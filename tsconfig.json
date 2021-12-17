@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "outDir": "./built",
+    "allowJs": true,
+    "target": "es5",
+    "sourceMap": true,
+    "resolveJsonModule": true
+  },
+  "include": [
+    "./src/*"
+  ]
+}
