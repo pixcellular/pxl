@@ -14,8 +14,9 @@ export default class MoveRule implements Rule {
 
   public enforce(action: Action, entity: EntityStub, world: World): Action {
     const location = entity.props.location;
-    const destination = world.getDestination(action, location);
-    if (destination == null || world.getGrid().get(destination).symbol !== this.space.symbol) {
+    const destination = location.plus(action.direction.toVector());
+    const found = world.getGrid().get(destination);
+    if (!found || found.symbol !== this.space.symbol) {
       return action;
     }
     entity.props.energy -= 10;

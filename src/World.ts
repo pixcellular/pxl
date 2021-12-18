@@ -1,5 +1,3 @@
-import Action from './Action';
-import {cardinalDirections} from './Direction';
 import Entity from './Entity';
 import {EntityFactory} from './EntityFactory';
 import {EntityHandlerMap} from './EntityHandler';
@@ -54,28 +52,12 @@ export default class World {
   /**
    * Make the world turn one round
    */
-  public turn() {
+  public turn(): Grid {
     this.grid.forEachCell((entity: Entity, location: Vector) => {
       const handler = this.entityHandlers.get(entity.symbol);
       handler.handle(entity, location, this);
     });
-  }
-
-  /**
-   * Check destination is a valid vector
-   * @return vector if valid
-   * @return null if invalid
-   */
-  public getDestination(action: Action, location: Vector): Vector | null {
-    const dir = action.direction.toString();
-    const dirExists = cardinalDirections.includes(dir);
-    if (dirExists) {
-      const dest = location.plus(action.direction.toVector());
-      if (this.grid.isInside(dest)) {
-        return dest;
-      }
-    }
-    return null;
+    return this.grid;
   }
 
   public getGrid(): Grid {

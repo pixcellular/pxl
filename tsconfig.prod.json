@@ -3,12 +3,11 @@
     "outDir": "./dist",
     "allowJs": true,
     "target": "es5",
-    "sourceMap": true,
+    "sourceMap": false,
     "resolveJsonModule": true,
     "declaration": true
   },
   "include": [
-    "./src/**/*",
-    "./tests/**/*"
+    "./src/**/*"
   ]
 }

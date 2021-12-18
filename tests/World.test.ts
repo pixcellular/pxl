@@ -75,8 +75,8 @@ it('should move test organism to east', () => {
 
   const world = new World([startPlan], entityFactory, [props], testSymbolHandler);
 
-  world.turn();
+  const result = world.turn();
 
-  expect(world.getGrid().toString()).toBe(expectedPlan);
+  expect(result.toString()).toBe(expectedPlan);
   expect(props.location).toEqual({x: 1, y: 0});
 });

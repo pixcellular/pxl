@@ -15,7 +15,7 @@ export default class Grid {
     this.height = height;
   }
 
-  public isInside(vector: Vector) {
+  public isInside(vector: Vector): boolean {
     return vector.x >= 0 && vector.x < this.width &&
       vector.y >= 0 && vector.y < this.height;
   }
@@ -23,7 +23,7 @@ export default class Grid {
   /**
    * Get cell by vector
    */
-  public get(vector: Vector) {
+  public get(vector: Vector): Entity | undefined {
     return this.cells[vector.x + vector.y * this.width];
   }
 
@@ -46,15 +46,15 @@ export default class Grid {
     }
   }
 
-  public getHeight() {
+  public getHeight(): number {
     return this.height;
   }
 
-  public getWidth() {
+  public getWidth(): number {
     return this.width;
   }
 
-  public toString() {
+  public toString(): string {
     let output = '';
     for (let y = 0; y < this.getHeight(); y++) {
       for (let x = 0; x < this.getWidth(); x++) {
