@@ -1,4 +1,5 @@
 import Direction, {direction} from './Direction';
+import Entity from './Entity';
 import randomElement from './util/randomElement';
 import Vector from './Vector';
 import World from './World';
@@ -15,10 +16,14 @@ export default class View {
         this.location = location;
     }
 
-    public look(dir: Direction) {
+    /**
+     * Find entity
+     * @param dir
+     */
+    public look(dir: Direction): Entity {
         const target = this.location.plus(dir.toVector());
         if (this.world.getGrid().isInside(target)) {
-            return this.world.getGrid().get(target).symbol;
+            return this.world.getGrid().get(target);
         }
         return null;
     }
@@ -26,7 +31,7 @@ export default class View {
     public findAll(symbol: string): Direction[] {
         const found = [];
         for (const dir of direction) {
-            if (this.look(dir) === symbol) {
+            if (this.look(dir).symbol === symbol) {
                 found.push(dir);
             }
         }
