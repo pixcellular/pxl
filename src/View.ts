@@ -33,6 +33,12 @@ export default class View {
         return found;
     }
 
+    /**
+     * Find an entity with {symbol}
+     * Pick random entity when multiple available
+     * @return Direction
+     * @return null when not present
+     */
     public find(symbol: string): Direction {
         const found = this.findAll(symbol);
         if (found.length === 0) {
