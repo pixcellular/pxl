@@ -1,14 +1,18 @@
 {
   "compilerOptions": {
-    "outDir": "./dist",
-    "allowJs": true,
-    "target": "es5",
+    "noEmit": true,
+    "target": "esnext",
+    "module": "commonjs",
     "sourceMap": true,
+    "declaration": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "jsx": "react",
     "resolveJsonModule": true,
-    "declaration": true
+    "removeComments": true,
   },
   "include": [
-    "./src/**/*",
-    "./tests/**/*"
+    "src",
+    "test"
   ]
 }
