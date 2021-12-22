@@ -53,9 +53,14 @@ export default class World {
    * Make the world turn one round
    */
   public turn(): Grid {
+    this.grid.unhandle();
     this.grid.forEachCell((entity: Entity, location: Vector) => {
+      if (entity.handled) {
+        return;
+      }
       const handler = this.entityHandlers.get(entity.symbol);
       handler.handle(entity, location, this);
+      entity.handled = true;
     });
     return this.grid;
   }

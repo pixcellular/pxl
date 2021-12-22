@@ -32,6 +32,7 @@ organismRules.addNode(sleepRule.name, sleepRule.rule);
 // Link rules by their results:
 organismRules.addLink(entryRuleName, move, moveRule.name);
 organismRules.addLink(moveRule.name, sleep, sleepRule.name);
+organismRules.addLink(moveRule.name, move, sleepRule.name);
 organismRules.addLink(sleepRule.name, exit);
 
 testSymbolHandler.add('o', new EntityStubHandler(organismRules));
@@ -41,11 +42,13 @@ it('should contain grid that matches plan', () => {
     public props: EntityProps;
     public symbol: string;
     public direction: Direction;
+    public handled;
 
     constructor(symbol: string, props: EntityProps) {
       this.props = props;
       this.symbol = symbol;
       this.direction = randomDirection();
+      this.handled = false;
     }
 
   }
@@ -70,6 +73,25 @@ it('should move test organism to east', () => {
 
   const startPlan = 'o ';
   const expectedPlan = ' o';
+
+  const world = new World([startPlan], entityFactory, [props], testSymbolHandler);
+
+  const result = world.turn();
+
+  expect(result.toString()).toBe(expectedPlan);
+  expect(props.location).toEqual({x: 1, y: 0});
+});
+
+it('should not handle entity twice', () => {
+  const location = new Vector(0, 0);
+  const props = new EntityStubProps(location, E, 40);
+
+  const entityFactory = new EntityFactory();
+  entityFactory.add(' ', () => SPACE);
+  entityFactory.add('o', (p) => new EntityStub(p as EntityStubProps));
+
+  const startPlan = 'o  ';
+  const expectedPlan = ' o ';
 
   const world = new World([startPlan], entityFactory, [props], testSymbolHandler);
 

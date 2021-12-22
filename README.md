@@ -1,11 +1,15 @@
 # Pixcellular
 
-Small grid framework to set up cellular automata
+Small grid framework to set up cellular automata.
 
-## Development
+Plain javascript example: 
+[organism](./examples/index.html)
 
-### Prepare
+### Development
+
+## Prepare
 Run: `npm i`
 
-### Test
+## Test
 Run: `npm t`
+

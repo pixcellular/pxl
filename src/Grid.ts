@@ -35,15 +35,12 @@ export default class Grid {
   }
 
   public forEachCell(handler: (entity: Entity, location: Vector) => void) {
-    for (let y = 0; y < this.height; y++) {
-      for (let x = 0; x < this.width; x++) {
-        const entity = this.cells[x + y * this.width];
-        if (entity != null) {
-          const location = new Vector(x, y);
-          handler(entity, location);
-        }
+    this.forEach((entity: Entity, x: number, y: number) => {
+      if (entity != null) {
+        const location = new Vector(x, y);
+        handler(entity, location);
       }
-    }
+    });
   }
 
   public getHeight(): number {
@@ -56,8 +53,9 @@ export default class Grid {
 
   public toString(): string {
     let output = '';
-    for (let y = 0; y < this.getHeight(); y++) {
-      for (let x = 0; x < this.getWidth(); x++) {
+
+    for (let y = 0; y < this.height; y++) {
+      for (let x = 0; x < this.width; x++) {
         const element = this.get(new Vector(x, y));
         output += element.symbol;
       }
@@ -65,7 +63,25 @@ export default class Grid {
         output += '\n';
       }
     }
+
     return output;
   }
 
+  /**
+   * Mark all entities as unhandled
+   */
+  public unhandle(): void {
+    this.forEach((entity: Entity) => {
+      entity.handled = false;
+    });
+  }
+
+  private forEach(handler: (e: Entity, x: number, y: number) => void): void {
+    for (let y = 0; y < this.height; y++) {
+      for (let x = 0; x < this.width; x++) {
+        const entity = this.get(new Vector(x, y));
+        handler(entity, x, y);
+      }
+    }
+  }
 }

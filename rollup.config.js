@@ -6,8 +6,10 @@ export default [
     input: 'dist/index.js',
     output: {
       file: 'dist/index.js',
-      format: 'cjs'
+      format: 'umd',
+      name: 'pxl'
     },
+    context: 'window',
     plugins: [commonjs()]
   },
   {

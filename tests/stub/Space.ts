@@ -4,6 +4,7 @@ import Entity from '../../src/Entity';
 export default class Space implements Entity {
   public symbol: string;
   public props: EntityProps;
+  public handled = true;
 
   constructor(symbol: string, props: EntityProps) {
     this.props = props;

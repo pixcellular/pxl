@@ -12,4 +12,9 @@ export default interface Entity {
      * as seen on grid.toString()
      */
     symbol: string;
+
+    /**
+     * Has entity been handled in the current turn?
+     */
+    handled: boolean;
 }

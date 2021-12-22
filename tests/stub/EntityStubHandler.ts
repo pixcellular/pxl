@@ -1,5 +1,5 @@
-import {EntityHandler} from '../../src/EntityHandler';
-import {RuleGraph} from '../../src/RuleGraph';
+import {EntityHandler} from '../../src';
+import {RuleGraph} from '../../src';
 import Vector from '../../src/Vector';
 import World from '../../src/World';
 import {EntityStub} from './EntityStub';
@@ -16,11 +16,7 @@ export default class EntityStubHandler implements EntityHandler {
    * Let critter act on destination of vector
    */
   public handle(entity: EntityStub, location: Vector, world: World) {
-    if (entity.handled) {
-      return;
-    }
     this.rules.traverse(entity, world);
-    entity.handled = true;
   }
 
 }

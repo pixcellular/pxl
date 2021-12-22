@@ -1,5 +1,5 @@
+import {Rule} from '../../src';
 import Action from '../../src/Action';
-import {Rule} from '../../src/RuleGraph';
 import World from '../../src/World';
 import {SLEEP} from './Actions';
 import {EntityStub} from './EntityStub';
