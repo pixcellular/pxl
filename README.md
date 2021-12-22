@@ -2,7 +2,7 @@
 
 Small grid framework to set up cellular automata.
 
-[Plain javascript example](./examples/vanilla/index.html)
+[Plain javascript example](https://github.com/pixcellular/pxl/blob/main/examples/vanilla/index.html)
 
 ## Development
 
