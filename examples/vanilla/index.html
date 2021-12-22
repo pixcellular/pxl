@@ -38,7 +38,7 @@
         const organismProps = {location: new pxl.Vector(2, 2), age: 0, energy: 50};
         const entityProps = [organismProps];
 
-        // Define their behaviour:
+        // Define behaviour:
         const entityHandler = new pxl.EntityHandlerMap()
         entityHandler.add(' ', {handle: () => null});
         entityHandler.add('o', {
@@ -56,7 +56,7 @@
 
                 // Update props:
                 organism.props.age ++;
-                organism.props.energy -= 1;
+                organism.props.energy --;
 
                 if(organism.props.energy <= 0) {
                     // Die:
