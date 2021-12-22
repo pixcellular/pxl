@@ -60,3 +60,21 @@ it('should contain all neighbours with char', () => {
   const expectedDirs: string[] = ['n', 'ne', 'sw', 'w', 'nw'];
   expect(expectedDirs).toStrictEqual(allWall.map(w => w.toString()));
 });
+
+it('should not find itself', () => {
+  const propsOfElements = [];
+  const testPlan = ['o  ', ' o ', '  o'];
+
+  const world = new World(
+    testPlan,
+    entityFactory,
+    propsOfElements,
+    testSymbolHandler
+  );
+
+  const view = new View(world, new Vector(1, 1));
+  const allWall = view.findAll('o');
+  const expectedDirs: string[] = ['se', 'nw'];
+  expect(expectedDirs).toStrictEqual(allWall.map(w => w.toString()));
+
+});

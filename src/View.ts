@@ -1,4 +1,4 @@
-import Direction, {direction} from './Direction';
+import Direction, {direction, directionWithoutNone} from './Direction';
 import Entity from './Entity';
 import randomElement from './util/randomElement';
 import Vector from './Vector';
@@ -19,8 +19,10 @@ export default class View {
     /**
      * Find entity
      * @param dir
+     * @return Entity at dir
+     * @return null when dir outside of grid
      */
-    public look(dir: Direction): Entity {
+    public look(dir: Direction): Entity | null {
         const target = this.location.plus(dir.toVector());
         if (this.world.getGrid().isInside(target)) {
             return this.world.getGrid().get(target);
@@ -28,10 +30,16 @@ export default class View {
         return null;
     }
 
+    /**
+     * Find all directions of entities with {symbol}
+     * @return Direction[]
+     * @return null when not present
+     */
     public findAll(symbol: string): Direction[] {
         const found = [];
-        for (const dir of direction) {
-            if (this.look(dir).symbol === symbol) {
+        for (const dir of directionWithoutNone) {
+            const entity = this.look(dir);
+            if (entity && entity.symbol === symbol) {
                 found.push(dir);
             }
         }
@@ -39,7 +47,7 @@ export default class View {
     }
 
     /**
-     * Find an entity with {symbol}
+     * Find the directions of an entity with {symbol}
      * Pick random entity when multiple available
      * @return Direction
      * @return null when not present
