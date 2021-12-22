@@ -39,6 +39,9 @@ export class RuleGraph {
     this.exitLink = exitActionType;
   }
 
+  /**
+   * Add rule to graph
+   */
   public addNode(name: string, rule: Rule) {
     this.rules[name] = new RuleNodeWithLinks(name, rule);
   }
@@ -71,6 +74,9 @@ export class RuleGraph {
     }
   }
 
+  /**
+   * Traverse rule graph
+   */
   public traverse(entity: Entity, world: World): Action[] {
     const walk = [];
     let node = this.rules[this.entryAction.type];
@@ -89,6 +95,9 @@ export class RuleGraph {
     return walk;
   }
 
+  /**
+   * @return rule graph in {@link https://en.wikipedia.org/wiki/DOT_(graph_description_language)|DOT} format
+   */
   public toString() {
     let result = 'digraph RuleGraph {\n';
     result += '  node [shape="box"];\n';
@@ -103,7 +112,7 @@ export class RuleGraph {
   }
 
   private nodeToLinks(name: string): string[] {
-    let result = [];
+    let result: string[] = [];
     const head = this.rules[name];
     for (const link of Object.keys(head.links)) {
       const tail = head.links[link];

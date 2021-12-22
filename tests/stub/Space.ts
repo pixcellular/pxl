@@ -1,14 +1,15 @@
+import {EntityProps} from '../../src';
 import Entity from '../../src/Entity';
-import {EntityProps} from '../../src/EntityProps';
 
 export default class Space implements Entity {
   public symbol: string;
-  public readonly props: EntityProps = null;
+  public props: EntityProps;
 
-  constructor(symbol: string) {
+  constructor(symbol: string, props: EntityProps) {
+    this.props = props;
     this.symbol = symbol;
   }
 
 }
 
-export const SPACE = new Space(' ');
+export const SPACE = new Space(' ', {} as EntityProps);

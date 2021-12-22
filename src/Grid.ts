@@ -23,7 +23,7 @@ export default class Grid {
   /**
    * Get cell by vector
    */
-  public get(vector: Vector): Entity | undefined {
+  public get(vector: Vector): Entity {
     return this.cells[vector.x + vector.y * this.width];
   }
 

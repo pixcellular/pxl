@@ -1,13 +1,15 @@
+import {EntityProps} from '../../src';
 import Entity from '../../src/Entity';
 
 class Wall implements Entity {
     public symbol: string;
-    public readonly props = null;
+    public props: EntityProps;
 
-    constructor(symbol: string) {
+    constructor(symbol: string, props: EntityProps) {
         this.symbol = symbol;
+        this.props = props;
     }
 
 }
 
-export const WALL = new Wall('#');
+export const WALL = new Wall('#', {} as EntityProps);

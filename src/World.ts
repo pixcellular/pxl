@@ -42,7 +42,7 @@ export default class World {
         if (props) {
           props.startLocation = location;
         }
-        const element = entityBuilders.get(line[x])(props);
+        const element = entityBuilders.get(line[x])(props ? props : {location});
         grid.set(location, element);
       }
     });

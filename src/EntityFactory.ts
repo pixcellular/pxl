@@ -1,5 +1,4 @@
 import Entity from './Entity';
-import {EntityHandler} from './EntityHandler';
 import {EntityProps} from './EntityProps';
 
 /**

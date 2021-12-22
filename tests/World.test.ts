@@ -1,9 +1,9 @@
+import {EntityFactory} from '../src';
+import {EntityHandlerMap} from '../src';
+import {EntityProps} from '../src';
+import {RuleGraph} from '../src';
 import Direction, {E} from '../src/Direction';
 import Entity from '../src/Entity';
-import {EntityFactory} from '../src/EntityFactory';
-import {EntityHandlerMap} from '../src/EntityHandler';
-import {EntityProps} from '../src/EntityProps';
-import {RuleGraph} from '../src/RuleGraph';
 import randomDirection from '../src/util/randomDirection';
 import Vector from '../src/Vector';
 import World from '../src/World';
@@ -42,7 +42,8 @@ it('should contain grid that matches plan', () => {
     public symbol: string;
     public direction: Direction;
 
-    constructor(symbol: string) {
+    constructor(symbol: string, props: EntityProps) {
+      this.props = props;
       this.symbol = symbol;
       this.direction = randomDirection();
     }
@@ -52,7 +53,7 @@ it('should contain grid that matches plan', () => {
   const entityFactory = new EntityFactory();
   entityFactory.add(' ', () => SPACE);
   entityFactory.add('#', () => WALL);
-  entityFactory.add('o', () => new Org('o'));
+  entityFactory.add('o', (props) => new Org('o', props));
   const testPlan = ['#o', '# '];
   const world = new World(testPlan, entityFactory, [], testSymbolHandler);
   expect(world.getGrid().toString()).toBe(testPlan.join('\n'));
@@ -61,14 +62,11 @@ it('should contain grid that matches plan', () => {
 it('should move test organism to east', () => {
   console.log('rules:\n', (testSymbolHandler.get('o') as EntityStubHandler).rules.toString());
   const location = new Vector(0, 0);
-
-  const props = new EntityStubProps();
-  props.location = location;
-  props.dir = E;
+  const props = new EntityStubProps(location, E, 40);
 
   const entityFactory = new EntityFactory();
   entityFactory.add(' ', () => SPACE);
-  entityFactory.add('o', (p: EntityStubProps) => new EntityStub(p));
+  entityFactory.add('o', (p) => new EntityStub(p as EntityStubProps));
 
   const startPlan = 'o ';
   const expectedPlan = ' o';

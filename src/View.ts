@@ -1,4 +1,4 @@
-import Direction, {direction, directionWithoutNone} from './Direction';
+import Direction, {directionWithoutNone} from './Direction';
 import Entity from './Entity';
 import randomElement from './util/randomElement';
 import Vector from './Vector';
@@ -52,7 +52,7 @@ export default class View {
      * @return Direction
      * @return null when not present
      */
-    public find(symbol: string): Direction {
+    public find(symbol: string): Direction | null {
         const found = this.findAll(symbol);
         if (found.length === 0) {
             return null;

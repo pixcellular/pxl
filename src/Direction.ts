@@ -32,6 +32,6 @@ export const NW = new Direction('nw', -1, -1);
 export const NONE = new Direction('none', 0, 0);
 
 export const cardinalToDirection = Object.freeze({n: N, ne: NE, e: E, se: SE, s: S, sw: SW, w: W, nw: NW, none: NONE});
-export const cardinalDirections = Object.freeze(Object.keys(cardinalToDirection));
-export const direction = Object.freeze(Object.values(cardinalToDirection));
-export const directionWithoutNone = direction.slice(0, -1);
+export const cardinalDirections: readonly string[] = Object.freeze(Object.keys(cardinalToDirection));
+export const direction: readonly Direction[] = Object.freeze(Object.values(cardinalToDirection));
+export const directionWithoutNone: readonly Direction[] = direction.slice(0, -1);

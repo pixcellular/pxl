@@ -1,6 +1,9 @@
+import {NONE, SE} from '../src';
+import {Rule, RuleGraph} from '../src';
 import Action from '../src/Action';
-import {NONE, SE} from '../src/Direction';
-import {Rule, RuleGraph} from '../src/RuleGraph';
+import World from '../src/World';
+import {EntityStub} from './stub/EntityStub';
+import {EntityStubProps} from './stub/EntityStubProps';
 
 class EntryRule implements Rule {
   private toReturn: Action;
@@ -101,6 +104,6 @@ it('should traverse graph', () => {
       }
     }
   ];
-  const walk = rules.traverse(null, null);
+  const walk = rules.traverse(new EntityStub({} as EntityStubProps), {} as World);
   expect(JSON.stringify(walk)).toBe(JSON.stringify(expectedWalk));
 });

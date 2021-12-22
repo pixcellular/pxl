@@ -1,3 +1,3 @@
-export default function randomElement(array) {
-  return array[Math.floor(Math.random() * array.length)];
+export default function randomElement(arr: any[]) {
+  return arr[Math.floor(Math.random() * arr.length)];
 }

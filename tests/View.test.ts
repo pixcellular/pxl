@@ -1,9 +1,10 @@
+import {EntityProps} from '../src';
+import {NONE} from '../src';
+import {EntityFactory} from '../src';
+import {EntityHandlerMap} from '../src';
+import {Rule, RuleGraph} from '../src';
 import Action from '../src/Action';
-import {NONE} from '../src/Direction';
 import Entity from '../src/Entity';
-import {EntityFactory} from '../src/EntityFactory';
-import {EntityHandlerMap} from '../src/EntityHandler';
-import {Rule, RuleGraph} from '../src/RuleGraph';
 import Vector from '../src/Vector';
 import View from '../src/View';
 import World from '../src/World';
@@ -45,7 +46,7 @@ testSymbolHandler.add('o',
 );
 
 it('should contain all neighbours with char', () => {
-  const propsOfElements = [];
+  const propsOfElements: EntityProps[] = [];
   const testPlan = ['###', '#  ', '#  '];
 
   const world = new World(
@@ -57,12 +58,18 @@ it('should contain all neighbours with char', () => {
 
   const view = new View(world, new Vector(1, 1));
   const allWall = view.findAll('#');
-  const expectedDirs: string[] = ['n', 'ne', 'sw', 'w', 'nw'];
-  expect(expectedDirs).toStrictEqual(allWall.map(w => w.toString()));
+  const expectedDirs: string[] = [
+    'n',
+    'ne',
+    'sw',
+    'w',
+    'nw'
+  ];
+  expect(allWall.map(w => w.toString())).toStrictEqual(expectedDirs);
 });
 
 it('should not find itself', () => {
-  const propsOfElements = [];
+  const propsOfElements: EntityProps[] = [];
   const testPlan = ['o  ', ' o ', '  o'];
 
   const world = new World(
