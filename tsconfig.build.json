@@ -1,9 +1,14 @@
 {
-  "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "./dist",
-    "noEmit": false,
-    "sourceMap": false
+    "moduleResolution": "node",
+    "module": "amd",
+    "target": "ES5",
+    "sourceMap": true,
+    "declaration": true,
+    "outFile": "dist/index.js"
   },
-  "include": ["src"]
+  "include": [
+    "src",
+    "test"
+  ]
 }
