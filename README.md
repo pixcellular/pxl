@@ -2,14 +2,13 @@
 
 Small grid framework to set up cellular automata.
 
-Plain javascript example: 
-[organism](./examples/index.html)
+[Plain javascript example](./examples/vanilla/index.html)
 
-### Development
+## Development
 
-## Prepare
+### Prepare
 Run: `npm i`
 
-## Test
+### Test
 Run: `npm t`
 
