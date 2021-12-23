@@ -17,7 +17,7 @@
   </head>
   <body>
     <pre id="grid"></pre>
-    <script src="https://unpkg.com/pixcellular@1.1.19/index.js"></script>
+    <script src="https://unpkg.com/pixcellular@1.1.21/index.js"></script>
     <script>
 
         const map = [
@@ -51,7 +51,7 @@
 
                 // Move:
                 view.set(direction, organism);
-                view.set(location, space);
+                view.set(pxl.NONE, space);
 
                 // Update props:
                 organism.props.age ++;
@@ -59,7 +59,7 @@
 
                 if(organism.props.energy <= 0) {
                     // Die:
-                    world.getGrid().set(destination, space);
+                    view.set(pxl.NONE, space);
                 }
             }
         });
