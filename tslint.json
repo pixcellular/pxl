@@ -21,6 +21,7 @@
     "max-classes-per-file": false,
     "arrow-parens": false,
     "interface-over-type-literal": false,
+    "no-shadowed-variable": false,
     "quotemark": [
       true,
       "single"
