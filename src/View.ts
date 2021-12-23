@@ -5,7 +5,8 @@ import Vector from './Vector';
 import World from './World';
 
 /**
- * A limited perspective of 1 cell in all directions (except NONE)
+ * A limited perspective of 1 cell in all directions
+ * Vector location + direction = destination
  */
 export default class View {
   private world: World;
@@ -17,9 +18,9 @@ export default class View {
   }
 
   /**
-   * Get entity by its direction
-   * @param dir
-   * @return Entity at dir
+   * Get an entity by its location relative to View.location
+   * Vector location + direction = destination
+   * @return Entity at destination
    * @return null when dir outside of grid
    */
   public get(dir: Direction): Entity | null {
@@ -31,8 +32,9 @@ export default class View {
   }
 
   /**
-   * Set entity to direction
-   * Note: an entity is not removed from its original place
+   * Add entity at destination
+   * Vector location + direction = destination
+   * Note: the entity that is set, is not jet removed from its original place
    */
   public set(dir: Direction, entity: Entity) {
     const target = this.location.plus(dir.toVector());
@@ -70,8 +72,8 @@ export default class View {
   }
 
   /**
-   * Find first entity that matches predicate,
-   * starting at a random direction when searching
+   * Find first entity that matches predicate
+   * with a randomized search start direction
    * @return Direction of entity
    * @return null when none found
    */
