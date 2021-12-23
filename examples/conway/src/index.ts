@@ -43,7 +43,7 @@ class CellHandler implements EntityHandler {
     if (!livingCell && livingNeighbours.length === 3) {
       // Start living:
       entity.symbol = 'o';
-    } else if (livingCell && livingNeighbours.length < 2 || livingNeighbours.length > 3) {
+    } else if (livingCell && (livingNeighbours.length < 2 || livingNeighbours.length > 3)) {
       // Die:
       entity.symbol = '.';
     }
@@ -57,3 +57,5 @@ const world = new World(map, entityFactory, [], entityHandlers);
 setInterval(() => {
   logUpdate(world.turn().toString());
 }, 100);
+
+process.on('SIGINT', process.exit);
