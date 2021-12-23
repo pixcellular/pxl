@@ -1,62 +1,90 @@
 import Direction, {directionWithoutNone} from './Direction';
 import Entity from './Entity';
-import randomElement from './util/randomElement';
+import randomIndex from './util/randomIndex';
 import Vector from './Vector';
 import World from './World';
 
 /**
- * A limited perspective on the world
+ * A limited perspective of 1 cell in all directions (except NONE)
  */
 export default class View {
-    private world: World;
-    private location: Vector;
+  private world: World;
+  private location: Vector;
 
-    constructor(world: World, location: Vector) {
-        this.world = world;
-        this.location = location;
-    }
+  constructor(world: World, location: Vector) {
+    this.world = world;
+    this.location = location;
+  }
 
-    /**
-     * Find entity
-     * @param dir
-     * @return Entity at dir
-     * @return null when dir outside of grid
-     */
-    public look(dir: Direction): Entity | null {
-        const target = this.location.plus(dir.toVector());
-        if (this.world.getGrid().isInside(target)) {
-            return this.world.getGrid().get(target);
-        }
-        return null;
+  /**
+   * Get entity by its direction
+   * @param dir
+   * @return Entity at dir
+   * @return null when dir outside of grid
+   */
+  public get(dir: Direction): Entity | null {
+    const target = this.location.plus(dir.toVector());
+    if (this.world.getGrid().isInside(target)) {
+      return this.world.getGrid().get(target);
     }
+    return null;
+  }
 
-    /**
-     * Find all directions of entities with {symbol}
-     * @return Direction[]
-     * @return null when not present
-     */
-    public findAll(symbol: string): Direction[] {
-        const found = [];
-        for (const dir of directionWithoutNone) {
-            const entity = this.look(dir);
-            if (entity && entity.symbol === symbol) {
-                found.push(dir);
-            }
-        }
-        return found;
-    }
+  /**
+   * Set entity to direction
+   * Note: an entity is not removed from its original place
+   */
+  public set(dir: Direction, entity: Entity) {
+    const target = this.location.plus(dir.toVector());
+    this.world.getGrid().set(target, entity);
+  }
 
-    /**
-     * Find the directions of an entity with {symbol}
-     * Pick random entity when multiple available
-     * @return Direction
-     * @return null when not present
-     */
-    public find(symbol: string): Direction | null {
-        const found = this.findAll(symbol);
-        if (found.length === 0) {
-            return null;
-        }
-        return randomElement(found);
+  /**
+   * Find all entities that match predicate
+   * @return Direction[] of entities
+   */
+  public filter(predicate: (e: Entity) => boolean): Direction[] {
+    const found = [];
+    for (const dir of directionWithoutNone) {
+      const entity = this.get(dir);
+      if (entity && predicate(entity)) {
+        found.push(dir);
+      }
     }
+    return found;
+  }
+
+  /**
+   * Find first entity that matches predicate
+   * @return Direction of entity
+   * @return null when none found
+   */
+  public find(predicate: (e: Entity) => boolean): Direction | null {
+    for (const dir of directionWithoutNone) {
+      const entity = this.get(dir);
+      if (entity && predicate(entity)) {
+        return dir;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Find first entity that matches predicate,
+   * starting at a random direction when searching
+   * @return Direction of entity
+   * @return null when none found
+   */
+  public findRand(predicate: (e: Entity) => boolean): Direction | null {
+    const offset = randomIndex(directionWithoutNone as []);
+    for (let i = 0; i < directionWithoutNone.length; i++) {
+      const pointer = (i + offset) % directionWithoutNone.length;
+      const dir = directionWithoutNone[pointer];
+      const entity = this.get(dir);
+      if (entity && predicate(entity)) {
+        return dir;
+      }
+    }
+    return null;
+  }
 }

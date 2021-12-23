@@ -31,7 +31,22 @@ export const W = new Direction('w', -1, 0);
 export const NW = new Direction('nw', -1, -1);
 export const NONE = new Direction('none', 0, 0);
 
+/**
+ * Lower case cardinal direction to Direction
+ */
 export const cardinalToDirection = Object.freeze({n: N, ne: NE, e: E, se: SE, s: S, sw: SW, w: W, nw: NW, none: NONE});
+
+/**
+ * All lower case cardinal directions as string values
+ */
 export const cardinalDirections: readonly string[] = Object.freeze(Object.keys(cardinalToDirection));
+
+/**
+ * All Directions
+ */
 export const direction: readonly Direction[] = Object.freeze(Object.values(cardinalToDirection));
+
+/**
+ * All Directions without NONE
+ */
 export const directionWithoutNone: readonly Direction[] = direction.slice(0, -1);

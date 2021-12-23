@@ -2,7 +2,7 @@
 
 <html lang="en">
   <head>
-    <title>Plan javascript pixcellular example</title>
+    <title>Plain javascript pixcellular example</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
@@ -47,12 +47,11 @@
                 const view = new pxl.View(world, location);
 
                 // Find random empty space:
-                const direction = view.find(' ');
-                const destination = location.plus(direction.toVector());
+                const direction = view.findRand(e => e.symbol === ' ');
 
                 // Move:
-                world.getGrid().set(location, space);
-                world.getGrid().set(destination, organism);
+                view.set(direction, organism);
+                view.set(location, space);
 
                 // Update props:
                 organism.props.age ++;

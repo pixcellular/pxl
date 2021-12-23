@@ -57,7 +57,7 @@ it('should contain all neighbours with char', () => {
   );
 
   const view = new View(world, new Vector(1, 1));
-  const allWall = view.findAll('#');
+  const allWall = view.filter(e => e.symbol === '#');
   const expectedDirs: string[] = [
     'n',
     'ne',
@@ -80,7 +80,7 @@ it('should not find itself', () => {
   );
 
   const view = new View(world, new Vector(1, 1));
-  const allWall = view.findAll('o');
+  const allWall = view.filter(e => e.symbol === 'o');
   const expectedDirs: string[] = ['se', 'nw'];
   expect(expectedDirs).toStrictEqual(allWall.map(w => w.toString()));
 

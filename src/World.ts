@@ -36,13 +36,15 @@ export default class World {
     plan.forEach((line, y) => {
       for (let x = 0; x < line.length; x++) {
         const location = new Vector(x, y);
-        const props = entityProps.find((p) => {
+        let props = entityProps.find((p) => {
           return p.location.x === x && p.location.y === y;
         });
         if (props) {
           props.startLocation = location;
+        } else {
+          props = {location};
         }
-        const element = entityBuilders.get(line[x])(props ? props : {location});
+        const element = entityBuilders.get(line[x])(props);
         grid.set(location, element);
       }
     });

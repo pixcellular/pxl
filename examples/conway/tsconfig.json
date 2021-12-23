@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "outDir": "build",
+    "module": "es6",
+    "moduleResolution": "node",
+    "forceConsistentCasingInFileNames": true,
+    "strict": true
+  }
+}

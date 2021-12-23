@@ -1,0 +1,18 @@
+{
+  "name": "conway",
+  "version": "1.0.0",
+  "description": "Conway's game of life using Pixcellular",
+  "author": "Pixcellular",
+  "license": "ISC",
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "start": "node build/index.js"
+  },
+  "type": "module",
+  "devDependencies": {
+    "pixcellular": "^1.1.21",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.5.4",
+    "log-update": "^5.0.0"
+  }
+}

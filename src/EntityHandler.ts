@@ -34,5 +34,5 @@ export class EntityHandlerMap {
 }
 
 export interface EntityHandler {
-  handle(entity: Entity, vector: Vector, world: World): void;
+  handle(entity: Entity, location: Vector, world: World): void;
 }
