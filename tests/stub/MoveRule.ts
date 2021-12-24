@@ -1,9 +1,9 @@
 import {Rule} from '../../src';
 import Action from '../../src/Action';
+import Space from '../../src/Space';
 import World from '../../src/World';
 import {SLEEP} from './Actions';
 import {EntityStub} from './EntityStub';
-import Space from './Space';
 
 export default class MoveRule implements Rule {
   private space: Space;

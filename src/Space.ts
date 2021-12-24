@@ -1,5 +1,5 @@
-import {EntityProps} from '../../src';
-import Entity from '../../src/Entity';
+import Entity from './Entity';
+import {EntityProps} from './EntityProps';
 
 export default class Space implements Entity {
   public symbol: string;

@@ -6,12 +6,11 @@ if (!process.argv[2]) {
   throw new Error('usage: npm run start [path-to-map]');
 }
 
-// Our map:
+// Map of our world:
 const map = JSON.parse(fs.readFileSync(process.argv[2]).toString());
 
 type CellProps = EntityProps & { previousSymbol?: string };
 class Cell implements Entity {
-  public handled: boolean = false;
   public props: CellProps;
   public symbol: string;
 
@@ -26,7 +25,7 @@ const entityFactory = new EntityFactory();
 entityFactory.add('.', (props) => new Cell(props as CellProps, '.'));
 entityFactory.add('o', (props) => new Cell(props as CellProps, 'o'));
 
-// Define behaviour of our entities:
+// Define behaviour of entities:
 const entityHandlers = new EntityHandlerMap();
 class CellHandler implements EntityHandler {
   public handle(entity: Entity, location: Vector, world: World): void {
@@ -34,10 +33,12 @@ class CellHandler implements EntityHandler {
     cellProps.previousSymbol = entity.symbol;
 
     const view = new View(world, location);
-    const livingNeighbours = view.filter(e => e.handled
-      ? (e.props as CellProps).previousSymbol === 'o'
-      : e.symbol === 'o'
-    );
+    const livingNeighbours = view.filter(e => {
+      // e.handled is set and reset by world.turn:
+      return e.handled
+        ? (e.props as CellProps).previousSymbol === 'o'
+        : e.symbol === 'o';
+    });
 
     const livingCell = entity.symbol === 'o';
     if (!livingCell && livingNeighbours.length === 3) {
@@ -58,4 +59,4 @@ setInterval(() => {
   logUpdate(world.turn().toString());
 }, 100);
 
-process.on('SIGINT', process.exit);
+process.on('SIGINT', () => process.exit());

@@ -17,7 +17,7 @@
   </head>
   <body>
     <pre id="grid"></pre>
-    <script src="https://unpkg.com/pixcellular@1.1.21/index.js"></script>
+    <script src="https://unpkg.com/pixcellular@1.1.22/index.js"></script>
     <script>
 
         const map = [
@@ -32,7 +32,7 @@
         const entityFactory = new pxl.EntityFactory();
         const space = {symbol: ' '};
         entityFactory.add(' ', () => space);
-        entityFactory.add('o', (props) => { return {symbol: 'o', handled: false, props}});
+        entityFactory.add('o', (props) => { return {symbol: 'o', props}});
 
         // Define properties of entity:
         const organismProps = {location: new pxl.Vector(2, 2), age: 0, energy: 50};

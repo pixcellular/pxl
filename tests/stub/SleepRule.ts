@@ -1,9 +1,9 @@
+import {Rule} from '../../src';
 import Action from '../../src/Action';
-import {Rule} from '../../src/RuleGraph';
+import Space from '../../src/Space';
 import World from '../../src/World';
 import {EXIT} from './Actions';
 import {EntityStub} from './EntityStub';
-import Space from './Space';
 
 export default class SleepRule implements Rule {
 

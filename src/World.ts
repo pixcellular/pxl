@@ -3,6 +3,7 @@ import {EntityFactory} from './EntityFactory';
 import {EntityHandlerMap} from './EntityHandler';
 import {EntityProps} from './EntityProps';
 import Grid from './Grid';
+import {SPACE} from './Space';
 import Vector from './Vector';
 
 /**
@@ -32,7 +33,7 @@ export default class World {
   }
 
   public mapToGrid(plan: string[], entityProps: EntityProps[], entityBuilders: EntityFactory): Grid {
-    const grid = new Grid(plan[0].length, plan.length);
+    const grid = new Grid(plan[0].length, plan.length, SPACE);
     plan.forEach((line, y) => {
       for (let x = 0; x < line.length; x++) {
         const location = new Vector(x, y);

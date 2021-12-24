@@ -9,10 +9,11 @@ export default class Grid {
   private readonly width: number;
   private readonly height: number;
 
-  constructor(width: number, height: number) {
+  constructor(width: number, height: number, defaultEntity: Entity) {
     this.cells = new Array(width * height);
     this.width = width;
     this.height = height;
+    this.forEach((_, x, y) => this.set(new Vector(x, y), defaultEntity));
   }
 
   public isInside(vector: Vector): boolean {
@@ -51,20 +52,27 @@ export default class Grid {
     return this.width;
   }
 
+  /**
+   * @return string[] map in which each character
+   * represents the symbol of an entity on the grid
+   */
+  public toMap(): string[] {
+    const result: string[] = [];
+    this.forEach((entity, x, y) => {
+      if (!result[y]) {
+        result[y] = '';
+      }
+      result[y] += entity.symbol;
+    });
+    return result;
+  }
+
+  /**
+   * @return string newline seperated map in which each character
+   * represents the symbol of an entity on the grid
+   */
   public toString(): string {
-    let output = '';
-
-    for (let y = 0; y < this.height; y++) {
-      for (let x = 0; x < this.width; x++) {
-        const element = this.get(new Vector(x, y));
-        output += element.symbol;
-      }
-      if (y < this.getHeight() - 1) {
-        output += '\n';
-      }
-    }
-
-    return output;
+    return this.toMap().join('\n');
   }
 
   /**

@@ -14,7 +14,7 @@ export default interface Entity {
     symbol: string;
 
     /**
-     * Has entity been handled in the current turn?
+     * Used by World to determine if entity has been handled in current turn
      */
-    handled: boolean;
+    handled?: boolean;
 }

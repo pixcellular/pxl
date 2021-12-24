@@ -1,7 +1,7 @@
 import {Rule, RuleGraph} from '../../src/RuleGraph';
+import {SPACE} from '../../src/Space';
 import MoveRule from './MoveRule';
 import SleepRule from './SleepRule';
-import {SPACE} from './Space';
 
 class RuleEntry {
   public name: string;
