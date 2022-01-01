@@ -20,7 +20,7 @@ export default class Grid {
     this.width = width;
     this.height = height;
     this.defaultEntity = defaultEntity;
-    this.forEach((_, x, y) => this.put(new Vector(x, y), defaultEntity));
+    this.forEach((_, x, y) => this.set(new Vector(x, y), defaultEntity));
   }
 
   public isInside(vector: Vector): boolean {
@@ -36,18 +36,23 @@ export default class Grid {
   }
 
   /**
-   * Put entity at location
+   * Move entity at start to end location
+   *  - set entity of start location at end location
+   *  - set defaultEntity at start location
+   */
+  public move(start: Vector, end: Vector) {
+    const entity = this.cells[start.x + (this.width * start.y)];
+    this.cells[start.x + (this.width * start.y)] = this.defaultEntity;
+    this.set(end, entity);
+  }
+
+  /**
+   * Set entity at location
    *  - assign entity to new location
-   *  - when entity already had a location:
-   *    assign default entity to original location
    *  - when entity is not the default entity:
    *    update props.location
    */
-  public put(location: Vector, entity: Entity) {
-    const previous = entity.props.location;
-    if (previous) {
-      this.cells[previous.x + (this.width * previous.y)] = this.defaultEntity;
-    }
+  public set(location: Vector, entity: Entity) {
     this.cells[location.x + (this.width * location.y)] = entity;
     if (entity.symbol !== this.defaultEntity.symbol) {
       entity.props.location = location;

@@ -17,8 +17,8 @@ export default class World {
   /**
    * World containing a grid populated with entities
    *
-   * @param map matrix with element symbols
-   * @param entityFactory Array of elements
+   * @param map matrix with entity symbols
+   * @param entityFactory Array of entity builders
    * @param entityProps elements as found in team.members
    * @param entityHandlers symbolHandler
    */
@@ -34,7 +34,7 @@ export default class World {
 
   public mapToGrid(plan: string[], entityProps: EntityProps[], entityBuilders: EntityFactory): Grid {
     const grid = new Grid(plan[0].length, plan.length, SPACE);
-    grid.forEachCell((entity: Entity, location: Vector) => {
+    grid.forEachCell((_: Entity, location: Vector) => {
       let props = entityProps.find((p) => {
         return p && p.location && p.location.x === location.x && p.location.y === location.y;
       });
@@ -42,8 +42,8 @@ export default class World {
         props = new EntityProps();
       }
       const mapSymbol = plan[location.y][location.x];
-      const element = entityBuilders.get(mapSymbol)(props);
-      grid.put(location, element);
+      const entity = entityBuilders.get(mapSymbol)(props);
+      grid.set(location, entity);
     });
     return grid;
   }

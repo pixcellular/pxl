@@ -20,7 +20,7 @@ export default class MoveRule implements Rule {
       return action;
     }
     entity.props.energy -= 10;
-    world.getGrid().put(destination, entity);
+    world.getGrid().move(location, destination);
     return SLEEP;
   }
 }

@@ -32,13 +32,21 @@ export default class View {
   }
 
   /**
-   * Add entity at destination
+   * Set entity at destination
    * Vector location + direction = destination
-   * Note: the entity that is set, is not jet removed from its original place
    */
   public set(dir: Direction, entity: Entity) {
     const target = this.location.plus(dir.toVector());
-    this.world.getGrid().put(target, entity);
+    this.world.getGrid().set(target, entity);
+  }
+
+  /**
+   * Move entity to destination
+   * Vector location + direction = destination
+   */
+  public move(dir: Direction) {
+    const target = this.location.plus(dir.toVector());
+    this.world.getGrid().move(this.location, target);
   }
 
   /**

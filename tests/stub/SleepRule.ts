@@ -17,7 +17,7 @@ export default class SleepRule implements Rule {
     // Are we going to die in our sleep?
     if (entity.props.energy <= 0) {
       // Remove from board:
-      world.getGrid().put(entity.props.location, this.space);
+      world.getGrid().set(entity.props.location, this.space);
     }
 
     return EXIT;

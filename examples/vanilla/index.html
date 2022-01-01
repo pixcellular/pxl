@@ -17,7 +17,7 @@
   </head>
   <body>
     <pre id="grid"></pre>
-    <script src="https://unpkg.com/pixcellular@1.1.22/index.js"></script>
+    <script src="https://unpkg.com/pixcellular@1.2.1/index.js"></script>
     <script>
 
         const map = [
@@ -50,8 +50,7 @@
                 const direction = view.findRand(e => e.symbol === ' ');
 
                 // Move:
-                view.set(direction, organism);
-                view.set(pxl.NONE, space);
+                view.move(direction);
 
                 // Update props:
                 organism.props.age ++;

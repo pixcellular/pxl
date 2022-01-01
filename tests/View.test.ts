@@ -1,4 +1,4 @@
-import {EntityProps} from '../src';
+import {EntityProps, N} from '../src';
 import {NONE} from '../src';
 import {EntityFactory} from '../src';
 import {EntityHandlerMap} from '../src';
@@ -47,13 +47,13 @@ testSymbolHandler.add('o',
 );
 
 it('should contain all neighbours with char', () => {
-  const propsOfElements: EntityProps[] = [];
+  const propsOfEntities: EntityProps[] = [];
   const testPlan = ['###', '#  ', '#  '];
 
   const world = new World(
     testPlan,
     entityFactory,
-    propsOfElements,
+    propsOfEntities,
     testSymbolHandler
   );
 
@@ -70,19 +70,35 @@ it('should contain all neighbours with char', () => {
 });
 
 it('should not find itself', () => {
-  const propsOfElements: EntityProps[] = [];
+  const propsOfEntities: EntityProps[] = [];
   const testPlan = ['o  ', ' o ', '  o'];
 
   const world = new World(
     testPlan,
     entityFactory,
-    propsOfElements,
+    propsOfEntities,
     testSymbolHandler
   );
 
   const view = new View(world, new Vector(1, 1));
-  const allWall = view.filter(e => e.symbol === 'o');
+  const allO = view.filter(e => e.symbol === 'o');
   const expectedDirs: string[] = ['se', 'nw'];
-  expect(expectedDirs).toStrictEqual(allWall.map(w => w.toString()));
+  expect(expectedDirs).toStrictEqual(allO.map(w => w.toString()));
+});
 
+it('should update props.location on move', () => {
+  const props = {location: new Vector(1, 1)};
+  const propsOfEntities: EntityProps[] = [props];
+  const testPlan = ['   ', ' o ', '   '];
+
+  const world = new World(
+    testPlan,
+    entityFactory,
+    propsOfEntities,
+    testSymbolHandler
+  );
+
+  const view = new View(world, new Vector(1, 1));
+  view.move(N);
+  expect(props.location).toStrictEqual(new Vector(1, 0));
 });
