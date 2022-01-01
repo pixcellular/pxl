@@ -15,7 +15,7 @@ import EntityStubHandler from './stub/EntityStubHandler';
 import {EntityStubProps} from './stub/EntityStubProps';
 import {moveRule, sleepRule} from './stub/Rules';
 import SpaceHandler from './stub/SpaceHandler';
-import {WALL} from './stub/Wall';
+import {Wall} from './stub/Wall';
 import WallHandler from './stub/WallHandler';
 
 const entryRuleName = 'entryRule';
@@ -55,7 +55,7 @@ it('should contain grid that matches plan', () => {
 
   const entityFactory = new EntityFactory();
   entityFactory.add(' ', () => SPACE);
-  entityFactory.add('#', () => WALL);
+  entityFactory.add('#', (props) => new Wall('#', props));
   entityFactory.add('o', (props) => new Org('o', props));
   const testPlan = ['#o', '# '];
   const world = new World(testPlan, entityFactory, [], testSymbolHandler);

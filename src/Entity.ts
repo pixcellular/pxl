@@ -1,5 +1,8 @@
 import {EntityProps} from './EntityProps';
 
+/**
+ * Representation of a symbol on the map
+ */
 export default interface Entity {
 
     /**
@@ -17,4 +20,5 @@ export default interface Entity {
      * Used by World to determine if entity has been handled in current turn
      */
     handled?: boolean;
+
 }

@@ -34,20 +34,16 @@ export default class World {
 
   public mapToGrid(plan: string[], entityProps: EntityProps[], entityBuilders: EntityFactory): Grid {
     const grid = new Grid(plan[0].length, plan.length, SPACE);
-    plan.forEach((line, y) => {
-      for (let x = 0; x < line.length; x++) {
-        const location = new Vector(x, y);
-        let props = entityProps.find((p) => {
-          return p.location.x === x && p.location.y === y;
-        });
-        if (props) {
-          props.startLocation = location;
-        } else {
-          props = {location};
-        }
-        const element = entityBuilders.get(line[x])(props);
-        grid.set(location, element);
+    grid.forEachCell((entity: Entity, location: Vector) => {
+      let props = entityProps.find((p) => {
+        return p && p.location && p.location.x === location.x && p.location.y === location.y;
+      });
+      if (!props) {
+        props = new EntityProps();
       }
+      const mapSymbol = plan[location.y][location.x];
+      const element = entityBuilders.get(mapSymbol)(props);
+      grid.put(location, element);
     });
     return grid;
   }

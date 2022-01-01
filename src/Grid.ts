@@ -8,12 +8,19 @@ export default class Grid {
   private readonly cells: Entity[];
   private readonly width: number;
   private readonly height: number;
+  private readonly defaultEntity: Entity;
 
+  /**
+   * @param {number} width - Width of grid
+   * @param {number} height - Height of grid
+   * @param {Entity} defaultEntity - Locationless Entity used to populate grid and fill empty cells
+   */
   constructor(width: number, height: number, defaultEntity: Entity) {
     this.cells = new Array(width * height);
     this.width = width;
     this.height = height;
-    this.forEach((_, x, y) => this.set(new Vector(x, y), defaultEntity));
+    this.defaultEntity = defaultEntity;
+    this.forEach((_, x, y) => this.put(new Vector(x, y), defaultEntity));
   }
 
   public isInside(vector: Vector): boolean {
@@ -29,10 +36,22 @@ export default class Grid {
   }
 
   /**
-   * Put entity on location
+   * Put entity at location
+   *  - assign entity to new location
+   *  - when entity already had a location:
+   *    assign default entity to original location
+   *  - when entity is not the default entity:
+   *    update props.location
    */
-  public set(location: Vector, entity: Entity) {
+  public put(location: Vector, entity: Entity) {
+    const previous = entity.props.location;
+    if (previous) {
+      this.cells[previous.x + (this.width * previous.y)] = this.defaultEntity;
+    }
     this.cells[location.x + (this.width * location.y)] = entity;
+    if (entity.symbol !== this.defaultEntity.symbol) {
+      entity.props.location = location;
+    }
   }
 
   public forEachCell(handler: (entity: Entity, location: Vector) => void) {

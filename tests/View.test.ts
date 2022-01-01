@@ -4,20 +4,21 @@ import {EntityFactory} from '../src';
 import {EntityHandlerMap} from '../src';
 import {Rule, RuleGraph} from '../src';
 import Action from '../src/Action';
-import Entity from '../src/Entity';
 import {SPACE} from '../src/Space';
 import Vector from '../src/Vector';
 import View from '../src/View';
 import World from '../src/World';
+import {EntityStub} from './stub/EntityStub';
 import EntityStubHandler from './stub/EntityStubHandler';
+import {EntityStubProps} from './stub/EntityStubProps';
 import SpaceHandler from './stub/SpaceHandler';
-import {WALL} from './stub/Wall';
+import {Wall} from './stub/Wall';
 import WallHandler from './stub/WallHandler';
 
 const entityFactory = new EntityFactory();
 entityFactory.add(' ', () => SPACE);
-entityFactory.add('#', () => WALL);
-entityFactory.add('o', () => ({symbol: 'o'} as Entity));
+entityFactory.add('#', (props) => new Wall('#', props));
+entityFactory.add('o', (props) => new EntityStub(props as EntityStubProps));
 
 class EntryRule implements Rule {
   private toReturn: Action;

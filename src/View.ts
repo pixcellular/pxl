@@ -38,7 +38,7 @@ export default class View {
    */
   public set(dir: Direction, entity: Entity) {
     const target = this.location.plus(dir.toVector());
-    this.world.getGrid().set(target, entity);
+    this.world.getGrid().put(target, entity);
   }
 
   /**

@@ -14,10 +14,10 @@ export default class SleepRule implements Rule {
   }
 
   public enforce(action: Action, entity: EntityStub, world: World): Action {
-    // Lets die peacefully?
+    // Are we going to die in our sleep?
     if (entity.props.energy <= 0) {
-      // remove from board:
-      world.getGrid().set(entity.props.location, this.space);
+      // Remove from board:
+      world.getGrid().put(entity.props.location, this.space);
     }
 
     return EXIT;
