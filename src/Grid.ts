@@ -39,23 +39,36 @@ export default class Grid {
    * Move entity at start to end location
    *  - set entity of start location at end location
    *  - set defaultEntity at start location
+   *  @return Entity - Previous entity at the specified end location, or undefined if default
    */
-  public move(start: Vector, end: Vector) {
+  public move(start: Vector, end: Vector): Entity | undefined {
     const entity = this.cells[start.x + (this.width * start.y)];
     this.cells[start.x + (this.width * start.y)] = this.defaultEntity;
-    this.set(end, entity);
+    return this.set(end, entity);
   }
 
   /**
    * Set entity at location
    *  - assign entity to new location
-   *  - when entity is not the default entity:
+   *  - when non-default entity:
    *    update props.location
+   *  - when location occupied by a non-default entity:
+   *    delete location of occupying entity
+   *  @return Entity - Previous entity at the specified location, or undefined if default
    */
-  public set(location: Vector, entity: Entity) {
-    this.cells[location.x + (this.width * location.y)] = entity;
+  public set(location: Vector, entity: Entity): Entity | undefined {
+    const cellIndex = location.x + (this.width * location.y);
+    const overwriteEntity = this.cells[cellIndex];
+    this.cells[cellIndex] = entity;
+    const overwriteNonDefault = overwriteEntity?.props?.location;
+    if (overwriteNonDefault) {
+      delete overwriteEntity.props.location;
+    }
     if (entity.symbol !== this.defaultEntity.symbol) {
       entity.props.location = location;
+    }
+    if (overwriteNonDefault) {
+      return overwriteEntity;
     }
   }
 

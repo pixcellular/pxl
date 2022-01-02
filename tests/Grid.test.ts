@@ -32,14 +32,17 @@ it('should update entity.props.location when setting and moving an entity', () =
   const grid = new Grid(3, 3, SPACE);
   const location1 = new Vector(0, 0);
   const location2 = new Vector(0, 1);
-  const props = {} as EntityProps;
+  const props = {name: 'entity1'} as EntityProps;
   const entity = {symbol: 'o', handled: false, props} as Entity;
 
   grid.set(location1, entity);
   expect(grid.get(location1).props.location).toStrictEqual(location1);
+  expect(grid.toString()).toBe('o  \n   \n   ');
 
+  // Set entity at two locations:
   grid.set(location2, entity);
   expect(props.location).toStrictEqual(location2);
+  expect(grid.toString()).toBe('o  \no  \n   ');
 
   grid.move(location2, location1);
   expect(props.location).toStrictEqual(location1);
@@ -57,4 +60,35 @@ it('should not set defaultEntity.props.location', () => {
   const newLocation = new Vector(0, 1);
   grid.move(location, newLocation);
   expect(grid.get(location).props.location).toBeUndefined();
+});
+
+it('should overwrite when setting at a location populated by a non-default entity', () => {
+  const grid = new Grid(1, 1, SPACE);
+  const location1 = new Vector(0, 0);
+  const entity1 = {symbol: 'o', handled: false, props: {}} as Entity;
+  grid.set(location1, entity1);
+  const entity2 = {symbol: 'x', handled: false, props: {}} as Entity;
+
+  const resultOverwrite = grid.set(location1, entity2) as Entity;
+
+  expect(entity2.props.location).toStrictEqual(location1);
+  expect(resultOverwrite.symbol).toBe('o');
+  expect(resultOverwrite.props.location).toBeUndefined();
+  expect(resultOverwrite.props.location).toBeUndefined();
+});
+
+it('should overwrite when moving to a location populated by a non-default entity', () => {
+  const grid = new Grid(2, 1, SPACE);
+  const location1 = new Vector(0, 0);
+  const entity1 = {symbol: 'o', handled: false, props: {}} as Entity;
+  grid.set(location1, entity1);
+  const location2 = new Vector(1, 0);
+  const entity2 = {symbol: 'x', handled: false, props: {}} as Entity;
+  grid.set(location2, entity2);
+
+  const resultOverwrite = grid.move(location2, location1) as Entity;
+
+  expect(entity2.props.location).toStrictEqual(location1);
+  expect((resultOverwrite as Entity).symbol).toBe('o');
+  expect((resultOverwrite as Entity).props.location).toBeUndefined();
 });

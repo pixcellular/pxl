@@ -6,7 +6,7 @@ import World from './World';
 
 /**
  * A limited perspective of 1 cell in all directions
- * Vector location + direction = destination
+ * Vector destination = location + direction
  */
 export default class View {
   private world: World;
@@ -33,7 +33,7 @@ export default class View {
 
   /**
    * Set entity at destination
-   * Vector location + direction = destination
+   * Destination = location + direction
    */
   public set(dir: Direction, entity: Entity) {
     const target = this.location.plus(dir.toVector());
@@ -42,7 +42,7 @@ export default class View {
 
   /**
    * Move entity to destination
-   * Vector location + direction = destination
+   * Destination = location + direction
    */
   public move(dir: Direction) {
     const target = this.location.plus(dir.toVector());
