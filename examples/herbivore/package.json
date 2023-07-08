@@ -1,0 +1,29 @@
+{
+  "name": "herbivore",
+  "author": "Pixcellular",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "build:rollup": "rollup -c --bundleConfigAsCjs",
+    "build": "npm run clean:dist && npm run build:rollup && npm run cp:static",
+    "clean:dist": "rm -rf dist/*",
+    "cp:static": "cp ./static/* ./dist/"
+  },
+  "engines": {
+    "npm": ">=8.0.0",
+    "node": ">=16.0.0"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "pixcellular": "^2.0.1"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.2",
+    "@rollup/plugin-node-resolve": "^15.1.0",
+    "@rollup/plugin-typescript": "^11.1.0",
+    "rollup": "3.20.2",
+    "tslib": "^2.5.0",
+    "typescript": "5.0.3"
+  }
+}
