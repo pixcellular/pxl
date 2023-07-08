@@ -53,7 +53,7 @@ class CellHandler implements EntityHandler {
 entityHandlers.add('.', new CellHandler());
 entityHandlers.add('o', new CellHandler());
 
-const world = new World(map, entityFactory, [], entityHandlers);
+const world = new World(map, [], entityFactory, entityHandlers);
 
 setInterval(() => {
   logUpdate(world.turn().toString());

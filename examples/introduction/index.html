@@ -50,7 +50,7 @@
         }
       });
 
-      const world = new pxl.World(map, entityFactory, organisms, entityHandler)
+      const world = new pxl.World(map, organisms, entityFactory, entityHandler)
 
       while (organisms.find(e => e.energy)) {
         console.log(world.turn().toMap());

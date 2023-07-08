@@ -63,7 +63,7 @@
             }
         });
 
-        const world = new pxl.World(map, entityFactory, entityProps, entityHandler)
+        const world = new pxl.World(map, entityProps, entityFactory, entityHandler)
 
         const interval = setInterval(() => {
             document.getElementById('grid').innerText = world.turn().toString();

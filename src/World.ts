@@ -18,14 +18,14 @@ export default class World {
    * World containing a grid populated with entities
    *
    * @param map matrix with entity symbols
-   * @param entityFactory Array of entity builders
    * @param entityProps elements as found in team.members
-   * @param entityHandlers symbolHandler
+   * @param entityFactory Array of entity builders
+   * @param entityHandlers Map of {@link EntityHandler}s
    */
   constructor(
     map: string[],
-    entityFactory: EntityFactory,
     entityProps: EntityProps[],
+    entityFactory: EntityFactory,
     entityHandlers: EntityHandlerMap
   ) {
     this.entityHandlers = entityHandlers;

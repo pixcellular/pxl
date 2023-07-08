@@ -58,7 +58,7 @@ it('should contain grid that matches plan', () => {
   entityFactory.add('#', (props) => new Wall('#', props));
   entityFactory.add('o', (props) => new Org('o', props));
   const testPlan = ['#o', '# '];
-  const world = new World(testPlan, entityFactory, [], testSymbolHandler);
+  const world = new World(testPlan, [], entityFactory, testSymbolHandler);
   expect(world.getGrid().toString()).toBe(testPlan.join('\n'));
 });
 
@@ -74,7 +74,7 @@ it('should move test organism to east', () => {
   const startPlan = 'o ';
   const expectedPlan = ' o';
 
-  const world = new World([startPlan], entityFactory, [props], testSymbolHandler);
+  const world = new World([startPlan], [props], entityFactory, testSymbolHandler);
 
   const result = world.turn();
 
@@ -93,7 +93,7 @@ it('should not handle entity twice', () => {
   const startPlan = 'o  ';
   const expectedPlan = ' o ';
 
-  const world = new World([startPlan], entityFactory, [props], testSymbolHandler);
+  const world = new World([startPlan], [props], entityFactory, testSymbolHandler);
 
   const result = world.turn();
 

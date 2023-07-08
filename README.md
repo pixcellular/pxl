@@ -28,25 +28,25 @@ You can do this with an `EntityFactory`.
 
 Note: entity properties need a `location`. Pxl will use it to map the symbols on the map to their properties. Space does not need a location because all space properties are the same (i.e. an empty object).
 ```js
-const entityFactory = new EntityFactory();
+const factory = new EntityFactory();
 
 // Space stays space:
-entityFactory.add(' ', (props) => ({symbol: ' ', space}));
+factory.add(' ', (props) => ({symbol: ' ', space}));
 
 // Every entity can have its own properties:
-entityFactory.add('o', (props) => ({symbol: 'o', props}));
+factory.add('o', (props) => ({symbol: 'o', props}));
 ```
 
-All entities behave in a certain way. For 'space' it is simple: do nothing. But for the `o` organism we might want to define a specific set of behavioural rules. Pxl uses an `EntityHandler` to determine the behaviour of every entity.
+All entities behave in a certain way. For 'space' it is simple: do nothing. But for the `o` organism we might want to define a specific set of behavioural rules. Pxl uses `EntityHandler`s to determine the behaviour of every entity.
 
 ```js
-const entityHandler = new EntityHandlerMap();
+const handler = new EntityHandlerMap();
 
 // Space does nothing:
-entityHandler.add(' ', { handle: () => null });
+handler.add(' ', { handle: () => null });
 
 // Organisms behave according to specific rules:
-entityHandler.add('o', {
+handler.add('o', {
   handle: (organism, location, world) => {
     // Get neighbouring cells:
     const view = new View(world, location);
@@ -69,8 +69,9 @@ entityHandler.add('o', {
 ```
 
 Now, lets pull all these building blocks together into a single world:
+
 ```js
-const world = new World(map, entityFactory, organisms, entityHandler);
+const world = new World(map,organisms,factory,handler);
 ```
 
 And finally, lets make the world turn:

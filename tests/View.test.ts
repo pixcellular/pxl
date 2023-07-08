@@ -50,12 +50,7 @@ it('should contain all neighbours with char', () => {
   const propsOfEntities: EntityProps[] = [];
   const testPlan = ['###', '#  ', '#  '];
 
-  const world = new World(
-    testPlan,
-    entityFactory,
-    propsOfEntities,
-    testSymbolHandler
-  );
+  const world = new World(testPlan, propsOfEntities, entityFactory, testSymbolHandler);
 
   const view = new View(world, new Vector(1, 1));
   const allWall = view.filter(e => e.symbol === '#');
@@ -73,12 +68,7 @@ it('should not find itself', () => {
   const propsOfEntities: EntityProps[] = [];
   const testPlan = ['o  ', ' o ', '  o'];
 
-  const world = new World(
-    testPlan,
-    entityFactory,
-    propsOfEntities,
-    testSymbolHandler
-  );
+  const world = new World(testPlan, propsOfEntities, entityFactory, testSymbolHandler);
 
   const view = new View(world, new Vector(1, 1));
   const allO = view.filter(e => e.symbol === 'o');
@@ -91,12 +81,7 @@ it('should update props.location on move', () => {
   const propsOfEntities: EntityProps[] = [props];
   const testPlan = ['   ', ' o ', '   '];
 
-  const world = new World(
-    testPlan,
-    entityFactory,
-    propsOfEntities,
-    testSymbolHandler
-  );
+  const world = new World(testPlan, propsOfEntities, entityFactory, testSymbolHandler);
 
   const view = new View(world, new Vector(1, 1));
   view.move(N);
