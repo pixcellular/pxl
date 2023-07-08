@@ -1,9 +1,14 @@
 # Pixcellular
 
-A small grid framework to set up cellular automata.
+Pixcellular (pxl) is a small grid framework to create cellular automata and world simulations in typescript and javascript. 
+
+- The basics are explained in the [introduction](#introduction)
+- Working code can be found in the [examples](https://github.com/pixcellular/pxl/blob/main/examples/README.md)
+- Bugs or unsolvable questions? Please create an [issue](https://github.com/pixcellular/pxl/issues).
+- Want to contribute? :D See [development](#development)
 
 ## Introduction
-With Pixcellular (pxl) we can model a world filled with organisms, each organism containing specific properties and a specific set of behavioural rules.
+With Pixcellular we can model a world filled with organisms, each organism containing specific properties and a specific set of behavioural rules.
 
 ### Map the world
 To create a new pxl _world_ we pass it a _map_ in which every _symbol_ marks an _entity_.
@@ -91,10 +96,6 @@ while (organisms.find(e => e.energy)) {
   console.log(world.turn().toMap());
 }
 ```
-
-## Examples
-- [Minimal browser example](https://github.com/pixcellular/pxl/blob/main/examples/vanilla/index.html) (Javascript)
-- [Conway's Game of Life](https://github.com/pixcellular/pxl/blob/main/examples/conway/README.md) (Typescript)
 
 ## Development
 
