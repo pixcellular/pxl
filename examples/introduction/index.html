@@ -1,0 +1,61 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <title>Console example from introduction</title>
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <script src="https://unpkg.com/pixcellular@1.2.2/index.js"></script>
+    <script>
+      const map = [
+        'o    ',
+        '  o  ',
+        '     '
+      ];
+      const space = {};
+      const organisms = [
+        {location: new pxl.Vector(0, 0), energy: 10},
+        {location: new pxl.Vector(1, 1), energy: 20}
+      ];
+
+      const entityFactory = new pxl.EntityFactory();
+      // Space stays space:
+      entityFactory.add(' ', (props) => ({symbol: ' ', space}));
+      // Every entity can have its own props:
+      entityFactory.add('o', (props) => ({symbol: 'o', props}));
+
+      const entityHandler = new pxl.EntityHandlerMap()
+      // Space does nothing:
+      entityHandler.add(' ', { handle: () => null });
+      // Organisms behave according to specific rules:
+      entityHandler.add('o', {
+        handle: (organism, location, world) => {
+          // Get neighbouring cells:
+          const view = new pxl.View(world, location);
+
+          // Find random empty space:
+          const direction = view.findRand(e => e.symbol === ' ');
+
+          // Move randomly:
+          view.move(direction);
+
+          // Moving costs energy:
+          organism.props.energy--;
+
+          // No energy means death:
+          if (organism.props.energy <= 0) {
+            view.set(direction, space);
+          }
+        }
+      });
+
+      const world = new pxl.World(map, entityFactory, organisms, entityHandler)
+
+      while (organisms.find(e => e.energy)) {
+        console.log(world.turn().toMap());
+      }
+
+    </script>
+  </body>
+</html>
