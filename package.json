@@ -1,6 +1,6 @@
 {
   "name": "pixcellular",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "",
   "author": "pixcellular",
   "license": "ISC",
@@ -37,7 +37,7 @@
     "build:static": "cp package.json README.md dist",
     "build": "npm-run-all build:*",
 
-    "publish:dist": "cd dist && npm publish"
+    "publish:dist": "cd dist && npm publish --verbose"
   },
   "dependencies": {
     "@types/node": "^12.12.21",

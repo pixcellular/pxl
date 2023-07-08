@@ -93,3 +93,6 @@ Run: `npm i`
 
 ### Test
 Run: `npm t`
+
+## Publish
+Run: `npm run build && npm run publish:dist`
