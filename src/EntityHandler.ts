@@ -3,6 +3,12 @@ import Vector from './Vector';
 import World from './World';
 
 /**
+ * Define entity behaviour
+ */
+export interface EntityHandler {
+  handle(entity: Entity, location: Vector, world: World): void;
+}
+/**
  * Map entity symbol to its handler
  */
 export class EntityHandlerMap {
@@ -33,6 +39,3 @@ export class EntityHandlerMap {
 
 }
 
-export interface EntityHandler {
-  handle(entity: Entity, location: Vector, world: World): void;
-}

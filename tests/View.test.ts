@@ -1,6 +1,6 @@
 import {EntityProps, N} from '../src';
 import {NONE} from '../src';
-import {EntityFactory} from '../src';
+import {EntityBuilderMap} from '../src';
 import {EntityHandlerMap} from '../src';
 import {Rule, RuleGraph} from '../src';
 import Action from '../src/Action';
@@ -15,10 +15,10 @@ import SpaceHandler from './stub/SpaceHandler';
 import {Wall} from './stub/Wall';
 import WallHandler from './stub/WallHandler';
 
-const entityFactory = new EntityFactory();
-entityFactory.add(' ', () => SPACE);
-entityFactory.add('#', (props) => new Wall('#', props));
-entityFactory.add('o', (props) => new EntityStub(props as EntityStubProps));
+const entityFactory = new EntityBuilderMap();
+entityFactory.add(' ', {build: () => SPACE});
+entityFactory.add('#', {build: (props) => new Wall('#', props)});
+entityFactory.add('o', {build: (props) => new EntityStub(props as EntityStubProps)});
 
 class EntryRule implements Rule {
   private toReturn: Action;

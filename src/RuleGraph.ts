@@ -22,14 +22,14 @@ export class RuleGraph {
   private entryAction: Action;
 
   /**
-   * Last rule in walk, should not be called
-   */
-  private readonly exitNode: RuleNodeWithLinks;
-
-  /**
    * Name of link that marks end of walk
    */
   private readonly exitLink: string;
+
+  /**
+   * Last rule in walk, should not be called
+   */
+  private readonly exitNode: RuleNodeWithLinks;
 
   constructor(entryRuleName: string, entryRule: Rule, exitActionType: string) {
     this.rules = {};

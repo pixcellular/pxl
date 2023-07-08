@@ -16,6 +16,10 @@
     "trailing-comma": [
       false
     ],
+    "variable-name": [
+      true,
+      "allow-leading-underscore"
+    ],
     "no-empty": false,
     "no-trailing-whitespace": false,
     "max-classes-per-file": false,

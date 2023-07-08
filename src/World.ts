@@ -1,5 +1,5 @@
 import Entity from './Entity';
-import {EntityFactory} from './EntityFactory';
+import {EntityBuilderMap} from './EntityBuilder';
 import {EntityHandlerMap} from './EntityHandler';
 import {EntityProps} from './EntityProps';
 import Grid from './Grid';
@@ -15,6 +15,11 @@ export default class World {
   private readonly entityHandlers: EntityHandlerMap;
 
   /**
+   * Turns that have passed since start of world
+   */
+  private _age = 0;
+
+  /**
    * World containing a grid populated with entities
    *
    * @param map matrix with entity symbols
@@ -25,14 +30,14 @@ export default class World {
   constructor(
     map: string[],
     entityProps: EntityProps[],
-    entityFactory: EntityFactory,
+    entityFactory: EntityBuilderMap,
     entityHandlers: EntityHandlerMap
   ) {
     this.entityHandlers = entityHandlers;
     this.grid = this.mapToGrid(map, entityProps, entityFactory);
   }
 
-  public mapToGrid(plan: string[], entityProps: EntityProps[], entityBuilders: EntityFactory): Grid {
+  public mapToGrid(plan: string[], entityProps: EntityProps[], entityBuilders: EntityBuilderMap): Grid {
     const grid = new Grid(plan[0].length, plan.length, SPACE);
     grid.forEachCell((_: Entity, location: Vector) => {
       let props = entityProps.find((p) => {
@@ -42,7 +47,7 @@ export default class World {
         props = new EntityProps();
       }
       const mapSymbol = plan[location.y][location.x];
-      const entity = entityBuilders.get(mapSymbol)(props);
+      const entity = entityBuilders.get(mapSymbol).build(props);
       grid.set(location, entity);
     });
     return grid;
@@ -61,11 +66,19 @@ export default class World {
       handler.handle(entity, location, this);
       entity.handled = true;
     });
+    this._age++;
     return this.grid;
   }
 
   public getGrid(): Grid {
     return this.grid;
+  }
+
+  /**
+   * Turns that have passed since beginning of world
+   */
+  get age(): number {
+    return this._age;
   }
 
 }

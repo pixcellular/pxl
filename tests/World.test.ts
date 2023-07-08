@@ -1,4 +1,4 @@
-import {EntityFactory} from '../src';
+import {EntityBuilderMap} from '../src';
 import {EntityHandlerMap} from '../src';
 import {EntityProps} from '../src';
 import {RuleGraph} from '../src';
@@ -53,10 +53,10 @@ it('should contain grid that matches plan', () => {
 
   }
 
-  const entityFactory = new EntityFactory();
-  entityFactory.add(' ', () => SPACE);
-  entityFactory.add('#', (props) => new Wall('#', props));
-  entityFactory.add('o', (props) => new Org('o', props));
+  const entityFactory = new EntityBuilderMap();
+  entityFactory.add(' ', {build: () => SPACE});
+  entityFactory.add('#', {build: (props) => new Wall('#', props)});
+  entityFactory.add('o', {build: (props) => new Org('o', props)});
   const testPlan = ['#o', '# '];
   const world = new World(testPlan, [], entityFactory, testSymbolHandler);
   expect(world.getGrid().toString()).toBe(testPlan.join('\n'));
@@ -67,9 +67,9 @@ it('should move test organism to east', () => {
   const location = new Vector(0, 0);
   const props = new EntityStubProps(location, E, 40);
 
-  const entityFactory = new EntityFactory();
-  entityFactory.add(' ', () => SPACE);
-  entityFactory.add('o', (p) => new EntityStub(p as EntityStubProps));
+  const entityFactory = new EntityBuilderMap();
+  entityFactory.add(' ', {build: () => SPACE});
+  entityFactory.add('o', {build: (p) => new EntityStub(p as EntityStubProps)});
 
   const startPlan = 'o ';
   const expectedPlan = ' o';
@@ -86,9 +86,9 @@ it('should not handle entity twice', () => {
   const location = new Vector(0, 0);
   const props = new EntityStubProps(location, E, 40);
 
-  const entityFactory = new EntityFactory();
-  entityFactory.add(' ', () => SPACE);
-  entityFactory.add('o', (p) => new EntityStub(p as EntityStubProps));
+  const entityFactory = new EntityBuilderMap();
+  entityFactory.add(' ', {build: () => SPACE});
+  entityFactory.add('o', {build: (p) => new EntityStub(p as EntityStubProps)});
 
   const startPlan = 'o  ';
   const expectedPlan = ' o ';

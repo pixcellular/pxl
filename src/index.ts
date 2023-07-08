@@ -18,7 +18,7 @@ import Direction, {
   W
 } from './Direction';
 import Entity from './Entity';
-import {EntityBuilder, EntityFactory} from './EntityFactory';
+import {EntityBuilder, EntityBuilderMap} from './EntityBuilder';
 import {EntityHandler, EntityHandlerMap} from './EntityHandler';
 import {EntityProps} from './EntityProps';
 import Grid from './Grid';
@@ -52,7 +52,7 @@ export {
   Entity,
 
   EntityBuilder,
-  EntityFactory,
+  EntityBuilderMap,
 
   EntityHandler,
   EntityHandlerMap,

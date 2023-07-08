@@ -4,12 +4,14 @@ import {EntityProps} from './EntityProps';
 /**
  * Create Entity with props
  */
-export type EntityBuilder = (props: EntityProps) => Entity;
+export interface EntityBuilder {
+  build: (props: EntityProps) => Entity;
+}
 
 /**
  * Create an Entity by its symbol
  */
-export class EntityFactory {
+export class EntityBuilderMap {
 
   private entities: Record<string, EntityBuilder>;
 
