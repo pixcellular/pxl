@@ -35,7 +35,8 @@
     "build:bundle": "rollup -c",
     "build:static": "cp package.json README.md dist",
     "build": "npm-run-all build:*",
-    "publish:dist": "cd dist && npm publish --verbose"
+    "publish:dist": "cd dist && npm publish --verbose",
+    "publish": "npm run test && npm run build && npm run publish:dist"
   },
   "dependencies": {
     "@types/node": "^12.12.21",

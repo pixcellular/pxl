@@ -16,7 +16,7 @@
   },
   "license": "ISC",
   "dependencies": {
-    "pixcellular": "^2.0.1"
+    "pixcellular": "file:../../dist"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^25.0.2",

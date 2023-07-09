@@ -1,14 +1,13 @@
-import {EntityHandler} from '../../src';
-import {RuleGraph} from '../../src';
+import {BehaviourGraph, EntityHandler} from '../../src';
 import Vector from '../../src/Vector';
 import World from '../../src/World';
 import {EntityStub} from './EntityStub';
 
 export default class EntityStubHandler implements EntityHandler {
 
-  public readonly rules: RuleGraph;
+  public readonly rules: BehaviourGraph<EntityStub>;
 
-  constructor(rules: RuleGraph) {
+  constructor(rules: BehaviourGraph<EntityStub>) {
     this.rules = rules;
   }
 

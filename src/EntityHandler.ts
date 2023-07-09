@@ -8,6 +8,7 @@ import World from './World';
 export interface EntityHandler {
   handle(entity: Entity, location: Vector, world: World): void;
 }
+
 /**
  * Map entity symbol to its handler
  */
@@ -16,21 +17,21 @@ export class EntityHandlerMap {
   /**
    * EntityHandlers by symbol
    */
-  private entities: Record<string, EntityHandler>;
+  private handlers: Record<string, EntityHandler>;
 
   constructor() {
-    this.entities = {};
+    this.handlers = {};
   }
 
   public add(symbol: string, handler: EntityHandler) {
-    if (this.entities[symbol]) {
+    if (this.handlers[symbol]) {
       throw new Error(`Symbol '${symbol}' already has an entity handler`);
     }
-    this.entities[symbol] = handler;
+    this.handlers[symbol] = handler;
   }
 
   public get(symbol: string): EntityHandler {
-    const entityHandler = this.entities[symbol];
+    const entityHandler = this.handlers[symbol];
     if (!entityHandler) {
       throw new Error(`No entity handler found for symbol '${symbol}'`);
     }

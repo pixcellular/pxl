@@ -1,60 +1,70 @@
-import {Action, Entity, NONE, Rule, RuleGraph, SE, View, World} from 'pixcellular';
+import {Action, Behaviour, BehaviourGraph, View, World} from 'pixcellular';
 import {Plant, plantBuilder} from './Plant';
-import {PlantProps} from './PlantProps';
 import {SPACE} from './Symbols';
 
-// TODO:
-//  - RuleGraph should look like:
-//    export const plantBehaviour = new RuleGraph(entryRule, exitRule);
-//  - Grid should have field that contains all entities
+const STOP = new Action('stop');
+const GROW = new Action('grow');
+const CLONE = new Action('clone');
+const NOOP = new Action('');
 
-class EntryRule implements Rule {
-  private toReturn: Action;
-
-  constructor(toReturn: Action) {
-    this.toReturn = toReturn;
-  }
-
-  public enforce(action: Action, entity: Entity, world: World): Action {
-    return this.toReturn;
-  }
-}
-
-class GrowRule implements Rule {
-  public enforce(action: Action, entity: Plant, world: World): Action {
-    entity.props.energy++;
-    return new Action('clone', NONE);
-  }
-}
-
-class CloneRule implements Rule {
-  public enforce(action: Action, entity: Plant, world: World): Action {
-    if (entity.props.energy > 20) {
-      const view = new View(world, entity.props.location);
-      const space = view.findRand(e => e.symbol === SPACE);
-      if (space) {
-        const splitEnergy = Math.floor(entity.props.energy / 2);
-        entity.props.energy = splitEnergy;
-        view.set(space, plantBuilder.build({energy: splitEnergy} as PlantProps));
+const starting = new Behaviour<Plant>(
+    'starting',
+    (action: Action, entity: Plant, world: World): Action => {
+      if (entity.props.energy > 40) {
+        return CLONE;
+      } else {
+        return GROW;
       }
     }
-    return new Action('exit', NONE);
-  }
-}
+);
+const stopping = new Behaviour<Plant>(
+    'stopping',
+    () => NOOP
+);
 
-const entryRuleName = 'entryRule';
-const exitActionType = 'exit';
+const growing = new Behaviour<Plant>(
+    'growing',
+    (action: Action, entity: Plant, world: World): Action => {
+      entity.props.energy++;
+      return STOP;
+    }
+);
 
-const plantEntryRule = new EntryRule(new Action('grow', NONE));
-export const plantBehaviour = new RuleGraph(entryRuleName, plantEntryRule, exitActionType);
+const cloning = new Behaviour<Plant>(
+    'cloning',
+    (action: Action, entity: Plant, world: World): Action => {
+      const view = new View(world, entity.props.location);
+      const space = view.findRand(e => e.symbol === SPACE);
+      if (!space) {
+        return GROW;
+      } else {
+        const splitEnergy = Math.floor(entity.props.energy / 2);
+        entity.props.energy = splitEnergy;
+        view.set(space, plantBuilder.build({energy: splitEnergy}));
+        return STOP;
+      }
+    }
+);
 
-const growRuleName = 'growRule';
-plantBehaviour.addNode(growRuleName, new GrowRule());
-const cloneRuleName = 'cloneRule';
-plantBehaviour.addNode(cloneRuleName, new CloneRule());
+/**
+ * To structure more complex entity behaviour, we can use a {@link BehaviourGraph} to split up the different behaviours.
+ * Every behaviour returns an action, which tells the graph which behaviour to call next.
+ *
+ * The outcome of a behaviour differs on the properties of an entity.
+ * See for example the {@link starting} behaviour of plants:
+ * - when a plant has much energy, it will try to clone itself;
+ * - and otherwise it will simply grow and increase its energy.
+ *
+ * The graph always starts with the starting behaviour and ends with the stopping behaviour
+ */
+export const plantBehaviour = new BehaviourGraph<Plant>(starting, stopping);
+plantBehaviour.add(growing);
+plantBehaviour.add(cloning);
 
-plantBehaviour.addLink(entryRuleName, 'grow', growRuleName);
-plantBehaviour.addLink(growRuleName, 'clone', cloneRuleName);
-plantBehaviour.addLink(cloneRuleName, exitActionType);
+plantBehaviour.link(starting, GROW, growing);
+plantBehaviour.link(starting, CLONE, cloning);
+plantBehaviour.link(growing, STOP, stopping);
+plantBehaviour.link(cloning, GROW, growing);
+plantBehaviour.link(cloning, STOP, stopping);
 
-console.log(plantBehaviour.toString());
+console.log('behaviour:\n', plantBehaviour.toString(), '\n plot in https://dreampuf.github.io/GraphvizOnline');

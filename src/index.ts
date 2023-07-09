@@ -2,6 +2,7 @@
  * Export barrel
  */
 import Action from './Action';
+import BehaviourGraph, {Behaviour, BehaviourGraphHandler, BehaviourName} from './BehaviourGraph';
 import Direction, {
   cardinalDirections,
   cardinalToDirection,
@@ -23,7 +24,6 @@ import {EntityHandler, EntityHandlerMap} from './EntityHandler';
 import {EntityProps} from './EntityProps';
 import Grid from './Grid';
 import Reproducer from './Reproducer';
-import {ExitRule, Rule, RuleGraph, RuleNodeWithLinks} from './RuleGraph';
 import dirPlus from './util/dirPlus';
 import randomDirection from './util/randomDirection';
 import randomElement from './util/randomElement';
@@ -33,6 +33,11 @@ import World from './World';
 
 export {
   Action,
+
+  Behaviour,
+  BehaviourGraph,
+  BehaviourGraphHandler,
+  BehaviourName,
 
   Direction,
   cardinalDirections,
@@ -62,11 +67,6 @@ export {
   Grid,
 
   Reproducer,
-
-  Rule,
-  RuleGraph,
-  RuleNodeWithLinks,
-  ExitRule,
 
   dirPlus,
   randomDirection,

@@ -1,41 +1,46 @@
-import {EntityBuilderMap} from '../src';
+import {Action, Behaviour, BehaviourGraph, EntityBuilderMap} from '../src';
 import {EntityHandlerMap} from '../src';
 import {EntityProps} from '../src';
-import {RuleGraph} from '../src';
 import Direction, {E} from '../src/Direction';
 import Entity from '../src/Entity';
 import {SPACE} from '../src/Space';
 import randomDirection from '../src/util/randomDirection';
 import Vector from '../src/Vector';
 import World from '../src/World';
-import {exit, move, sleep} from './stub/Actions';
+import {MOVE, SLEEP, STOP} from './stub/Actions';
 import {EntityStub} from './stub/EntityStub';
-import {EntityStubBehaviourRule} from './stub/EntityStubBehaviourRule';
 import EntityStubHandler from './stub/EntityStubHandler';
 import {EntityStubProps} from './stub/EntityStubProps';
-import {moveRule, sleepRule} from './stub/Rules';
+import {MovingBehaviour} from './stub/MovingBehaviour';
+import SleepingBehaviour from './stub/SleepingBehaviour';
 import SpaceHandler from './stub/SpaceHandler';
 import {Wall} from './stub/Wall';
 import WallHandler from './stub/WallHandler';
-
-const entryRuleName = 'entryRule';
 
 const testSymbolHandler = new EntityHandlerMap();
 testSymbolHandler.add(' ', new SpaceHandler());
 testSymbolHandler.add('#', new WallHandler());
 
 // Create rule graph:
-const organismRules = new RuleGraph(entryRuleName, new EntityStubBehaviourRule(), exit);
+const starting = new Behaviour<EntityStub>('starting', (action, entity, world) => {
+  return new Action(MOVE.type, entity.props.dir);
+});
+const moving = new MovingBehaviour(SPACE);
+const sleeping = new SleepingBehaviour(SPACE);
+const stopping = new Behaviour('stop', () => {
+  return new Action('');
+});
+const organismBehaviour = new BehaviourGraph<EntityStub>(starting, stopping);
 // Add rules:
-organismRules.addNode(moveRule.name, moveRule.rule);
-organismRules.addNode(sleepRule.name, sleepRule.rule);
+organismBehaviour.add(moving);
+organismBehaviour.add(sleeping);
 // Link rules by their results:
-organismRules.addLink(entryRuleName, move, moveRule.name);
-organismRules.addLink(moveRule.name, sleep, sleepRule.name);
-organismRules.addLink(moveRule.name, move, sleepRule.name);
-organismRules.addLink(sleepRule.name, exit);
+organismBehaviour.link(starting, MOVE, moving);
+organismBehaviour.link(moving, SLEEP, sleeping);
+organismBehaviour.link(moving, MOVE, sleeping);
+organismBehaviour.link(sleeping, STOP,  stopping);
 
-testSymbolHandler.add('o', new EntityStubHandler(organismRules));
+testSymbolHandler.add('o', new EntityStubHandler(organismBehaviour));
 
 it('should contain grid that matches plan', () => {
   class Org implements Entity {

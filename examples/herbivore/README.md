@@ -9,3 +9,5 @@ npm install
 ```shell
 npm run build
 ```
+
+And open `./dist/index.html` in brower

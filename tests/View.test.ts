@@ -1,8 +1,6 @@
-import {EntityProps, N} from '../src';
-import {NONE} from '../src';
+import {Behaviour, BehaviourGraph, EntityProps, N} from '../src';
 import {EntityBuilderMap} from '../src';
 import {EntityHandlerMap} from '../src';
-import {Rule, RuleGraph} from '../src';
 import Action from '../src/Action';
 import {SPACE} from '../src/Space';
 import Vector from '../src/Vector';
@@ -20,29 +18,21 @@ entityFactory.add(' ', {build: () => SPACE});
 entityFactory.add('#', {build: (props) => new Wall('#', props)});
 entityFactory.add('o', {build: (props) => new EntityStub(props as EntityStubProps)});
 
-class EntryRule implements Rule {
-  private toReturn: Action;
-
-  constructor(toReturn: Action) {
-    this.toReturn = toReturn;
-  }
-
-  public enforce(action: Action): Action {
-    return this.toReturn;
-  }
-}
-
 const testSymbolHandler = new EntityHandlerMap();
 testSymbolHandler.add(' ', new SpaceHandler());
 testSymbolHandler.add('#', new WallHandler());
+
+const entryRule = new Behaviour('entry', (action: Action) => {
+  return action;
+});
+const stopRule = new Behaviour('stop', (action: Action) => {
+  return action;
+});
+const behaviourGraph = new BehaviourGraph(entryRule, stopRule);
+
 testSymbolHandler.add('o',
   new EntityStubHandler(
-    new RuleGraph('entryRule',
-      new EntryRule(
-        new Action('eat', NONE)
-      ),
-      'stop'
-    )
+    behaviourGraph
   )
 );
 
