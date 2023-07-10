@@ -35,27 +35,28 @@ const cloning = new Behaviour<Plant>(
     (action: Action, entity: Plant, world: World): Action => {
       const view = new View(world, entity.props.location);
       const space = view.findRand(e => e.symbol === SPACE);
-      if (!space) {
-        return GROW;
-      } else {
+      if (space) {
         const splitEnergy = Math.floor(entity.props.energy / 2);
         entity.props.energy = splitEnergy;
         view.set(space, plantBuilder.build({energy: splitEnergy}));
         return STOP;
+      } else {
+        return GROW;
       }
     }
 );
 
 /**
- * To structure more complex entity behaviour, we can use a {@link BehaviourGraph} to split up the different behaviours.
+ * To structure more complex entity behaviour, we can use a {@link BehaviourGraph}
+ * to split it up in different subbehaviours.
  * Every behaviour returns an action, which tells the graph which behaviour to call next.
  *
- * The outcome of a behaviour differs on the properties of an entity.
+ * The resulting action of a behaviour depends on the properties of an entity.
  * See for example the {@link starting} behaviour of plants:
  * - when a plant has much energy, it will try to clone itself;
  * - and otherwise it will simply grow and increase its energy.
  *
- * The graph always starts with the starting behaviour and ends with the stopping behaviour
+ * The graph always starts with the starting behaviour and ends with the stopping behaviour.
  */
 export const plantBehaviour = new BehaviourGraph<Plant>(starting, stopping);
 plantBehaviour.add(growing);
@@ -67,4 +68,10 @@ plantBehaviour.link(growing, STOP, stopping);
 plantBehaviour.link(cloning, GROW, growing);
 plantBehaviour.link(cloning, STOP, stopping);
 
-console.log('behaviour:\n', plantBehaviour.toString(), '\n plot in https://dreampuf.github.io/GraphvizOnline');
+console.log(
+    'Behaviour graph in DOT format:',
+    '\n',
+    plantBehaviour.toString(),
+    '\n',
+    'Plot in https://dreampuf.github.io/GraphvizOnline'
+);

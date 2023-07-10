@@ -84,13 +84,13 @@ handlers.add('o', {
 ```
 
 ### Start simulation
-Finally, we can put all these building blocks together into a single world:
+Finally, we can put all these building blocks together:
 
 ```js
 const world = new World(map, organisms, builders, handlers)
 ```
 
-Lets make the world go round:
+Let's make the world go round:
 ```js
 while (organisms.find(e => e.energy)) {
   console.log(world.turn().toMap());
