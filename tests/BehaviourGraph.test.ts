@@ -20,13 +20,11 @@ it('should create graph in dot format', () => {
   graph.link(startNode, eat, eating);
   graph.link(eating, stop, stopNode);
 
-  const expectedDotGraph = 'digraph BehaviourGraph {\n' +
-      '  node [shape="box"];\n' +
-      '  start [shape=circle]\n' +
-      '  stop [shape=circle, label="stop"]\n' +
-      '  start -> eating [label="eat"];\n' +
-      '  eating -> stop [label="stop"];\n' +
-      '}\n';
+  const expectedDotGraph = `graph TD
+  start((start))
+  stop((stop))
+  start --> |eat|eating
+  eating --> |stop|stop\n`;
 
   const dotFormatgraph = graph.toString();
   expect(dotFormatgraph).toBe(expectedDotGraph);

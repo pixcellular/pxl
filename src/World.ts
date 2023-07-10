@@ -3,7 +3,6 @@ import {EntityBuilderMap} from './EntityBuilder';
 import {EntityHandlerMap} from './EntityHandler';
 import {EntityProps} from './EntityProps';
 import Grid from './Grid';
-import {SPACE} from './Space';
 import Vector from './Vector';
 
 /**
@@ -38,7 +37,7 @@ export default class World {
   }
 
   public mapToGrid(plan: string[], entityProps: EntityProps[], entityBuilders: EntityBuilderMap): Grid {
-    const grid = new Grid(plan[0].length, plan.length, SPACE);
+    const grid = new Grid(plan[0].length, plan.length);
     grid.forEachCell((_: Entity, location: Vector) => {
       let props = entityProps.find((p) => {
         return p && p.location && p.location.x === location.x && p.location.y === location.y;

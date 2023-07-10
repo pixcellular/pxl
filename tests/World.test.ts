@@ -25,8 +25,8 @@ testSymbolHandler.add('#', new WallHandler());
 const starting = new Behaviour<EntityStub>('starting', (action, entity, world) => {
   return new Action(MOVE.type, entity.props.dir);
 });
-const moving = new MovingBehaviour(SPACE);
-const sleeping = new SleepingBehaviour(SPACE);
+const moving = new MovingBehaviour();
+const sleeping = new SleepingBehaviour();
 const stopping = new Behaviour('stop', () => {
   return new Action('');
 });

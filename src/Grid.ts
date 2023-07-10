@@ -1,8 +1,9 @@
 import Entity from './Entity';
+import {SPACE} from './Space';
 import Vector from './Vector';
 
 /**
- * Two dimensional map of square cells with entities
+ * Two-dimensional map of square cells with entities
  */
 export default class Grid {
   private readonly cells: Entity[];
@@ -13,9 +14,9 @@ export default class Grid {
   /**
    * @param {number} width - Width of grid
    * @param {number} height - Height of grid
-   * @param {Entity} defaultEntity - Locationless Entity used to populate grid and fill empty cells
+   * @param {Entity} [defaultEntity] - Locationless {@link Entity} used to fill empty cells
    */
-  constructor(width: number, height: number, defaultEntity: Entity) {
+  constructor(width: number, height: number, defaultEntity: Entity = SPACE) {
     this.cells = new Array(width * height);
     this.width = width;
     this.height = height;

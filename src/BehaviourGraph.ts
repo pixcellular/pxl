@@ -107,18 +107,16 @@ export default class BehaviourGraph<T extends Entity> {
   }
 
   /**
-   * @return rule graph in {@link https://en.wikipedia.org/wiki/DOT_(graph_description_language)|DOT} format
+   * @return behaviour graph in {@link https://mermaid.live/edit)|mermaid} format
    */
   public toString() {
-    let result = 'digraph BehaviourGraph {\n';
-    result += '  node [shape="box"];\n';
-    result += `  ${this.startBehaviour.name} [shape=circle]\n`;
-    result += `  ${this.stopBehaviour.name} [shape=circle, label="${this.stopBehaviour.name}"]\n`;
+    let result = 'graph TD\n';
+    result += `  ${this.startBehaviour.name}((${this.startBehaviour.name}))\n`;
+    result += `  ${this.stopBehaviour.name}((${this.stopBehaviour.name}))\n`;
     const links = Array.from(new Set(this.nodeToLinks(this.startBehaviour.name)));
     for (const l of links) {
       result += `  ${l}\n`;
     }
-    result += '}\n';
     return result;
   }
 
@@ -130,7 +128,7 @@ export default class BehaviourGraph<T extends Entity> {
     const head = this.behaviours[name];
     for (const action of Object.keys(head.actions)) {
       const tail = head.actions[action];
-      result.push(`${name} -> ${tail.behaviour.name} [label="${action}"];`);
+      result.push(`${name} --> |${action}|${tail.behaviour.name}`);
       if (tail.behaviour.name !== this.stopBehaviour.name) {
         result = result.concat(this.nodeToLinks(tail.behaviour.name));
       }

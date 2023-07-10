@@ -23,7 +23,6 @@ import {EntityBuilder, EntityBuilderMap} from './EntityBuilder';
 import {EntityHandler, EntityHandlerMap} from './EntityHandler';
 import {EntityProps} from './EntityProps';
 import Grid from './Grid';
-import Reproducer from './Reproducer';
 import dirPlus from './util/dirPlus';
 import randomDirection from './util/randomDirection';
 import randomElement from './util/randomElement';
@@ -65,8 +64,6 @@ export {
   EntityProps,
 
   Grid,
-
-  Reproducer,
 
   dirPlus,
   randomDirection,

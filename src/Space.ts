@@ -1,7 +1,7 @@
 import Entity from './Entity';
 import {EntityProps} from './EntityProps';
 
-export default class Space implements Entity {
+class Space implements Entity {
   public symbol: string;
   public props: EntityProps;
   public handled = true;
@@ -13,4 +13,7 @@ export default class Space implements Entity {
 
 }
 
-export const SPACE = new Space(' ', {} as EntityProps);
+/**
+ * Convenience space entity using the space character as symbol
+ */
+export const SPACE = new Space(' ', {});

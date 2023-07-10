@@ -68,10 +68,4 @@ plantBehaviour.link(growing, STOP, stopping);
 plantBehaviour.link(cloning, GROW, growing);
 plantBehaviour.link(cloning, STOP, stopping);
 
-console.log(
-    'Behaviour graph in DOT format:',
-    '\n',
-    plantBehaviour.toString(),
-    '\n',
-    'Plot in https://dreampuf.github.io/GraphvizOnline'
-);
+console.log('Behaviour graph in mermaid format:', plantBehaviour.toString());
