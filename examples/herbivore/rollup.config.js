@@ -5,13 +5,16 @@ export default {
   input: 'src/index.ts',
   output: {
     file: 'dist/bundle.js',
-    format: 'iife'
+    format: 'iife',
+    sourcemap: true,
   },
   plugins: [
     typescript({
       declaration: true,
       typescript: require('typescript'),
       tsconfig: "tsconfig.json",
+      sourceMap: true,
+      inlineSources: true
     }),
     nodeResolve({ preferBuiltins: false }), // or `true`
     commonjs()

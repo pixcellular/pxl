@@ -36,9 +36,9 @@ const cloning = new Behaviour<Plant>(
       const view = new View(world, entity.props.location);
       const space = view.findRand(e => e.symbol === SPACE);
       if (space) {
-        const splitEnergy = Math.floor(entity.props.energy / 2);
-        entity.props.energy = splitEnergy;
-        view.set(space, plantBuilder.build({energy: splitEnergy}));
+        const childEnergy = Math.ceil(Math.random() * entity.props.energy);
+        entity.props.energy -= childEnergy;
+        view.set(space, plantBuilder.build({energy: childEnergy}));
         return STOP;
       } else {
         return GROW;

@@ -13,21 +13,27 @@ export default class App {
     console.log('run');
 
     const map = [
-      '...',
-      '.#.',
-      '...'
+      '.........',
+      '.........',
+      '.........',
+      '.........',
+      '....#....',
+      '.........',
+      '.........',
+      '.........',
+      '.........'
     ];
 
     const space = {} as EntityProps;
     const plants: PlantProps[] = [
-      {location: new Vector(1, 1), energy: 10}
+      {location: new Vector(4, 4), energy: 10}
     ];
 
     // Factory that will convert the map into entities:
-    const builder = new EntityBuilderMap();
-    builder.add(SPACE, {build: (props) => ({symbol: SPACE, props: space})});
+    const builders = new EntityBuilderMap();
+    builders.add(SPACE, {build: (props) => ({symbol: SPACE, props: space})});
 
-    builder.add(PLANT, plantBuilder);
+    builders.add(PLANT, plantBuilder);
 
     // Define behaviour of entities:
     const handlers = new EntityHandlerMap();
@@ -49,7 +55,7 @@ export default class App {
 
     handlers.add(PLANT, new PlantHandler());
 
-    const world = new World(map, plants, builder, handlers);
+    const world = new World(map, plants, builders, handlers);
     setInterval(() => {
       world.turn();
       const currentPlants = [];
@@ -60,6 +66,6 @@ export default class App {
       });
       console.log('turn', world.age, 'plants', currentPlants);
       document.getElementById('grid').innerText = world.getGrid().toString();
-    }, 250);
+    }, 100);
   }
 }
