@@ -41,15 +41,6 @@ export default class View {
   }
 
   /**
-   * Move entity to destination
-   * Destination = location + direction
-   */
-  public move(dir: Direction) {
-    const target = this.location.plus(dir.toVector());
-    this.world.getGrid().move(this.location, target);
-  }
-
-  /**
    * Find all entities that match predicate
    * @return Direction[] of entities
    */

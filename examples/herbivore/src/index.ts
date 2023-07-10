@@ -1,2 +1,2 @@
 import App from './App';
-new App().run();
+const intervalId = new App().run();

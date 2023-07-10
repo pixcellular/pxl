@@ -2,4 +2,9 @@
     display: inline-block;
     border: 1px solid black;
     line-height: 0.6em;
+    font-size: 2em;
+}
+
+.store-form-field label {
+    width: 10em;
 }

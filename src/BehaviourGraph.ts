@@ -97,7 +97,7 @@ export default class BehaviourGraph<T extends Entity> {
       action = behaviour.handle(action, entity, world);
       const nextBehaviour = linkedBehaviour.actions[action.type];
       if (!nextBehaviour) {
-        throw Error(`Behaviour '${behaviour.name}' has no action '${action}'`);
+        throw Error(`Behaviour '${behaviour.name}' has no action '${action.type}'`);
       }
       linkedBehaviour = nextBehaviour;
     } while (!this.isEndBehaviour(linkedBehaviour));

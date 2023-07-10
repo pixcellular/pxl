@@ -1,16 +1,14 @@
 import {Action, Behaviour, BehaviourGraph, View, World} from 'pixcellular';
-import {Plant, plantBuilder} from './Plant';
+import {CLONE, GROW, NOOP, STOP} from './Actions';
+import {Plant} from './Plant';
+import {PlantBuilder} from './PlantBuilder';
+import {store} from './Store';
 import {SPACE} from './Symbols';
-
-const STOP = new Action('stop');
-const GROW = new Action('grow');
-const CLONE = new Action('clone');
-const NOOP = new Action('');
 
 const starting = new Behaviour<Plant>(
     'starting',
     (action: Action, entity: Plant, world: World): Action => {
-      if (entity.props.energy > 40) {
+      if (entity.props.energy > store.plantCloneThreshold) {
         return CLONE;
       } else {
         return GROW;
@@ -25,11 +23,12 @@ const stopping = new Behaviour<Plant>(
 const growing = new Behaviour<Plant>(
     'growing',
     (action: Action, entity: Plant, world: World): Action => {
-      entity.props.energy++;
+      entity.props.energy += store.plantGrowEnergy;
       return STOP;
     }
 );
 
+const plantBuilder = new PlantBuilder({energy: 5});
 const cloning = new Behaviour<Plant>(
     'cloning',
     (action: Action, entity: Plant, world: World): Action => {
@@ -68,4 +67,4 @@ plantBehaviour.link(growing, STOP, stopping);
 plantBehaviour.link(cloning, GROW, growing);
 plantBehaviour.link(cloning, STOP, stopping);
 
-console.log('Behaviour graph in mermaid format:', plantBehaviour.toString());
+console.log('Plant behaviour graph in mermaid format:\n', plantBehaviour.toString());
