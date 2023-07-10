@@ -101,7 +101,7 @@ while (organisms.find(e => e.energy)) {
 
 This is a very simple example, and you probably want to give your entities more complex behaviour. 
 To prevent outrageously unreadable handler functions, pxl offers a way to divide your behaviour into smaller parts using a `BehaviourGraph`. 
-You can find an example including documented code in the _herbivore_ example.
+You can find an example including documented code in the [herbivore](https://github.com/pixcellular/pxl/blob/main/examples/herbivore/README.md) example.
 
 ## Development
 
