@@ -1,4 +1,4 @@
-import {EntityProps} from './EntityProps';
+import {EntityProps, EntityPropsWithLocation} from './EntityProps';
 
 /**
  * Representation of a symbol on the map
@@ -21,4 +21,12 @@ export default interface Entity {
      */
     handled?: boolean;
 
+}
+
+export interface EntityWithLocation extends Entity {
+
+    /**
+     * Props that can differ between each entity
+     */
+    props: EntityPropsWithLocation;
 }

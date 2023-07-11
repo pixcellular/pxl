@@ -44,10 +44,11 @@ export default class World {
       });
       if (!props) {
         props = new EntityProps();
+        props.location = location;
       }
       const mapSymbol = plan[location.y][location.x];
       const entity = entityBuilders.get(mapSymbol).build(props);
-      grid.set(location, entity);
+      grid.put(location, entity);
     });
     return grid;
   }

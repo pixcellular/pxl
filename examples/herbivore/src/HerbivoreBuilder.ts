@@ -13,9 +13,10 @@ export class HerbivoreBuilder implements EntityBuilder {
   }
 
   private createProps(props): HerbivoreProps {
-    return {
+    const newProps = {
       energy: props.energy || this.defaultEnergy,
-      dir: randomDirection()
+      dir: randomDirection(),
     };
+    return Object.assign(newProps, props);
   }
 }

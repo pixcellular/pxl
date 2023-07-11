@@ -17,7 +17,7 @@
   </head>
   <body>
     <pre id="grid"></pre>
-    <script src="https://unpkg.com/pixcellular@2.0.1/index.js"></script>
+    <script src="https://unpkg.com/pixcellular@2.2.0/index.js"></script>
     <script>
 
       const map = [
@@ -43,23 +43,27 @@
       // Organisms behave according to specific rules:
       handlers.add('o', {
         handle: (organism, location, world) => {
-          // Get neighbouring cells:
-          const view = new pxl.View(world, location);
-
-          // Find random empty space:
-          const direction = view.findRand(e => e.symbol === ' ');
-
-          // Move randomly:
-          view.move(direction);
-
-          // Moving costs energy:
+          // Living costs energy:
           organism.props.energy--;
+
+          // Get current and neighbouring cells:
+          const view = new pxl.View(world, location);
 
           // No energy means death:
           if (organism.props.energy <= 0) {
-            const newSpace = builders.get(' ').build(space);
-            view.set(direction, newSpace);
+            view.remove(pxl.NONE);
+            return;
           }
+
+          // Find random empty space:
+          const spaceFound = view.findDirRand(e => e.symbol === ' ');
+
+          if(spaceFound) {
+            // Move randomly:
+            view.put(spaceFound, organism);
+            return;
+          }
+
         }
       });
 

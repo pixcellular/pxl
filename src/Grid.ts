@@ -1,6 +1,7 @@
-import Entity from './Entity';
+import Entity, {EntityWithLocation} from './Entity';
 import {SPACE} from './Space';
 import Vector from './Vector';
+import {EntityProps} from "./EntityProps";
 
 /**
  * Two-dimensional map of square cells with entities
@@ -21,12 +22,15 @@ export default class Grid {
     this.width = width;
     this.height = height;
     this.defaultEntity = defaultEntity;
-    this.forEach((_, x, y) => this.set(new Vector(x, y), defaultEntity));
+    this.forEach((_, x, y) => this.put(new Vector(x, y), defaultEntity));
   }
 
-  public isInside(vector: Vector): boolean {
-    return vector.x >= 0 && vector.x < this.width &&
-      vector.y >= 0 && vector.y < this.height;
+  /**
+   * Does grid contain location?
+   */
+  public contains(location: Vector): boolean {
+    return location.x >= 0 && location.x < this.width &&
+        location.y >= 0 && location.y < this.height;
   }
 
   /**
@@ -37,42 +41,60 @@ export default class Grid {
   }
 
   /**
-   * Move entity at start to end location
-   *  - set entity of start location at end location
-   *  - set defaultEntity at start location
-   *  @return Entity - Previous entity at the specified end location, or undefined if default
-   */
-  public move(start: Vector, end: Vector): Entity | undefined {
-    const entity = this.cells[start.x + (this.width * start.y)];
-    this.cells[start.x + (this.width * start.y)] = this.defaultEntity;
-    return this.set(end, entity);
-  }
-
-  /**
    * Set entity at location
    *  - assign entity to new location
    *  - when non-default entity:
    *    update props.location
    *  - when location occupied by a non-default entity:
    *    delete location of occupying entity
-   *  @return Entity - Previous entity at the specified location, or undefined if default
+   *  @return {Entity} - Possible previous entity at the specified location, or null if default entity
    */
-  public set(location: Vector, entity: Entity): Entity | undefined {
-    const cellIndex = location.x + (this.width * location.y);
-    const overwriteEntity = this.cells[cellIndex];
-    this.cells[cellIndex] = entity;
-    const overwriteNonDefault = overwriteEntity?.props?.location;
-    if (overwriteNonDefault) {
-      delete overwriteEntity.props.location;
+  public put(location: Vector, entity: Entity): Entity | null {
+    if (!location) {
+      throw new Error('No location');
     }
-    if (entity.symbol !== this.defaultEntity.symbol) {
+    const newIndex = this.getCellIndex(location);
+    const entityToOverwrite = this.cells[newIndex];
+    this.cells[newIndex] = entity;
+
+    // Set location:
+    if (this.isNonDefault(entity)) {
+      const oldLocation = entity.props.location;
       entity.props.location = location;
+      if (oldLocation && !oldLocation.isEqual(location)) {
+        const oldIndex = this.getCellIndex(oldLocation);
+        this.cells[oldIndex] = this.defaultEntity;
+      }
     }
-    if (overwriteNonDefault) {
-      return overwriteEntity;
+
+    if (this.isNonDefault(entityToOverwrite)) {
+      // Remove from grid and return:
+      delete (entityToOverwrite.props as EntityProps).location;
+      return entityToOverwrite;
     }
+    return null;
   }
 
+  /**
+   * Remove entity from the board
+   * - Deletes location from props
+   * - Replaces cell with default entity
+   */
+  public remove(location: Vector): Entity | null {
+    const index = this.getCellIndex(location);
+    const entity = this.cells[index];
+    this.cells[index] = this.defaultEntity;
+    if (entity.props.location) {
+      delete entity.props.location;
+      return entity;
+    }
+    return null;
+  }
+
+  /**
+   * Loop through entities by their location
+   * from left to right, from top to bottom
+   */
   public forEachCell(handler: (entity: Entity, location: Vector) => void) {
     this.forEach((entity: Entity, x: number, y: number) => {
       if (entity != null) {
@@ -80,6 +102,13 @@ export default class Grid {
         handler(entity, location);
       }
     });
+  }
+
+  /**
+   * Get all entities
+   */
+  public getAll() {
+    return this.cells;
   }
 
   public getHeight(): number {
@@ -122,6 +151,9 @@ export default class Grid {
     });
   }
 
+  /**
+   * Loop through cells, from left to right, from top to bottom
+   */
   private forEach(handler: (e: Entity, x: number, y: number) => void): void {
     for (let y = 0; y < this.height; y++) {
       for (let x = 0; x < this.width; x++) {
@@ -130,4 +162,16 @@ export default class Grid {
       }
     }
   }
+
+  private getCellIndex(location: Vector): number {
+    return location.x + (this.width * location.y);
+  }
+
+  /**
+   * Default has no location:
+   */
+  private isNonDefault(entity: Entity): entity is EntityWithLocation {
+    return !!entity?.symbol && entity.symbol !== this.defaultEntity.symbol;
+  }
+
 }

@@ -10,7 +10,7 @@
   },
   "type": "module",
   "devDependencies": {
-    "pixcellular": "^2.0.0",
+    "pixcellular": "^2.2.0",
     "typescript": "^4.5.4",
     "log-update": "^5.0.0"
   }

@@ -13,6 +13,9 @@ export default class View {
   private location: Vector;
 
   constructor(world: World, location: Vector) {
+    if (!location) {
+      throw new Error('Location not set');
+    }
     this.world = world;
     this.location = location;
   }
@@ -25,26 +28,41 @@ export default class View {
    */
   public get(dir: Direction): Entity | null {
     const target = this.location.plus(dir.toVector());
-    if (this.world.getGrid().isInside(target)) {
+    if (this.world.getGrid().contains(target)) {
       return this.world.getGrid().get(target);
     }
     return null;
   }
 
   /**
-   * Set entity at destination
-   * Destination = location + direction
+   * Put entity at destination (= location + direction)
+   * @return {Entity} Replaced target, or null
    */
-  public set(dir: Direction, entity: Entity) {
+  public put(dir: Direction, entity: Entity) {
     const target = this.location.plus(dir.toVector());
-    this.world.getGrid().set(target, entity);
+    return this.world.getGrid().put(target, entity);
   }
 
   /**
-   * Find all entities that match predicate
+   * Find first direction that matches predicate
+   * @return {Direction} of entity
+   * @return {null} when none found
+   */
+  public findDir(predicate: (e: Entity) => boolean): Direction | null {
+    for (const dir of directionWithoutNone) {
+      const entity = this.get(dir);
+      if (entity && predicate(entity)) {
+        return dir;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Find all entity directions that match predicate
    * @return Direction[] of entities
    */
-  public filter(predicate: (e: Entity) => boolean): Direction[] {
+  public findDirs(predicate: (e: Entity) => boolean): Direction[] {
     const found = [];
     for (const dir of directionWithoutNone) {
       const entity = this.get(dir);
@@ -57,26 +75,11 @@ export default class View {
 
   /**
    * Find first entity that matches predicate
-   * @return Direction of entity
-   * @return null when none found
-   */
-  public find(predicate: (e: Entity) => boolean): Direction | null {
-    for (const dir of directionWithoutNone) {
-      const entity = this.get(dir);
-      if (entity && predicate(entity)) {
-        return dir;
-      }
-    }
-    return null;
-  }
-
-  /**
-   * Find first entity that matches predicate
    * with a randomized search start direction
    * @return Direction of entity
    * @return null when none found
    */
-  public findRand(predicate: (e: Entity) => boolean): Direction | null {
+  public findDirRand(predicate: (e: Entity) => boolean): Direction | null {
     const offset = randomIndex(directionWithoutNone as []);
     for (let i = 0; i < directionWithoutNone.length; i++) {
       const pointer = (i + offset) % directionWithoutNone.length;
@@ -88,4 +91,15 @@ export default class View {
     }
     return null;
   }
+
+  /**
+   * Remove entity from the grid
+   * - Deletes location from props
+   * - Replaces cell with default entity
+   */
+  public remove(dir: Direction): Entity | null {
+    const target = this.location.plus(dir.toVector());
+    return this.world.getGrid().remove(target);
+  }
+
 }

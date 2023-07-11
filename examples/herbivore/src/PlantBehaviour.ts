@@ -33,11 +33,11 @@ const cloning = new Behaviour<Plant>(
     'cloning',
     (action: Action, entity: Plant, world: World): Action => {
       const view = new View(world, entity.props.location);
-      const space = view.findRand(e => e.symbol === SPACE);
+      const space = view.findDirRand(e => e.symbol === SPACE);
       if (space) {
         const childEnergy = Math.ceil(Math.random() * entity.props.energy);
         entity.props.energy -= childEnergy;
-        view.set(space, plantBuilder.build({energy: childEnergy}));
+        view.put(space, plantBuilder.build({energy: childEnergy}));
         return STOP;
       } else {
         return GROW;

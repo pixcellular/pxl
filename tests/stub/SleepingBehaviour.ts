@@ -13,7 +13,7 @@ export default class SleepingBehaviour extends Behaviour<EntityStub> {
       // Are we going to die in our sleep?
       if (entity.props.energy <= 0) {
         // Remove from board:
-        world.getGrid().set(entity.props.location, space);
+        world.getGrid().put(entity.props.location, space);
       }
 
       return STOP;

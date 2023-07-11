@@ -13,4 +13,9 @@ export default class Vector {
   public plus(other: Vector): Vector {
     return new Vector(this.x + other.x, this.y + other.y);
   }
+
+  public isEqual(other: Vector) {
+    return this.x === other?.x && this.y === other?.y;
+  }
+
 }

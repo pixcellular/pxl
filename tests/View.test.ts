@@ -1,4 +1,4 @@
-import {Behaviour, BehaviourGraph, EntityProps, N} from '../src';
+import {Behaviour, BehaviourGraph, EntityProps, N, NONE} from '../src';
 import {EntityBuilderMap} from '../src';
 import {EntityHandlerMap} from '../src';
 import Action from '../src/Action';
@@ -43,7 +43,7 @@ it('should contain all neighbours with char', () => {
   const world = new World(testPlan, propsOfEntities, entityFactory, testSymbolHandler);
 
   const view = new View(world, new Vector(1, 1));
-  const allWall = view.filter(e => e.symbol === '#');
+  const allWall = view.findDirs(e => e.symbol === '#');
   const expectedDirs: string[] = [
     'n',
     'ne',
@@ -61,12 +61,12 @@ it('should not find itself', () => {
   const world = new World(testPlan, propsOfEntities, entityFactory, testSymbolHandler);
 
   const view = new View(world, new Vector(1, 1));
-  const allO = view.filter(e => e.symbol === 'o');
+  const allO = view.findDirs(e => e.symbol === 'o');
   const expectedDirs: string[] = ['se', 'nw'];
   expect(expectedDirs).toStrictEqual(allO.map(w => w.toString()));
 });
 
-it('should update props.location on move', () => {
+it('should update props.location on set', () => {
   const props = {location: new Vector(1, 1)};
   const propsOfEntities: EntityProps[] = [props];
   const testPlan = ['   ', ' o ', '   '];
@@ -74,6 +74,20 @@ it('should update props.location on move', () => {
   const world = new World(testPlan, propsOfEntities, entityFactory, testSymbolHandler);
 
   const view = new View(world, new Vector(1, 1));
-  view.move(N);
+  view.put(N, view.get(NONE)!);
   expect(props.location).toStrictEqual(new Vector(1, 0));
+});
+
+it('should return previous entity on set', () => {
+  const props1 = {location: new Vector(1, 0), id: 1};
+  const props2 = {location: new Vector(1, 1), id: 2};
+  const propsOfEntities: EntityProps[] = [props1, props2];
+  const testPlan = [' o ', ' o ', '   '];
+  const world = new World(testPlan, propsOfEntities, entityFactory, testSymbolHandler);
+  const view = new View(world, new Vector(1, 1));
+
+  // Move 2 to 1, returning 1:
+  const previous = view.put(N, view.get(NONE)!);
+
+  expect((previous?.props as any)?.id).toStrictEqual(1);
 });

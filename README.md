@@ -57,7 +57,10 @@ All entities behave in a certain way. For 'space' it is simple: do nothing. But 
 const handlers = new EntityHandlerMap()
 
 // Space does nothing:
-handlers.add(' ', {handle: () => {}});
+handlers.add(' ', {
+  handle: () => {
+  }
+});
 
 // Organisms behave according to specific rules:
 handlers.add('o', {
@@ -66,7 +69,7 @@ handlers.add('o', {
     const view = new View(world, location);
 
     // Find a random empty cell:
-    const direction = view.findRand(e => e.symbol === ' ');
+    const direction = view.findDirRand(e => e.symbol === ' ');
 
     // Move the entity:
     view.move(direction);

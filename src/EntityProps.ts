@@ -15,3 +15,13 @@ export class EntityProps {
     this.location = location;
   }
 }
+
+export class EntityPropsWithLocation extends EntityProps {
+  public location: Vector;
+
+  constructor(location: Vector) {
+    super();
+    this.location = location;
+  }
+
+}

@@ -5,7 +5,7 @@ export type PlantProps = EntityProps & {
 };
 
 export function isPlantProps(props): props is PlantProps {
-  if (props && props.energy) {
+  if (props && props.energy && props.location) {
     return props;
   }
 }

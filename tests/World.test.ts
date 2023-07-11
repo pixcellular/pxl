@@ -17,9 +17,9 @@ import SpaceHandler from './stub/SpaceHandler';
 import {Wall} from './stub/Wall';
 import WallHandler from './stub/WallHandler';
 
-const testSymbolHandler = new EntityHandlerMap();
-testSymbolHandler.add(' ', new SpaceHandler());
-testSymbolHandler.add('#', new WallHandler());
+const handlers = new EntityHandlerMap();
+handlers.add(' ', new SpaceHandler());
+handlers.add('#', new WallHandler());
 
 // Create rule graph:
 const starting = new Behaviour<EntityStub>('starting', (action, entity, world) => {
@@ -30,6 +30,7 @@ const sleeping = new SleepingBehaviour();
 const stopping = new Behaviour('stop', () => {
   return new Action('');
 });
+
 const organismBehaviour = new BehaviourGraph<EntityStub>(starting, stopping);
 // Add rules:
 organismBehaviour.add(moving);
@@ -40,7 +41,7 @@ organismBehaviour.link(moving, SLEEP, sleeping);
 organismBehaviour.link(moving, MOVE, sleeping);
 organismBehaviour.link(sleeping, STOP,  stopping);
 
-testSymbolHandler.add('o', new EntityStubHandler(organismBehaviour));
+handlers.add('o', new EntityStubHandler(organismBehaviour));
 
 it('should contain grid that matches plan', () => {
   class Org implements Entity {
@@ -63,12 +64,12 @@ it('should contain grid that matches plan', () => {
   entityFactory.add('#', {build: (props) => new Wall('#', props)});
   entityFactory.add('o', {build: (props) => new Org('o', props)});
   const testPlan = ['#o', '# '];
-  const world = new World(testPlan, [], entityFactory, testSymbolHandler);
+  const world = new World(testPlan, [], entityFactory, handlers);
   expect(world.getGrid().toString()).toBe(testPlan.join('\n'));
 });
 
 it('should move test organism to east', () => {
-  console.log('rules:\n', (testSymbolHandler.get('o') as EntityStubHandler).rules.toString());
+  console.log('rules:\n', (handlers.get('o') as EntityStubHandler).rules.toString());
   const location = new Vector(0, 0);
   const props = new EntityStubProps(location, E, 40);
 
@@ -79,7 +80,7 @@ it('should move test organism to east', () => {
   const startPlan = 'o ';
   const expectedPlan = ' o';
 
-  const world = new World([startPlan], [props], entityFactory, testSymbolHandler);
+  const world = new World([startPlan], [props], entityFactory, handlers);
 
   const result = world.turn();
 
@@ -91,14 +92,14 @@ it('should not handle entity twice', () => {
   const location = new Vector(0, 0);
   const props = new EntityStubProps(location, E, 40);
 
-  const entityFactory = new EntityBuilderMap();
-  entityFactory.add(' ', {build: () => SPACE});
-  entityFactory.add('o', {build: (p) => new EntityStub(p as EntityStubProps)});
+  const builders = new EntityBuilderMap();
+  builders.add(' ', {build: () => SPACE});
+  builders.add('o', {build: (p) => new EntityStub(p as EntityStubProps)});
 
   const startPlan = 'o  ';
   const expectedPlan = ' o ';
 
-  const world = new World([startPlan], [props], entityFactory, testSymbolHandler);
+  const world = new World([startPlan], [props], builders, handlers);
 
   const result = world.turn();
 

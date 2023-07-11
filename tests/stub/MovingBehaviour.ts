@@ -16,7 +16,7 @@ export class MovingBehaviour extends Behaviour<EntityStub> {
         return action;
       }
       entity.props.energy -= 10;
-      world.getGrid().move(location, destination);
+      world.getGrid().put(destination, entity);
       return SLEEP;
     });
   }
