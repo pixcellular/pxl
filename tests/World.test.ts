@@ -59,12 +59,12 @@ it('should contain grid that matches plan', () => {
 
   }
 
-  const entityFactory = new EntityBuilderMap();
-  entityFactory.add(' ', {build: () => SPACE});
-  entityFactory.add('#', {build: (props) => new Wall('#', props)});
-  entityFactory.add('o', {build: (props) => new Org('o', props)});
+  const builders = new EntityBuilderMap();
+  builders.add(' ', {build: () => SPACE});
+  builders.add('#', {build: (props) => new Wall('#', props)});
+  builders.add('o', {build: (props) => new Org('o', props)});
   const testPlan = ['#o', '# '];
-  const world = new World(testPlan, [], entityFactory, handlers);
+  const world = new World({map: testPlan, entityProps: [], builders, handlers});
   expect(world.getGrid().toString()).toBe(testPlan.join('\n'));
 });
 
@@ -73,14 +73,14 @@ it('should move test organism to east', () => {
   const location = new Vector(0, 0);
   const props = new EntityStubProps(location, E, 40);
 
-  const entityFactory = new EntityBuilderMap();
-  entityFactory.add(' ', {build: () => SPACE});
-  entityFactory.add('o', {build: (p) => new EntityStub(p as EntityStubProps)});
+  const builders = new EntityBuilderMap();
+  builders.add(' ', {build: () => SPACE});
+  builders.add('o', {build: (p) => new EntityStub(p as EntityStubProps)});
 
-  const startPlan = 'o ';
+  const map = ['o '];
   const expectedPlan = ' o';
 
-  const world = new World([startPlan], [props], entityFactory, handlers);
+  const world = new World({map, entityProps: [props], builders, handlers});
 
   const result = world.turn();
 
@@ -99,10 +99,63 @@ it('should not handle entity twice', () => {
   const startPlan = 'o  ';
   const expectedPlan = ' o ';
 
-  const world = new World([startPlan], [props], builders, handlers);
+  const world = new World({map: [startPlan], entityProps: [props], builders, handlers});
 
   const result = world.turn();
 
   expect(result.toString()).toBe(expectedPlan);
   expect(props.location).toEqual({x: 1, y: 0});
+});
+
+it('should not handle entity twice', () => {
+  const location = new Vector(0, 0);
+  const props = new EntityStubProps(location, E, 40);
+
+  const builders = new EntityBuilderMap();
+  builders.add(' ', {build: () => SPACE});
+  builders.add('o', {build: (p) => new EntityStub(p as EntityStubProps)});
+
+  const startPlan = 'o  ';
+  const expectedPlan = ' o ';
+
+  const world = new World({map: [startPlan], entityProps: [props], builders, handlers});
+
+  const result = world.turn();
+
+  expect(result.toString()).toBe(expectedPlan);
+  expect(props.location).toEqual({x: 1, y: 0});
+});
+
+it('does not need default entity handler and builder', () => {
+  const location = new Vector(0, 0);
+  const props = new EntityStubProps(location, E, 40);
+
+  const builders = new EntityBuilderMap();
+  builders.add('o', {build: (p) => new EntityStub(p as EntityStubProps)});
+
+  const handlers = new EntityHandlerMap();
+  handlers.add('o', new EntityStubHandler(organismBehaviour));
+
+  const startPlan = 'o  ';
+  const defaultEntity = SPACE;
+
+  const world = new World({
+    map: [startPlan],
+    entityProps: [props],
+    builders,
+    handlers,
+    defaultEntity
+  });
+
+  const space = world.getGrid().get(new Vector(1, 0));
+  expect(space.props.location).toBe(undefined);
+
+  let noExceptionThrown = true;
+  try {
+    world.turn();
+  } catch (e) {
+    noExceptionThrown = false;
+  }
+  expect(noExceptionThrown).toBeTruthy();
+
 });

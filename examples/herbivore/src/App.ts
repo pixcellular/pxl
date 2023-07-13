@@ -114,7 +114,7 @@ function createWorld() {
   handlers.add(PLANT, new PlantHandler());
   handlers.add(HERBIVORE, new HerbivoreHandler());
 
-  return new World(map, [], builders, handlers);
+  return new World({map, entityProps: [], builders, handlers});
 }
 
 function noop() {

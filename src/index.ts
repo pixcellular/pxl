@@ -7,22 +7,23 @@ import Direction, {
   cardinalDirections,
   cardinalToDirection,
   direction,
-  directionWithoutNone,
+  directionNotZero,
   E,
   N,
   NE,
-  NONE,
   NW,
   S,
   SE,
   SW,
-  W
+  W,
+  ZERO
 } from './Direction';
 import Entity from './Entity';
 import {EntityBuilder, EntityBuilderMap} from './EntityBuilder';
 import {EntityHandler, EntityHandlerMap} from './EntityHandler';
 import {EntityProps} from './EntityProps';
 import Grid from './Grid';
+import Neighbours from './Neighbours';
 import dirPlus from './util/dirPlus';
 import randomDirection from './util/randomDirection';
 import randomElement from './util/randomElement';
@@ -42,7 +43,7 @@ export {
   cardinalDirections,
   direction,
   cardinalToDirection,
-  directionWithoutNone,
+  directionNotZero,
   N,
   NE,
   E,
@@ -51,7 +52,7 @@ export {
   SW,
   W,
   NW,
-  NONE,
+  ZERO,
 
   Entity,
 
@@ -68,6 +69,8 @@ export {
   dirPlus,
   randomDirection,
   randomElement,
+
+  Neighbours,
 
   Vector,
 

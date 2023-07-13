@@ -13,25 +13,29 @@ export interface EntityBuilder {
  */
 export class EntityBuilderMap {
 
-  private entities: Record<string, EntityBuilder>;
+  private builders: Record<string, EntityBuilder>;
 
   constructor() {
-    this.entities = {};
+    this.builders = {};
   }
 
   public add(symbol: string, handler: EntityBuilder) {
-    if (this.entities[symbol]) {
+    if (this.builders[symbol]) {
       throw new Error(`Symbol '${symbol}' already has an entity handler`);
     }
-    this.entities[symbol] = handler;
+    this.builders[symbol] = handler;
   }
 
   public get(symbol: string): EntityBuilder {
-    const entityHandler = this.entities[symbol];
-    if (!entityHandler) {
+    const entityHandler = this.builders[symbol];
+    if (!this.includes(symbol)) {
       throw new Error(`No entity builder found for symbol '${symbol}'`);
     }
     return entityHandler;
+  }
+
+  public includes(symbol: string): boolean {
+    return !!this.builders[symbol];
   }
 
 }

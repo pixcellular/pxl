@@ -1,7 +1,8 @@
-import {Behaviour, BehaviourGraph, EntityProps, N, NONE} from '../src';
+import {Behaviour, BehaviourGraph, EntityProps, N, ZERO} from '../src';
 import {EntityBuilderMap} from '../src';
 import {EntityHandlerMap} from '../src';
 import Action from '../src/Action';
+import Neighbours from '../src/Neighbours';
 import {SPACE} from '../src/Space';
 import Vector from '../src/Vector';
 import View from '../src/View';
@@ -31,18 +32,23 @@ const stopRule = new Behaviour('stop', (action: Action) => {
 const behaviourGraph = new BehaviourGraph(entryRule, stopRule);
 
 testSymbolHandler.add('o',
-  new EntityStubHandler(
-    behaviourGraph
-  )
+    new EntityStubHandler(
+        behaviourGraph
+    )
 );
 
 it('should contain all neighbours with char', () => {
   const propsOfEntities: EntityProps[] = [];
   const testPlan = ['###', '#  ', '#  '];
 
-  const world = new World(testPlan, propsOfEntities, entityFactory, testSymbolHandler);
+  const world = new World({
+    map: testPlan,
+    entityProps: propsOfEntities,
+    builders: entityFactory,
+    handlers: testSymbolHandler
+  });
 
-  const view = new View(world, new Vector(1, 1));
+  const view = new Neighbours(world, new Vector(1, 1));
   const allWall = view.findDirs(e => e.symbol === '#');
   const expectedDirs: string[] = [
     'n',
@@ -58,9 +64,14 @@ it('should not find itself', () => {
   const propsOfEntities: EntityProps[] = [];
   const testPlan = ['o  ', ' o ', '  o'];
 
-  const world = new World(testPlan, propsOfEntities, entityFactory, testSymbolHandler);
+  const world = new World({
+    map: testPlan,
+    entityProps: propsOfEntities,
+    builders: entityFactory,
+    handlers: testSymbolHandler
+  });
 
-  const view = new View(world, new Vector(1, 1));
+  const view: View = new Neighbours(world, new Vector(1, 1));
   const allO = view.findDirs(e => e.symbol === 'o');
   const expectedDirs: string[] = ['se', 'nw'];
   expect(expectedDirs).toStrictEqual(allO.map(w => w.toString()));
@@ -71,10 +82,15 @@ it('should update props.location on set', () => {
   const propsOfEntities: EntityProps[] = [props];
   const testPlan = ['   ', ' o ', '   '];
 
-  const world = new World(testPlan, propsOfEntities, entityFactory, testSymbolHandler);
+  const world = new World({
+    map: testPlan,
+    entityProps: propsOfEntities,
+    builders: entityFactory,
+    handlers: testSymbolHandler
+  });
 
-  const view = new View(world, new Vector(1, 1));
-  view.put(N, view.get(NONE)!);
+  const view = new Neighbours(world, new Vector(1, 1));
+  view.put(N, view.get(ZERO)!);
   expect(props.location).toStrictEqual(new Vector(1, 0));
 });
 
@@ -83,11 +99,16 @@ it('should return previous entity on set', () => {
   const props2 = {location: new Vector(1, 1), id: 2};
   const propsOfEntities: EntityProps[] = [props1, props2];
   const testPlan = [' o ', ' o ', '   '];
-  const world = new World(testPlan, propsOfEntities, entityFactory, testSymbolHandler);
-  const view = new View(world, new Vector(1, 1));
+  const world = new World({
+    map: testPlan,
+    entityProps: propsOfEntities,
+    builders: entityFactory,
+    handlers: testSymbolHandler
+  });
+  const view = new Neighbours(world, new Vector(1, 1));
 
   // Move 2 to 1, returning 1:
-  const previous = view.put(N, view.get(NONE)!);
+  const previous = view.put(N, view.get(ZERO)!);
 
   expect((previous?.props as any)?.id).toStrictEqual(1);
 });

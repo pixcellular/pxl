@@ -145,7 +145,7 @@ export default class Grid {
   /**
    * Mark all entities as unhandled
    */
-  public unhandle(): void {
+  public  unhandle(): void {
     this.forEach((entity: Entity) => {
       entity.handled = false;
     });

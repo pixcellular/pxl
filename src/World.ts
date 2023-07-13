@@ -3,7 +3,39 @@ import {EntityBuilderMap} from './EntityBuilder';
 import {EntityHandlerMap} from './EntityHandler';
 import {EntityProps} from './EntityProps';
 import Grid from './Grid';
+import {SPACE} from './Space';
 import Vector from './Vector';
+
+export type WorldConfig = {
+  /**
+   * Matrix with entity symbols
+   */
+  map: string[],
+
+  /**
+   * Elements as found in team.members
+   */
+  entityProps: EntityProps[],
+
+  /**
+   * Array of entity builders
+   */
+  builders: EntityBuilderMap,
+
+  /**
+   * Map of {@link EntityHandler}s
+   */
+  handlers: EntityHandlerMap
+
+  /**
+   * Entity on map that is used to fill up empty space.
+   * Singleton with a symbol, the same props and no location,
+   * i.e. only one defaultEntity exists.
+   *
+   * defaults to {@link SPACE}
+   */
+  defaultEntity?: Entity
+};
 
 /**
  * Inspired by: https://eloquentjavascript.net/2nd_edition/07_elife.html
@@ -12,6 +44,7 @@ export default class World {
 
   private readonly grid: Grid;
   private readonly entityHandlers: EntityHandlerMap;
+  private defaultEntity: Entity = SPACE;
 
   /**
    * Turns that have passed since start of world
@@ -20,34 +53,28 @@ export default class World {
 
   /**
    * World containing a grid populated with entities
-   *
-   * @param map matrix with entity symbols
-   * @param entityProps elements as found in team.members
-   * @param entityFactory Array of entity builders
-   * @param entityHandlers Map of {@link EntityHandler}s
    */
   constructor(
-    map: string[],
-    entityProps: EntityProps[],
-    entityFactory: EntityBuilderMap,
-    entityHandlers: EntityHandlerMap
+      config: WorldConfig
   ) {
-    this.entityHandlers = entityHandlers;
-    this.grid = this.mapToGrid(map, entityProps, entityFactory);
+    this.entityHandlers = config.handlers;
+    this.initDefaultEntity(config);
+    this.grid = this.mapToGrid(config);
   }
 
-  public mapToGrid(plan: string[], entityProps: EntityProps[], entityBuilders: EntityBuilderMap): Grid {
-    const grid = new Grid(plan[0].length, plan.length);
+  public mapToGrid(config: WorldConfig): Grid {
+    const grid = new Grid(
+        config.map[0].length,
+        config.map.length,
+        this.defaultEntity
+    );
     grid.forEachCell((_: Entity, location: Vector) => {
-      let props = entityProps.find((p) => {
+      const foundProps = config.entityProps.find((p) => {
         return p && p.location && p.location.x === location.x && p.location.y === location.y;
       });
-      if (!props) {
-        props = new EntityProps();
-        props.location = location;
-      }
-      const mapSymbol = plan[location.y][location.x];
-      const entity = entityBuilders.get(mapSymbol).build(props);
+      const props = foundProps || new EntityProps(location);
+      const mapSymbol = config.map[location.y][location.x];
+      const entity = config.builders.get(mapSymbol).build(props);
       grid.put(location, entity);
     });
     return grid;
@@ -79,6 +106,18 @@ export default class World {
    */
   get age(): number {
     return this._age;
+  }
+
+  private initDefaultEntity(config: WorldConfig) {
+    if (config.defaultEntity) {
+      this.defaultEntity = config.defaultEntity;
+    }
+    if (!config.builders.includes(this.defaultEntity.symbol)) {
+      config.builders.add(this.defaultEntity.symbol, {build: () => this.defaultEntity});
+    }
+    if (!config.handlers.includes(this.defaultEntity.symbol)) {
+      config.handlers.add(this.defaultEntity.symbol, {handle: () => {}});
+    }
   }
 
 }

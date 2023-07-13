@@ -1,4 +1,4 @@
-import {Action, Behaviour, BehaviourGraph, Direction, NONE, View, World} from 'pixcellular';
+import {Action, Behaviour, BehaviourGraph, Direction, Neighbours, ZERO, World} from 'pixcellular';
 import {EAT, MOVE, NOOP, REPRODUCE, STOP} from './Actions';
 import {Herbivore} from './Herbivore';
 import {HerbivoreBuilder} from './HerbivoreBuilder';
@@ -13,12 +13,10 @@ const spaceBuilder = new SpaceBuilder();
 const starting = new Behaviour<Herbivore>(
     'starting',
     (action: Action, entity: Herbivore, world: World): Action => {
-      const view = new View(world, entity.props.location);
+      const view = new Neighbours(world, entity.props.location);
 
       const spaceDir = view.findDirRand(e => e.symbol === SPACE);
-      const canReproduce = entity.props.energy > store.herbivoreReproductionThreshold;
-
-      if (canReproduce) {
+      if (canReproduce(entity)) {
         return new Action(REPRODUCE.type, spaceDir);
       }
       const plantDir = view.findDirRand(e => e.symbol === PLANT);
@@ -35,7 +33,7 @@ const starting = new Behaviour<Herbivore>(
 const reproducing = new Behaviour<Herbivore>(
     'reproducing',
     (action: Action, entity: Herbivore, world: World): Action => {
-      const view = new View(world, entity.props.location);
+      const view = new Neighbours(world, entity.props.location);
       const space = view.findDirRand(e => e.symbol === SPACE);
       if (space) {
         const child = herbivoreBuilder.build({energy: Math.floor(entity.props.energy / 3)});
@@ -49,12 +47,14 @@ const reproducing = new Behaviour<Herbivore>(
 const eating = new Behaviour<Herbivore>(
     'eating',
     (action: Action, entity: Herbivore, world: World): Action => {
-      const view = new View(world, entity.props.location);
+      const view = new Neighbours(world, entity.props.location);
       const plant = view.get(action.direction);
       if (isPlantProps(plant.props)) {
         view.put(action.direction, spaceBuilder.build());
         entity.props.energy += plant.props.energy;
-        return STOP;
+        return canReproduce(entity)
+            ? REPRODUCE
+            : STOP;
       } else {
         return MOVE;
       }
@@ -64,7 +64,7 @@ const eating = new Behaviour<Herbivore>(
 const moving = new Behaviour<Herbivore>(
     'growing',
     (action: Action, entity: Herbivore, world: World): Action => {
-      const view = new View(world, entity.props.location);
+      const view = new Neighbours(world, entity.props.location);
       let dir: Direction;
       if (view.get(entity.props.dir)?.symbol === SPACE) {
         // Move in props direction:
@@ -86,12 +86,16 @@ const stopping = new Behaviour<Herbivore>(
     (action: Action, entity: Herbivore, world: World): Action => {
       entity.props.energy -= store.herbivoreMetabolismCosts;
       if (entity.props.energy <= 0) {
-        const view = new View(world, entity.props.location);
-        view.remove(NONE);
+        const view = new Neighbours(world, entity.props.location);
+        view.remove(ZERO);
       }
       return NOOP;
     }
 );
+
+function canReproduce(entity: Herbivore) {
+  return entity.props.energy > store.herbivoreReproductionThreshold;
+}
 
 export const herbivoreBehaviour = new BehaviourGraph<Herbivore>(starting, stopping);
 herbivoreBehaviour.add(reproducing);
@@ -104,6 +108,7 @@ herbivoreBehaviour.link(starting, EAT, eating);
 herbivoreBehaviour.link(starting, STOP, stopping);
 
 herbivoreBehaviour.link(eating, MOVE, moving);
+herbivoreBehaviour.link(eating, REPRODUCE, moving);
 herbivoreBehaviour.link(eating, STOP, stopping);
 
 herbivoreBehaviour.link(reproducing, STOP, stopping);

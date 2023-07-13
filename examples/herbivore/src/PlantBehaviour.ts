@@ -1,4 +1,4 @@
-import {Action, Behaviour, BehaviourGraph, View, World} from 'pixcellular';
+import {Action, Behaviour, BehaviourGraph, Neighbours, World} from 'pixcellular';
 import {CLONE, GROW, NOOP, STOP} from './Actions';
 import {Plant} from './Plant';
 import {PlantBuilder} from './PlantBuilder';
@@ -32,7 +32,7 @@ const plantBuilder = new PlantBuilder({energy: 5});
 const cloning = new Behaviour<Plant>(
     'cloning',
     (action: Action, entity: Plant, world: World): Action => {
-      const view = new View(world, entity.props.location);
+      const view = new Neighbours(world, entity.props.location);
       const space = view.findDirRand(e => e.symbol === SPACE);
       if (space) {
         const childEnergy = Math.ceil(Math.random() * entity.props.energy);

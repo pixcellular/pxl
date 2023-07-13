@@ -1,6 +1,6 @@
 {
   "name": "pixcellular",
-  "version": "2.2.0",
+  "version": "2.3.1",
   "description": "",
   "author": "pixcellular",
   "license": "ISC",
@@ -36,7 +36,8 @@
     "build:static": "cp package.json README.md dist",
     "build": "npm-run-all build:*",
     "publish:dist": "cd dist && npm publish --verbose",
-    "publish": "npm run test && npm run build && npm run publish:dist"
+    "publish": "npm run test && npm run build && npm run publish:dist",
+    "test-examples": "npm run build && npm t && cd examples/herbivore/ && npm run build && cd ../conway && npm run build"
   },
   "dependencies": {
     "@types/node": "^12.12.21",

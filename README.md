@@ -57,16 +57,13 @@ All entities behave in a certain way. For 'space' it is simple: do nothing. But 
 const handlers = new EntityHandlerMap()
 
 // Space does nothing:
-handlers.add(' ', {
-  handle: () => {
-  }
-});
+handlers.add(' ', {handle: () => {}});
 
 // Organisms behave according to specific rules:
 handlers.add('o', {
   handle: (organism, location, world) => {
     // Current location plus neighbouring cells:
-    const view = new View(world, location);
+    const view = new Neighbours(world, location);
 
     // Find a random empty cell:
     const direction = view.findDirRand(e => e.symbol === ' ');
@@ -90,7 +87,7 @@ handlers.add('o', {
 Finally, we can put all these building blocks together:
 
 ```js
-const world = new World(map, organisms, builders, handlers)
+const world = new World({map, entityProps: organisms, builders, handlers})
 ```
 
 Let's make the world go round:

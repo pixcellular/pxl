@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import logUpdate from 'log-update';
-import {Entity, EntityFactory, EntityHandler, EntityHandlerMap, EntityProps, Vector, View, World} from 'pixcellular';
+import {Entity, EntityBuilderMap, EntityHandler, EntityHandlerMap, EntityProps, Neighbours, Vector, World} from 'pixcellular';
 
 if (!process.argv[2]) {
   throw new Error('usage: npm run start [path-to-map]');
@@ -21,19 +21,19 @@ class Cell implements Entity {
 }
 
 // Factory that will convert the map into entities:
-const entityFactory = new EntityFactory();
-entityFactory.add('.', (props) => new Cell(props as CellProps, '.'));
-entityFactory.add('o', (props) => new Cell(props as CellProps, 'o'));
+const builders = new EntityBuilderMap();
+builders.add('.', {build: (props) => new Cell(props as CellProps, '.')});
+builders.add('o', {build: (props) => new Cell(props as CellProps, 'o')});
 
 // Define behaviour of entities:
-const entityHandlers = new EntityHandlerMap();
+const handlers = new EntityHandlerMap();
 class CellHandler implements EntityHandler {
   public handle(entity: Entity, location: Vector, world: World): void {
     const cellProps = entity.props as CellProps;
     cellProps.previousSymbol = entity.symbol;
 
-    const view = new View(world, location);
-    const livingNeighbours = view.filter(e => {
+    const view = new Neighbours(world, location);
+    const livingNeighbours = view.findDirs(e => {
       // e.handled is set and reset by world.turn:
       return e.handled
         ? (e.props as CellProps).previousSymbol === 'o'
@@ -50,10 +50,10 @@ class CellHandler implements EntityHandler {
     }
   }
 }
-entityHandlers.add('.', new CellHandler());
-entityHandlers.add('o', new CellHandler());
+handlers.add('.', new CellHandler());
+handlers.add('o', new CellHandler());
 
-const world = new World(map, [], entityFactory, entityHandlers);
+const world = new World({map, entityProps: [], builders, handlers});
 
 setInterval(() => {
   logUpdate(world.turn().toString());

@@ -37,6 +37,8 @@ export class EntityHandlerMap {
     }
     return entityHandler;
   }
-
+  public includes(symbol: string): boolean {
+    return !!this.handlers[symbol];
+  }
 }
 

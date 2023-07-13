@@ -9,8 +9,10 @@
     "start": "node build/index.js"
   },
   "type": "module",
+  "dependencies": {
+    "pixcellular": "2.3.1"
+  },
   "devDependencies": {
-    "pixcellular": "^2.2.0",
     "typescript": "^4.5.4",
     "log-update": "^5.0.0"
   }

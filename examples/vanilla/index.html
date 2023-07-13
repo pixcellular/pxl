@@ -17,7 +17,7 @@
   </head>
   <body>
     <pre id="grid"></pre>
-    <script src="https://unpkg.com/pixcellular@2.2.0/index.js"></script>
+    <script data-search-needle="pxl-dependency" src="https://unpkg.com/pixcellular@2.3.1/index.js"></script>
     <script>
 
       const map = [
@@ -47,11 +47,11 @@
           organism.props.energy--;
 
           // Get current and neighbouring cells:
-          const view = new pxl.View(world, location);
+          const view = new pxl.Neighbours(world, location);
 
           // No energy means death:
           if (organism.props.energy <= 0) {
-            view.remove(pxl.NONE);
+            view.remove(pxl.ZERO);
             return;
           }
 
@@ -67,7 +67,7 @@
         }
       });
 
-      const world = new pxl.World(map, organisms, builders, handlers)
+      const world = new pxl.World({map, entityProps: organisms, builders, handlers})
 
       const interval = setInterval(() => {
         document.getElementById('grid').innerText = world.turn().toString();
