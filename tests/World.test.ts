@@ -23,7 +23,7 @@ handlers.add('#', new WallHandler());
 
 // Create rule graph:
 const starting = new Behaviour<EntityStub>('starting', (action, entity, world) => {
-  return new Action(MOVE.type, entity.props.dir);
+  return new Action(MOVE.name, entity.props.dir);
 });
 const moving = new MovingBehaviour();
 const sleeping = new SleepingBehaviour();

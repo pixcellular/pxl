@@ -5,9 +5,6 @@ import Action from './Action';
 import BehaviourGraph, {Behaviour, BehaviourGraphHandler, BehaviourName} from './BehaviourGraph';
 import Direction, {
   cardinalDirections,
-  cardinalToDirection,
-  direction,
-  directionNotZero,
   E,
   N,
   NE,
@@ -24,7 +21,6 @@ import {EntityHandler, EntityHandlerMap} from './EntityHandler';
 import {EntityProps} from './EntityProps';
 import Grid from './Grid';
 import Neighbours from './Neighbours';
-import dirPlus from './util/dirPlus';
 import randomDirection from './util/randomDirection';
 import randomElement from './util/randomElement';
 import Vector from './Vector';
@@ -41,9 +37,6 @@ export {
 
   Direction,
   cardinalDirections,
-  direction,
-  cardinalToDirection,
-  directionNotZero,
   N,
   NE,
   E,
@@ -66,7 +59,6 @@ export {
 
   Grid,
 
-  dirPlus,
   randomDirection,
   randomElement,
 

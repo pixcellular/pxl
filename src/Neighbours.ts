@@ -1,4 +1,4 @@
-import Direction, {directionNotZero} from './Direction';
+import Direction, {cardinalDirections} from './Direction';
 import Entity from './Entity';
 import randomIndex from './util/randomIndex';
 import Vector from './Vector';
@@ -38,7 +38,7 @@ export default class Neighbours implements View {
   }
 
   public findDir(predicate: (e: Entity) => boolean): Direction | null {
-    for (const dir of directionNotZero) {
+    for (const dir of cardinalDirections) {
       const entity = this.get(dir);
       if (entity && predicate(entity)) {
         return dir;
@@ -49,7 +49,7 @@ export default class Neighbours implements View {
 
   public findDirs(predicate: (e: Entity) => boolean): Direction[] {
     const found = [];
-    for (const dir of directionNotZero) {
+    for (const dir of cardinalDirections) {
       const entity = this.get(dir);
       if (entity && predicate(entity)) {
         found.push(dir);
@@ -59,10 +59,10 @@ export default class Neighbours implements View {
   }
 
   public findDirRand(predicate: (e: Entity) => boolean): Direction | null {
-    const offset = randomIndex(directionNotZero as []);
-    for (let i = 0; i < directionNotZero.length; i++) {
-      const pointer = (i + offset) % directionNotZero.length;
-      const dir = directionNotZero[pointer];
+    const offset = randomIndex(cardinalDirections as []);
+    for (let i = 0; i < cardinalDirections.length; i++) {
+      const pointer = (i + offset) % cardinalDirections.length;
+      const dir = cardinalDirections[pointer];
       const entity = this.get(dir);
       if (entity && predicate(entity)) {
         return dir;

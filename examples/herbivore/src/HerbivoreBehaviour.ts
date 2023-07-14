@@ -17,14 +17,14 @@ const starting = new Behaviour<Herbivore>(
 
       const spaceDir = view.findDirRand(e => e.symbol === SPACE);
       if (canReproduce(entity)) {
-        return new Action(REPRODUCE.type, spaceDir);
+        return new Action(REPRODUCE.name, spaceDir);
       }
       const plantDir = view.findDirRand(e => e.symbol === PLANT);
       if (plantDir) {
-        return new Action(EAT.type, plantDir);
+        return new Action(EAT.name, plantDir);
       }
       if (spaceDir) {
-        return new Action(MOVE.type);
+        return new Action(MOVE.name);
       }
       return STOP;
     }

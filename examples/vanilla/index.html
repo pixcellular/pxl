@@ -17,7 +17,7 @@
   </head>
   <body>
     <pre id="grid"></pre>
-    <script data-search-needle="pxl-dependency" src="https://unpkg.com/pixcellular@2.3.1/index.js"></script>
+    <script data-search-needle="pxl-dependency" src="https://unpkg.com/pixcellular@2.4.0/index.js"></script>
     <script>
 
       const map = [
@@ -25,43 +25,40 @@
         ' o ',
         '   '
       ];
-      const space = {};
+
+      // Every entity can have its own props:
       const organisms = [
         {location: new pxl.Vector(0, 0), energy: 10},
         {location: new pxl.Vector(1, 1), energy: 20}
       ];
 
+      // Pxl uses builders to convert the map and properties into entity objects:
       const builders = new pxl.EntityBuilderMap();
-      // Space stays space:
-      builders.add(' ', {build: (props) => ({symbol: ' ', space})});
-      // Every entity can have its own props:
       builders.add('o', {build: (props) => ({symbol: 'o', props})});
 
+      // Entities behave according to specific rules:
       const handlers = new pxl.EntityHandlerMap()
-      // Space does nothing:
-      handlers.add(' ', {handle: () => {}});
-      // Organisms behave according to specific rules:
       handlers.add('o', {
         handle: (organism, location, world) => {
+
+          // Get a view of neighbouring cells:
+          const view = new pxl.Neighbours(world, location);
+
+          // Find random empty space:
+          const spaceDirection = view.findDirRand(e => e.symbol === ' ');
+
+          if(spaceDirection) {
+            // Move randomly:
+            view.put(spaceDirection, organism);
+          }
+
           // Living costs energy:
           organism.props.energy--;
 
-          // Get current and neighbouring cells:
-          const view = new pxl.Neighbours(world, location);
-
-          // No energy means death:
+          // ... And no energy probably means death:
           if (organism.props.energy <= 0) {
-            view.remove(pxl.ZERO);
-            return;
-          }
-
-          // Find random empty space:
-          const spaceFound = view.findDirRand(e => e.symbol === ' ');
-
-          if(spaceFound) {
-            // Move randomly:
-            view.put(spaceFound, organism);
-            return;
+            // Remove entity from world:
+            view.remove(spaceDirection || pxl.ZERO);
           }
 
         }

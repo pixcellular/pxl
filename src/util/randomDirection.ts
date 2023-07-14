@@ -1,9 +1,9 @@
-import Direction, {directionNotZero} from '../Direction';
+import Direction, {cardinalDirections} from '../Direction';
 import randomElement from './randomElement';
 
 /**
- * @return direction other than 'zero'
+ * @return one of the {@link cardinalDirections}
  */
 export default function randomDirection(): Direction {
-  return randomElement(directionNotZero as Direction[]);
+  return randomElement(cardinalDirections);
 }

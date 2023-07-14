@@ -23,7 +23,6 @@ const map = [
 
 Every entity on our map can have properties:
 ```js
-const space = {};
 const organisms = [
   {location: new Vector(0, 0), energy: 10},
   {location: new Vector(1, 1), energy: 20}
@@ -41,9 +40,6 @@ Pxl converts the map and properties into a world with acting entities. It does t
 ```js
 const builders = new EntityBuilderMap();
 
-// Space stays space:
-builders.add(' ', {build: (props) => ({symbol: ' ', space})});
-
 // Every entity can have its own props:
 builders.add('o', {build: (props) => ({symbol: 'o', props})});
 ```
@@ -56,28 +52,27 @@ All entities behave in a certain way. For 'space' it is simple: do nothing. But 
 ```js
 const handlers = new EntityHandlerMap()
 
-// Space does nothing:
-handlers.add(' ', {handle: () => {}});
-
 // Organisms behave according to specific rules:
 handlers.add('o', {
   handle: (organism, location, world) => {
-    // Current location plus neighbouring cells:
-    const view = new Neighbours(world, location);
+    // Get a view of neighbouring cells:
+    const view = new pxl.Neighbours(world, location);
 
-    // Find a random empty cell:
-    const direction = view.findDirRand(e => e.symbol === ' ');
+    // Find random empty space:
+    const spaceDirection = view.findDirRand(e => e.symbol === ' ');
 
-    // Move the entity:
-    view.move(direction);
+    if(spaceDirection) {
+      // Move randomly:
+      view.put(spaceDirection, organism);
+    }
 
-    // However, moving is costly:
+    // Living costs energy:
     organism.props.energy--;
 
-    // ... and no energy means death:
+    // ... And no energy means death:
     if (organism.props.energy <= 0) {
-      const newSpace = builders.get(' ').build(space);
-      view.set(direction, newSpace);
+      // Remove entity from world:
+      view.remove(spaceDirection || pxl.ZERO);
     }
   }
 });
@@ -87,7 +82,12 @@ handlers.add('o', {
 Finally, we can put all these building blocks together:
 
 ```js
-const world = new World({map, entityProps: organisms, builders, handlers})
+const world = new World({
+  map, 
+  entityProps: organisms, 
+  builders, 
+  handlers
+});
 ```
 
 Let's make the world go round:

@@ -74,14 +74,14 @@ export default class BehaviourGraph<T extends Entity> {
     if (!b1ToTriggers) {
       throw new Error(`No behaviour exists with name '${b1.name}'`);
     }
-    if (b1ToTriggers.actions[action.type]) {
+    if (b1ToTriggers.actions[action.name]) {
       throw new Error(`Trigger '${action}' already exists for behaviour ${b1}`);
     }
     const b2ToTriggers = this.behaviours[b2.name];
     if (!b2ToTriggers) {
       throw new Error(`No behaviour exists with name '${b2.name}'`);
     }
-    b1ToTriggers.actions[action.type] = b2ToTriggers;
+    b1ToTriggers.actions[action.name] = b2ToTriggers;
   }
 
   /**
@@ -95,9 +95,9 @@ export default class BehaviourGraph<T extends Entity> {
       const behaviour = linkedBehaviour.behaviour;
       walk.push(behaviour.name);
       action = behaviour.handle(action, entity, world);
-      const nextBehaviour = linkedBehaviour.actions[action.type];
+      const nextBehaviour = linkedBehaviour.actions[action.name];
       if (!nextBehaviour) {
-        throw Error(`Behaviour '${behaviour.name}' has no action '${action.type}'`);
+        throw Error(`Behaviour '${behaviour.name}' has no action '${action.name}'`);
       }
       linkedBehaviour = nextBehaviour;
     } while (!this.isEndBehaviour(linkedBehaviour));
