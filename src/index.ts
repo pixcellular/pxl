@@ -1,7 +1,6 @@
 /**
  * Export barrel
  */
-import Action from './Action';
 import BehaviourGraph, {Behaviour, BehaviourGraphHandler, BehaviourName} from './BehaviourGraph';
 import Direction, {
   cardinalDirections,
@@ -13,7 +12,7 @@ import Direction, {
   SE,
   SW,
   W,
-  ZERO
+  CENTRE
 } from './Direction';
 import Entity from './Entity';
 import {EntityBuilder, EntityBuilderMap} from './EntityBuilder';
@@ -28,7 +27,6 @@ import View from './View';
 import World from './World';
 
 export {
-  Action,
 
   Behaviour,
   BehaviourGraph,
@@ -45,7 +43,7 @@ export {
   SW,
   W,
   NW,
-  ZERO,
+  CENTRE,
 
   Entity,
 

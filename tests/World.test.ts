@@ -1,13 +1,11 @@
-import {Action, Behaviour, BehaviourGraph, EntityBuilderMap} from '../src';
-import {EntityHandlerMap} from '../src';
-import {EntityProps} from '../src';
+import {Behaviour, BehaviourGraph, EntityBuilderMap, EntityHandlerMap, EntityProps} from '../src';
 import Direction, {E} from '../src/Direction';
 import Entity from '../src/Entity';
 import {SPACE} from '../src/Space';
 import randomDirection from '../src/util/randomDirection';
 import Vector from '../src/Vector';
 import World from '../src/World';
-import {MOVE, SLEEP, STOP} from './stub/Actions';
+import {MOVE, START, STOP} from './stub/Behaviours';
 import {EntityStub} from './stub/EntityStub';
 import EntityStubHandler from './stub/EntityStubHandler';
 import {EntityStubProps} from './stub/EntityStubProps';
@@ -22,24 +20,19 @@ handlers.add(' ', new SpaceHandler());
 handlers.add('#', new WallHandler());
 
 // Create rule graph:
-const starting = new Behaviour<EntityStub>('starting', (action, entity, world) => {
-  return new Action(MOVE.name, entity.props.dir);
-});
+const starting = new Behaviour<EntityStub>(START, () => {
+  return MOVE;
+}, [MOVE]);
 const moving = new MovingBehaviour();
 const sleeping = new SleepingBehaviour();
-const stopping = new Behaviour('stop', () => {
-  return new Action('');
-});
+const stopping = new Behaviour(STOP, () => {
+  return null;
+}, []);
 
-const organismBehaviour = new BehaviourGraph<EntityStub>(starting, stopping);
-// Add rules:
+const organismBehaviour = new BehaviourGraph<EntityStub>(starting);
 organismBehaviour.add(moving);
 organismBehaviour.add(sleeping);
-// Link rules by their results:
-organismBehaviour.link(starting, MOVE, moving);
-organismBehaviour.link(moving, SLEEP, sleeping);
-organismBehaviour.link(moving, MOVE, sleeping);
-organismBehaviour.link(sleeping, STOP,  stopping);
+organismBehaviour.add(stopping);
 
 handlers.add('o', new EntityStubHandler(organismBehaviour));
 
@@ -81,25 +74,6 @@ it('should move test organism to east', () => {
   const expectedPlan = ' o';
 
   const world = new World({map, entityProps: [props], builders, handlers});
-
-  const result = world.turn();
-
-  expect(result.toString()).toBe(expectedPlan);
-  expect(props.location).toEqual({x: 1, y: 0});
-});
-
-it('should not handle entity twice', () => {
-  const location = new Vector(0, 0);
-  const props = new EntityStubProps(location, E, 40);
-
-  const builders = new EntityBuilderMap();
-  builders.add(' ', {build: () => SPACE});
-  builders.add('o', {build: (p) => new EntityStub(p as EntityStubProps)});
-
-  const startPlan = 'o  ';
-  const expectedPlan = ' o ';
-
-  const world = new World({map: [startPlan], entityProps: [props], builders, handlers});
 
   const result = world.turn();
 

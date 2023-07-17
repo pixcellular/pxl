@@ -1,109 +1,100 @@
-import Action, {ActionType} from './Action';
 import Entity from './Entity';
 import {EntityHandler} from './EntityHandler';
 import Vector from './Vector';
 import World from './World';
 
-export type GraphHandler<T extends Entity> = (action: Action, entity: T, world: World) => Action;
-
 export type BehaviourName = string;
-export class Behaviour<T extends Entity> {
-  public name: BehaviourName;
-  public handle: GraphHandler<T>;
 
-  constructor(name: string, handle: GraphHandler<T>) {
-    this.name = name;
-    this.handle = handle;
+// TODO?
+// export type Response = {
+//   name: string;
+//   nextBehaviour: BehaviourName,
+// };
+
+export type PerformBehaviour<T extends Entity> = (entity: T, world: World) => BehaviourName | null;
+
+type ValidationErrorMsg = {
+  walk: string[],
+  error: string
+};
+export type ValidateReport = {
+  valid: boolean;
+  errors: ValidationErrorMsg[];
+};
+export class GraphValidationError extends Error {
+  constructor(report: ValidateReport) {
+    super(`Graph not valid: ${JSON.stringify(report)}`);
   }
 }
 
-/**
- * Every {@link Behaviour} results in a number of response behaviours linked by {@link Action}s
- */
-export class LinkedBehaviour<T extends Entity> {
-  public behaviour: Behaviour<T>;
+export class Behaviour<T extends Entity> {
+  public name: BehaviourName;
+  public perform: PerformBehaviour<T>;
+  public responses: BehaviourName[];
 
-  /**
-   * Directed links named by actionType
-   */
-  public readonly actions: Record<ActionType, LinkedBehaviour<T>> = {};
-
-  constructor(behaviour: Behaviour<T>) {
-    this.behaviour = behaviour;
+  constructor(
+      name: string,
+      perform: PerformBehaviour<T>,
+      responses: BehaviourName[]
+  ) {
+    this.name = name;
+    this.perform = perform;
+    this.responses = responses;
   }
 }
 
 /**
  * Directed graph of behaviours, one behaviour resulting in the next,
  * is used to split up complex behaviour into smaller parts,
- * always starts with {@link startBehaviour} and ends with {@link stopBehaviour}.
+ * always starts with {@link startBehaviourName}.
  */
 export default class BehaviourGraph<T extends Entity> {
 
-  private startAction: Action = new Action('');
-  private startBehaviour: Behaviour<T>;
-  private stopBehaviour: Behaviour<T>;
-  private behaviours: Record<string, LinkedBehaviour<T>> = {};
+  private readonly startBehaviourName: BehaviourName;
+  private behaviours: Record<string, Behaviour<T>> = {};
+  private validation: ValidateReport = {valid: true, errors: []};
 
   constructor(
       start: Behaviour<T>,
-      stop: Behaviour<T>
   ) {
-    this.startBehaviour = start;
-    this.stopBehaviour = stop;
-    this.behaviours[start.name] = new LinkedBehaviour(start);
-    this.behaviours[stop.name] = new LinkedBehaviour(stop);
+    this.startBehaviourName = start.name;
+    this.add(start);
   }
 
   /**
    * Add behaviour node to graph
    */
-  public add(b: Behaviour<T>) {
-    this.behaviours[b.name] = new LinkedBehaviour(b);
-  }
-
-  /**
-   * Link two behaviour nodes using action link
-   */
-  public link(
-      b1: Behaviour<T>,
-      action: Action,
-      b2: Behaviour<T>
-  ) {
-    const b1ToTriggers = this.behaviours[b1.name];
-    if (!b1ToTriggers) {
-      throw new Error(`No behaviour exists with name '${b1.name}'`);
-    }
-    if (b1ToTriggers.actions[action.name]) {
-      throw new Error(`Trigger '${action}' already exists for behaviour ${b1}`);
-    }
-    const b2ToTriggers = this.behaviours[b2.name];
-    if (!b2ToTriggers) {
-      throw new Error(`No behaviour exists with name '${b2.name}'`);
-    }
-    b1ToTriggers.actions[action.name] = b2ToTriggers;
+  public add(behaviour: Behaviour<T>) {
+    this.behaviours[behaviour.name] = behaviour;
+    this.validate();
   }
 
   /**
    *
    */
   public traverse(entity: T, world: World): BehaviourName[] {
+    if (!this.validation.valid) {
+      throw new GraphValidationError(this.validation);
+    }
     const walk: string[] = [];
-    let linkedBehaviour: LinkedBehaviour<T> = this.behaviours[this.startBehaviour.name];
-    let action = this.startAction;
-    do {
-      const behaviour = linkedBehaviour.behaviour;
-      walk.push(behaviour.name);
-      action = behaviour.handle(action, entity, world);
-      const nextBehaviour = linkedBehaviour.actions[action.name];
-      if (!nextBehaviour) {
-        throw Error(`Behaviour '${behaviour.name}' has no action '${action.name}'`);
+    let nextBehaviourName: string | null = this.startBehaviourName;
+    while (nextBehaviourName) {
+      const behaviour: Behaviour<T> = this.behaviours[nextBehaviourName];
+      if (walk.includes(behaviour.name)) {
+        throw new Error('Cycle detected while traversing: ' + [...walk, behaviour.name].join(','));
       }
-      linkedBehaviour = nextBehaviour;
-    } while (!this.isEndBehaviour(linkedBehaviour));
-    this.stopBehaviour.handle(action, entity, world);
-    walk.push(this.stopBehaviour.name);
+      walk.push(behaviour.name);
+      nextBehaviourName = behaviour.perform(entity, world);
+    }
     return walk;
+  }
+
+  /**
+   * Check that all responses are linked to existing behaviours
+   */
+  public validate() {
+    this.validation = this.validateBehaviour(this.startBehaviourName, []);
+    return this.validation;
   }
 
   /**
@@ -111,9 +102,8 @@ export default class BehaviourGraph<T extends Entity> {
    */
   public toString() {
     let result = 'graph TD\n';
-    result += `  ${this.startBehaviour.name}((${this.startBehaviour.name}))\n`;
-    result += `  ${this.stopBehaviour.name}((${this.stopBehaviour.name}))\n`;
-    const links = Array.from(new Set(this.nodeToLinks(this.startBehaviour.name)));
+    result += `  ${this.startBehaviourName}((${this.startBehaviourName}))\n`;
+    const links = Array.from(new Set(this.nodeToLinks(this.startBehaviourName)));
     for (const l of links) {
       result += `  ${l}\n`;
     }
@@ -124,27 +114,46 @@ export default class BehaviourGraph<T extends Entity> {
    * Convert linked behaviour into array of links in dot format
    */
   private nodeToLinks(name: string): string[] {
+    if (!this.validation.valid) {
+      throw new GraphValidationError(this.validation);
+    }
     let result: string[] = [];
-    const head = this.behaviours[name];
-    for (const action of Object.keys(head.actions)) {
-      const tail = head.actions[action];
-      result.push(`${name} --> |${action}|${tail.behaviour.name}`);
-      if (tail.behaviour.name !== this.stopBehaviour.name) {
-        result = result.concat(this.nodeToLinks(tail.behaviour.name));
-      }
+    const headNode = this.behaviours[name];
+    for (const response of headNode.responses) {
+      const tailNode = this.behaviours[response];
+      result.push(`${name} --> ${tailNode.name}`);
+      result = result.concat(this.nodeToLinks(tailNode.name));
     }
     return result;
   }
 
-  private isEndBehaviour(lb: LinkedBehaviour<T>): boolean {
-    return lb.behaviour.name === this.stopBehaviour.name;
+  /**
+   * @return {ValidateReport}
+   */
+  private validateBehaviour(name: BehaviourName, parents: BehaviourName[]) {
+    const report: ValidateReport = {valid: true, errors: []};
+    const behaviour = this.behaviours[name];
+    const walk = [...parents, name];
+    if (!behaviour) {
+      report.valid = false;
+      report.errors.push({error: `Behaviour '${name}' does not exist`, walk});
+    } else if (behaviour.responses.length) {
+      behaviour.responses.forEach(r => {
+        const responseReport = this.validateBehaviour(r, walk);
+        if (!responseReport.valid) {
+          report.valid = false;
+          report.errors.push(...responseReport.errors);
+        }
+      });
+    }
+    return report;
   }
-
 }
 
-export class BehaviourGraphHandler <E extends Entity> implements EntityHandler {
+export class BehaviourGraphHandler<E extends Entity> implements EntityHandler {
 
   private graph: BehaviourGraph<E>;
+
   constructor(graph: BehaviourGraph<E>) {
     this.graph = graph;
   }

@@ -1,48 +1,46 @@
-import {Action, Behaviour, BehaviourGraph, Neighbours, World} from 'pixcellular';
-import {CLONE, GROW, NOOP, STOP} from './Actions';
+import {Behaviour, BehaviourGraph, BehaviourName, Neighbours, World} from 'pixcellular';
+import {CLONE, GROW, START} from './Behaviours';
 import {Plant} from './Plant';
 import {PlantBuilder} from './PlantBuilder';
 import {store} from './Store';
 import {SPACE} from './Symbols';
 
 const starting = new Behaviour<Plant>(
-    'starting',
-    (action: Action, entity: Plant, world: World): Action => {
+    START,
+    (entity: Plant): BehaviourName => {
       if (entity.props.energy > store.plantCloneThreshold) {
         return CLONE;
       } else {
         return GROW;
       }
-    }
-);
-const stopping = new Behaviour<Plant>(
-    'stopping',
-    () => NOOP
+    }, [CLONE, GROW]
 );
 
 const growing = new Behaviour<Plant>(
-    'growing',
-    (action: Action, entity: Plant, world: World): Action => {
+    GROW,
+    (entity: Plant): BehaviourName => {
       entity.props.energy += store.plantGrowEnergy;
-      return STOP;
-    }
+      return null;
+    },
+    []
 );
 
 const plantBuilder = new PlantBuilder({energy: 5});
 const cloning = new Behaviour<Plant>(
-    'cloning',
-    (action: Action, entity: Plant, world: World): Action => {
+    CLONE,
+    (entity: Plant, world: World): BehaviourName => {
       const view = new Neighbours(world, entity.props.location);
       const space = view.findDirRand(e => e.symbol === SPACE);
       if (space) {
         const childEnergy = Math.ceil(Math.random() * entity.props.energy);
         entity.props.energy -= childEnergy;
         view.put(space, plantBuilder.build({energy: childEnergy}));
-        return STOP;
+        return null;
       } else {
         return GROW;
       }
-    }
+    },
+    [GROW]
 );
 
 /**
@@ -57,14 +55,8 @@ const cloning = new Behaviour<Plant>(
  *
  * The graph always starts with the starting behaviour and ends with the stopping behaviour.
  */
-export const plantBehaviour = new BehaviourGraph<Plant>(starting, stopping);
+export const plantBehaviour = new BehaviourGraph<Plant>(starting);
 plantBehaviour.add(growing);
 plantBehaviour.add(cloning);
-
-plantBehaviour.link(starting, GROW, growing);
-plantBehaviour.link(starting, CLONE, cloning);
-plantBehaviour.link(growing, STOP, stopping);
-plantBehaviour.link(cloning, GROW, growing);
-plantBehaviour.link(cloning, STOP, stopping);
 
 console.log('Plant behaviour graph in mermaid format:\n', plantBehaviour.toString());

@@ -1,12 +1,12 @@
-import {Behaviour, BehaviourGraph, EntityProps, N, ZERO} from '../src';
+import {Behaviour, BehaviourGraph, EntityProps, N, CENTRE} from '../src';
 import {EntityBuilderMap} from '../src';
 import {EntityHandlerMap} from '../src';
-import Action from '../src/Action';
 import Neighbours from '../src/Neighbours';
 import {SPACE} from '../src/Space';
 import Vector from '../src/Vector';
 import View from '../src/View';
 import World from '../src/World';
+import {START, STOP} from './stub/Behaviours';
 import {EntityStub} from './stub/EntityStub';
 import EntityStubHandler from './stub/EntityStubHandler';
 import {EntityStubProps} from './stub/EntityStubProps';
@@ -23,14 +23,10 @@ const testSymbolHandler = new EntityHandlerMap();
 testSymbolHandler.add(' ', new SpaceHandler());
 testSymbolHandler.add('#', new WallHandler());
 
-const entryRule = new Behaviour('entry', (action: Action) => {
-  return action;
-});
-const stopRule = new Behaviour('stop', (action: Action) => {
-  return action;
-});
-const behaviourGraph = new BehaviourGraph(entryRule, stopRule);
-
+const entryRule = new Behaviour(START, () => STOP, [STOP]);
+const stopRule = new Behaviour(STOP, () => null, []);
+const behaviourGraph = new BehaviourGraph(entryRule);
+behaviourGraph.add(stopRule);
 testSymbolHandler.add('o',
     new EntityStubHandler(
         behaviourGraph
@@ -90,7 +86,7 @@ it('should update props.location on set', () => {
   });
 
   const view = new Neighbours(world, new Vector(1, 1));
-  view.put(N, view.get(ZERO)!);
+  view.put(N, view.get(CENTRE)!);
   expect(props.location).toStrictEqual(new Vector(1, 0));
 });
 
@@ -108,7 +104,7 @@ it('should return previous entity on set', () => {
   const view = new Neighbours(world, new Vector(1, 1));
 
   // Move 2 to 1, returning 1:
-  const previous = view.put(N, view.get(ZERO)!);
+  const previous = view.put(N, view.get(CENTRE)!);
 
   expect((previous?.props as any)?.id).toStrictEqual(1);
 });

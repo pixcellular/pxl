@@ -17,7 +17,7 @@
   </head>
   <body>
     <pre id="grid"></pre>
-    <script data-search-needle="pxl-dependency" src="https://unpkg.com/pixcellular@2.4.0/index.js"></script>
+    <script data-search-needle="pxl-dependency" src="https://unpkg.com/pixcellular@2.5.1/index.js"></script>
     <script>
 
       const map = [
@@ -58,9 +58,8 @@
           // ... And no energy probably means death:
           if (organism.props.energy <= 0) {
             // Remove entity from world:
-            view.remove(spaceDirection || pxl.ZERO);
+            view.remove(spaceDirection || pxl.CENTRE);
           }
-
         }
       });
 

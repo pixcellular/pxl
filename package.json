@@ -1,6 +1,6 @@
 {
   "name": "pixcellular",
-  "version": "2.4.0",
+  "version": "2.5.1",
   "description": "",
   "author": "pixcellular",
   "license": "ISC",
@@ -36,7 +36,7 @@
     "build:static": "cp package.json README.md dist",
     "build": "npm-run-all build:*",
     "publish:dist": "cd dist && npm publish",
-    "publish": "npm run test && npm run build && npm run publish:dist",
+    "test-build-publish": "npm run test && npm run build && npm run publish:dist",
     "test-examples": "bash ./scripts/test-examples.sh",
     "set-pxl-version-in-examples": "node ./scripts/set-pxl-version-in-examples.js"
   },

@@ -1,10 +1,10 @@
 import {EntityProps} from '../../src';
-import Direction, {ZERO} from '../../src/Direction';
+import Direction, {CENTRE} from '../../src/Direction';
 import Vector from '../../src/Vector';
 
 export class EntityStubProps extends EntityProps {
 
-  public dir: Direction = ZERO;
+  public dir: Direction = CENTRE;
   public location: Vector;
   public energy: number;
 

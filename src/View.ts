@@ -10,7 +10,7 @@ import Vector from './Vector';
 export default interface View {
 
   /**
-   * Centre of the view, location ZERO, 0,0
+   * Centre of the view, location CENTRE, 0,0
    */
   getCentre(): Vector;
 

@@ -33,7 +33,7 @@ export const NW = new Direction('NW', -1, -1);
 /**
  * Directs to current location
  */
-export const ZERO = new Direction('zero', 0, 0);
+export const CENTRE = new Direction('CENTRE', 0, 0);
 
 /**
  * The nine cardinal and intercardinal directions representing all neighbouring cells
