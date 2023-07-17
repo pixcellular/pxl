@@ -19,7 +19,9 @@ const starting = new Behaviour<Plant>(
 const growing = new Behaviour<Plant>(
     GROW,
     (entity: Plant): BehaviourName => {
-      entity.props.energy += store.plantGrowEnergy;
+      if (entity.props.energy < store.plantGrowLimit) {
+        entity.props.energy += store.plantGrowEnergy;
+      }
       return null;
     },
     []

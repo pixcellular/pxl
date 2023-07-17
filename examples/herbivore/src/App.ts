@@ -36,9 +36,11 @@ export default class App {
       clearInterval(this.currentInterval);
     }
     this.currentInterval = setInterval(() => {
+      const start = performance.now();
       world.turn();
+      console.log('turn took', (performance.now() - start).toFixed(0));
       this.displayWorldOnce(world);
-    }, 100);
+    }, store.loopDurationMs);
   }
 
   private displayWorldOnce(world) {
@@ -64,15 +66,33 @@ export default class App {
 function createWorld() {
 
   const map = [
-    'O#  #   ^',
-    '#O    #  ',
-    ' #  #    ',
-    '    #    ',
-    '    #O   ',
-    ' ^   # ##',
-    ' #  # ##O',
-    '# ##  # #',
-    '     #   '
+    'O#  #    O#  #    O#  #    ',
+    '#O    #  #O    #  #O    #  ',
+    ' #  #     #  #     #  #    ',
+    '    #    ^   #        #    ',
+    '    #O       #O       #O   ',
+    '     # ##     # ##     # ##',
+    ' #  # ##O #  # ##O #  # ##O',
+    '# ##  # ## ##  # ## ##  # #',
+    '     #        #        #   ',
+    'O#  #    O#  #    O#  #    ',
+    '#O    #  #O    #  #O    #  ',
+    ' #  #     #  #     #  #    ',
+    '    #        #        #    ',
+    '    #O       #O       #O   ',
+    '  ^  # ##     # ##     # ##',
+    ' #  # ##O #  # ##O #  # ##O',
+    '# ##  # ## ##  # ## ##  # #',
+    '     #        #        #   ',
+    'O#  #    O#  #    O#  #    ',
+    '#O    #  #O    #  #O    #  ',
+    ' #  #     #  #     #  #    ',
+    '    #        #        #    ',
+    '    #O       #O       #O   ',
+    '     # ##     # ##     # ##',
+    ' #  # ##O #  # ##O #  # ##O',
+    '# ##  # ## ##  # ## ##  # #',
+    '     #        #        #   ',
   ];
 
   // Factory that will convert the map into entities:
