@@ -1,9 +1,10 @@
 /**
  * Export barrel
  */
-import BehaviourGraph, {Behaviour, BehaviourGraphHandler, BehaviourName} from './BehaviourGraph';
+import BehaviourGraph, {Behaviour, BehaviourName} from './BehaviourGraph';
 import Direction, {
   cardinalDirections,
+  CENTRE,
   E,
   N,
   NE,
@@ -11,12 +12,10 @@ import Direction, {
   S,
   SE,
   SW,
-  W,
-  CENTRE
+  W
 } from './Direction';
-import Entity from './Entity';
+import Entity, {EntityHandler} from './Entity';
 import {EntityBuilder, EntityBuilderMap} from './EntityBuilder';
-import {EntityHandler, EntityHandlerMap} from './EntityHandler';
 import {EntityProps} from './EntityProps';
 import Grid from './Grid';
 import Neighbours from './Neighbours';
@@ -30,7 +29,6 @@ export {
 
   Behaviour,
   BehaviourGraph,
-  BehaviourGraphHandler,
   BehaviourName,
 
   Direction,
@@ -46,12 +44,10 @@ export {
   CENTRE,
 
   Entity,
+  EntityHandler,
 
   EntityBuilder,
   EntityBuilderMap,
-
-  EntityHandler,
-  EntityHandlerMap,
 
   EntityProps,
 

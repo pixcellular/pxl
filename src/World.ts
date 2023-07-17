@@ -1,6 +1,5 @@
 import Entity from './Entity';
 import {EntityBuilderMap} from './EntityBuilder';
-import {EntityHandlerMap} from './EntityHandler';
 import {EntityProps} from './EntityProps';
 import Grid from './Grid';
 import {SPACE} from './Space';
@@ -23,11 +22,6 @@ export type WorldConfig = {
   builders: EntityBuilderMap,
 
   /**
-   * Map of {@link EntityHandler}s
-   */
-  handlers: EntityHandlerMap
-
-  /**
    * Entity on map that is used to fill up empty space.
    * Singleton with a symbol, the same props and no location,
    * i.e. only one defaultEntity exists.
@@ -43,7 +37,6 @@ export type WorldConfig = {
 export default class World {
 
   private readonly grid: Grid;
-  private readonly entityHandlers: EntityHandlerMap;
   private defaultEntity: Entity = SPACE;
 
   /**
@@ -57,7 +50,6 @@ export default class World {
   constructor(
       config: WorldConfig
   ) {
-    this.entityHandlers = config.handlers;
     this.initDefaultEntity(config);
     this.grid = this.mapToGrid(config);
   }
@@ -89,8 +81,7 @@ export default class World {
       if (entity.handled) {
         return;
       }
-      const handler = this.entityHandlers.get(entity.symbol);
-      handler.handle(entity, location, this);
+      entity.handle(location, this);
       entity.handled = true;
     });
     this._age++;
@@ -114,9 +105,6 @@ export default class World {
     }
     if (!config.builders.includes(this.defaultEntity.symbol)) {
       config.builders.add(this.defaultEntity.symbol, {build: () => this.defaultEntity});
-    }
-    if (!config.handlers.includes(this.defaultEntity.symbol)) {
-      config.handlers.add(this.defaultEntity.symbol, {handle: () => {}});
     }
   }
 

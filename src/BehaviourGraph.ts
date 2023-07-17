@@ -1,15 +1,7 @@
 import Entity from './Entity';
-import {EntityHandler} from './EntityHandler';
-import Vector from './Vector';
 import World from './World';
 
 export type BehaviourName = string;
-
-// TODO?
-// export type Response = {
-//   name: string;
-//   nextBehaviour: BehaviourName,
-// };
 
 export type PerformBehaviour<T extends Entity> = (entity: T, world: World) => BehaviourName | null;
 
@@ -147,18 +139,5 @@ export default class BehaviourGraph<T extends Entity> {
       });
     }
     return report;
-  }
-}
-
-export class BehaviourGraphHandler<E extends Entity> implements EntityHandler {
-
-  private graph: BehaviourGraph<E>;
-
-  constructor(graph: BehaviourGraph<E>) {
-    this.graph = graph;
-  }
-
-  public handle(entity: E, location: Vector, world: World): void {
-    this.graph.traverse(entity, world);
   }
 }

@@ -34,7 +34,42 @@ You can give any symbol any property you want. Also, space is an entity, albeit 
 
 Note: entity properties need a `location`. Pxl will use it to map the symbols on the map to their properties. Space does not need a location because all space properties are the same (i.e. an empty object).
 
+###  Define behaviour
+
+All entities behave in a certain way. For 'space' it is simple: do nothing. But for the `o` organism we might want to define a specific set of behavioural rules. Pxl uses the `Entity.handle` function to determine the behaviour of every symbol:
+
+```js
+class MyEntity {
+  symbol: 'o';
+  props;
+
+// Organisms behave according to specific rules:
+  handle = (location, world) => {
+    // Get a view of neighbouring cells:
+    const view = new pxl.Neighbours(world, location);
+
+    // Find random empty space:
+    const spaceDirection = view.findDirRand(e => e.symbol === ' ');
+
+    if (spaceDirection) {
+      // Move randomly:
+      view.put(spaceDirection, this);
+    }
+
+    // Living costs energy:
+    this.props.energy--;
+
+    // ... And no energy means death:
+    if (this.props.energy <= 0) {
+      // Remove entity from world:
+      view.remove(spaceDirection || pxl.ZERO);
+    }
+  }
+}
+```
+
 ### Build entities
+
 Pxl converts the map and properties into a world with acting entities. It does this using `EntityBuilder`s:
 
 ```js
@@ -46,38 +81,6 @@ builders.add('o', {build: (props) => ({symbol: 'o', props})});
 
 Note: in this example all spaces share the same `space` props, but every organism is created using its own unique properties. 
 
-###  Define behaviour
-All entities behave in a certain way. For 'space' it is simple: do nothing. But for the `o` organism we might want to define a specific set of behavioural rules. Pxl uses `EntityHandler`s to determine the behaviour of every symbol:
-
-```js
-const handlers = new EntityHandlerMap()
-
-// Organisms behave according to specific rules:
-handlers.add('o', {
-  handle: (organism, location, world) => {
-    // Get a view of neighbouring cells:
-    const view = new pxl.Neighbours(world, location);
-
-    // Find random empty space:
-    const spaceDirection = view.findDirRand(e => e.symbol === ' ');
-
-    if(spaceDirection) {
-      // Move randomly:
-      view.put(spaceDirection, organism);
-    }
-
-    // Living costs energy:
-    organism.props.energy--;
-
-    // ... And no energy means death:
-    if (organism.props.energy <= 0) {
-      // Remove entity from world:
-      view.remove(spaceDirection || pxl.ZERO);
-    }
-  }
-});
-```
-
 ### Start simulation
 Finally, we can put all these building blocks together:
 
@@ -85,8 +88,7 @@ Finally, we can put all these building blocks together:
 const world = new World({
   map, 
   entityProps: organisms, 
-  builders, 
-  handlers
+  builders
 });
 ```
 

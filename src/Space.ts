@@ -11,6 +11,8 @@ class Space implements Entity {
     this.symbol = symbol;
   }
 
+  public handle(): void {}
+
 }
 
 /**

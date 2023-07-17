@@ -20,10 +20,20 @@ it('should return an map array when calling grid.toMap()', () => {
   const expectedMap = ['###', 'oo#', '###'];
   const grid = new Grid(3, 3, new Wall('#', {}));
   const l1 = new Vector(0, 1);
-  const entity = {symbol: 'o', handled: false, props: {location: l1}};
+  const entity = {
+    symbol: 'o',
+    props: {location: l1},
+    handled: false,
+    handle: () => null
+  };
   grid.put(l1, entity);
   const l2 = new Vector(1, 1);
-  const entity2 = {symbol: 'o', handled: false, props: {location: l2}};
+  const entity2 = {
+    symbol: 'o',
+    props: {location: l2},
+    handled: false,
+    handle: () => null
+  };
   grid.put(l2, entity2);
   expect(grid.toMap()).toStrictEqual(expectedMap);
 });

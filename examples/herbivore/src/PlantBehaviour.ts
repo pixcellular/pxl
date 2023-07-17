@@ -25,7 +25,6 @@ const growing = new Behaviour<Plant>(
     []
 );
 
-const plantBuilder = new PlantBuilder({energy: 5});
 const cloning = new Behaviour<Plant>(
     CLONE,
     (entity: Plant, world: World): BehaviourName => {
@@ -34,7 +33,7 @@ const cloning = new Behaviour<Plant>(
       if (space) {
         const childEnergy = Math.ceil(Math.random() * entity.props.energy);
         entity.props.energy -= childEnergy;
-        view.put(space, plantBuilder.build({energy: childEnergy}));
+        view.put(space, entity.builder.build({energy: childEnergy}));
         return null;
       } else {
         return GROW;

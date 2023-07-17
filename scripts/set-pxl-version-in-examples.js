@@ -24,7 +24,6 @@ examplesWithPackageJson.forEach(example => {
   const json = JSON.parse(fs.readFileSync(packageJsonPath).toString());
   json.dependencies.pixcellular = replacement;
   fs.writeFileSync(packageJsonPath, JSON.stringify(json, null, 2));
-  runNpmInstallIn(examplePath);
 });
 
 const htmlExamples = [
@@ -44,6 +43,12 @@ htmlExamples.forEach(example => {
       replacementScriptTag
   );
   fs.writeFileSync(indexPath, update);
+});
+
+// Build after all examples dependencies are updated:
+examplesWithPackageJson.forEach(example => {
+  const examplePath = `./examples/${example}`
+  runNpmInstallIn(examplePath);
 });
 
 function runNpmInstallIn(path) {

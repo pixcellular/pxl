@@ -10,4 +10,5 @@ export class Wall implements Entity {
         this.symbol = symbol;
         this.props = props;
     }
+    public handle = () => null;
 }

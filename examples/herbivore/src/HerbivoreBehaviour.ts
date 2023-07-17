@@ -1,12 +1,9 @@
-import {Behaviour, BehaviourGraph, BehaviourName, Direction, Neighbours, World, CENTRE} from 'pixcellular';
+import {Behaviour, BehaviourGraph, BehaviourName, CENTRE, Direction, Neighbours, World} from 'pixcellular';
 import {EAT, MOVE, REPRODUCE, START, STOP} from './Behaviours';
 import {Herbivore} from './Herbivore';
-import {HerbivoreBuilder} from './HerbivoreBuilder';
 import {isPlantProps} from './PlantProps';
 import {store} from './Store';
 import {PLANT, SPACE} from './Symbols';
-
-const herbivoreBuilder = new HerbivoreBuilder(10);
 
 const starting = new Behaviour<Herbivore>(
     START,
@@ -36,7 +33,7 @@ const reproducing = new Behaviour<Herbivore>(
       const space = view.findDirRand(e => e.symbol === SPACE);
       if (space) {
         const childProps = {energy: Math.floor(entity.props.energy / 3)};
-        const child = herbivoreBuilder.build(childProps);
+        const child = entity.builder.build(childProps);
         view.put(space, child);
         entity.props.energy -= child.props.energy * 2;
       }

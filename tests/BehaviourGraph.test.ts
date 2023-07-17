@@ -39,7 +39,7 @@ it('should traverse graph', () => {
   ));
 
   const expectedWalk = ['START', 'EAT', 'STOP'];
-  const walk = graph.traverse(new EntityStub({} as EntityStubProps), {} as World);
+  const walk = graph.traverse(new EntityStub({} as EntityStubProps, {} as BehaviourGraph<EntityStub>), {} as World);
   expect(JSON.stringify(walk)).toBe(JSON.stringify(expectedWalk));
 });
 

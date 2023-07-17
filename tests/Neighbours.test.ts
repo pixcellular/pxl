@@ -1,6 +1,5 @@
-import {Behaviour, BehaviourGraph, EntityProps, N, CENTRE} from '../src';
+import {Behaviour, BehaviourGraph, CENTRE, EntityProps, N} from '../src';
 import {EntityBuilderMap} from '../src';
-import {EntityHandlerMap} from '../src';
 import Neighbours from '../src/Neighbours';
 import {SPACE} from '../src/Space';
 import Vector from '../src/Vector';
@@ -8,30 +7,23 @@ import View from '../src/View';
 import World from '../src/World';
 import {START, STOP} from './stub/Behaviours';
 import {EntityStub} from './stub/EntityStub';
-import EntityStubHandler from './stub/EntityStubHandler';
 import {EntityStubProps} from './stub/EntityStubProps';
-import SpaceHandler from './stub/SpaceHandler';
 import {Wall} from './stub/Wall';
-import WallHandler from './stub/WallHandler';
 
 const entityFactory = new EntityBuilderMap();
 entityFactory.add(' ', {build: () => SPACE});
 entityFactory.add('#', {build: (props) => new Wall('#', props)});
-entityFactory.add('o', {build: (props) => new EntityStub(props as EntityStubProps)});
-
-const testSymbolHandler = new EntityHandlerMap();
-testSymbolHandler.add(' ', new SpaceHandler());
-testSymbolHandler.add('#', new WallHandler());
+entityFactory.add('o', {
+  build: (props) => new EntityStub(
+      props as EntityStubProps,
+      {} as BehaviourGraph<EntityStub>
+  )
+});
 
 const entryRule = new Behaviour(START, () => STOP, [STOP]);
 const stopRule = new Behaviour(STOP, () => null, []);
 const behaviourGraph = new BehaviourGraph(entryRule);
 behaviourGraph.add(stopRule);
-testSymbolHandler.add('o',
-    new EntityStubHandler(
-        behaviourGraph
-    )
-);
 
 it('should contain all neighbours with char', () => {
   const propsOfEntities: EntityProps[] = [];
@@ -41,7 +33,6 @@ it('should contain all neighbours with char', () => {
     map: testPlan,
     entityProps: propsOfEntities,
     builders: entityFactory,
-    handlers: testSymbolHandler
   });
 
   const view = new Neighbours(world, new Vector(1, 1));
@@ -64,7 +55,6 @@ it('should not find itself', () => {
     map: testPlan,
     entityProps: propsOfEntities,
     builders: entityFactory,
-    handlers: testSymbolHandler
   });
 
   const view: View = new Neighbours(world, new Vector(1, 1));
@@ -82,7 +72,6 @@ it('should update props.location on set', () => {
     map: testPlan,
     entityProps: propsOfEntities,
     builders: entityFactory,
-    handlers: testSymbolHandler
   });
 
   const view = new Neighbours(world, new Vector(1, 1));
@@ -99,7 +88,6 @@ it('should return previous entity on set', () => {
     map: testPlan,
     entityProps: propsOfEntities,
     builders: entityFactory,
-    handlers: testSymbolHandler
   });
   const view = new Neighbours(world, new Vector(1, 1));
 

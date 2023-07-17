@@ -1,79 +1,48 @@
-import {Behaviour, BehaviourGraph, EntityBuilderMap, EntityHandlerMap, EntityProps} from '../src';
-import Direction, {E} from '../src/Direction';
-import Entity from '../src/Entity';
+import {Behaviour, BehaviourGraph, E, EntityBuilderMap, Vector} from '../src';
 import {SPACE} from '../src/Space';
-import randomDirection from '../src/util/randomDirection';
-import Vector from '../src/Vector';
 import World from '../src/World';
 import {MOVE, START, STOP} from './stub/Behaviours';
 import {EntityStub} from './stub/EntityStub';
-import EntityStubHandler from './stub/EntityStubHandler';
 import {EntityStubProps} from './stub/EntityStubProps';
 import {MovingBehaviour} from './stub/MovingBehaviour';
 import SleepingBehaviour from './stub/SleepingBehaviour';
-import SpaceHandler from './stub/SpaceHandler';
 import {Wall} from './stub/Wall';
-import WallHandler from './stub/WallHandler';
-
-const handlers = new EntityHandlerMap();
-handlers.add(' ', new SpaceHandler());
-handlers.add('#', new WallHandler());
 
 // Create rule graph:
-const starting = new Behaviour<EntityStub>(START, () => {
-  return MOVE;
-}, [MOVE]);
+const starting = new Behaviour<EntityStub>(START, () => MOVE, [MOVE]);
 const moving = new MovingBehaviour();
 const sleeping = new SleepingBehaviour();
-const stopping = new Behaviour(STOP, () => {
-  return null;
-}, []);
+const stopping = new Behaviour(STOP, () => null, []);
 
-const organismBehaviour = new BehaviourGraph<EntityStub>(starting);
-organismBehaviour.add(moving);
-organismBehaviour.add(sleeping);
-organismBehaviour.add(stopping);
-
-handlers.add('o', new EntityStubHandler(organismBehaviour));
+const graph = new BehaviourGraph<EntityStub>(starting);
+graph.add(moving);
+graph.add(sleeping);
+graph.add(stopping);
 
 it('should contain grid that matches plan', () => {
-  class Org implements Entity {
-    public props: EntityProps;
-    public symbol: string;
-    public direction: Direction;
-    public handled;
-
-    constructor(symbol: string, props: EntityProps) {
-      this.props = props;
-      this.symbol = symbol;
-      this.direction = randomDirection();
-      this.handled = false;
-    }
-
-  }
 
   const builders = new EntityBuilderMap();
   builders.add(' ', {build: () => SPACE});
   builders.add('#', {build: (props) => new Wall('#', props)});
-  builders.add('o', {build: (props) => new Org('o', props)});
+  builders.add('o', {build: (props) => new EntityStub(props as EntityStubProps, graph)});
   const testPlan = ['#o', '# '];
-  const world = new World({map: testPlan, entityProps: [], builders, handlers});
+
+  const world = new World({map: testPlan, entityProps: [], builders});
   expect(world.getGrid().toString()).toBe(testPlan.join('\n'));
 });
 
 it('should move test organism to east', () => {
-  console.log('rules:\n', (handlers.get('o') as EntityStubHandler).rules.toString());
   const location = new Vector(0, 0);
   const props = new EntityStubProps(location, E, 40);
 
   const builders = new EntityBuilderMap();
   builders.add(' ', {build: () => SPACE});
-  builders.add('o', {build: (p) => new EntityStub(p as EntityStubProps)});
+  builders.add('o', {build: (p) => new EntityStub(p as EntityStubProps, graph)});
 
   const map = ['o '];
   const expectedPlan = ' o';
 
-  const world = new World({map, entityProps: [props], builders, handlers});
+  const world = new World({map, entityProps: [props], builders});
 
   const result = world.turn();
 
@@ -87,12 +56,12 @@ it('should not handle entity twice', () => {
 
   const builders = new EntityBuilderMap();
   builders.add(' ', {build: () => SPACE});
-  builders.add('o', {build: (p) => new EntityStub(p as EntityStubProps)});
+  builders.add('o', {build: (p) => new EntityStub(p as EntityStubProps, graph)});
 
   const startPlan = 'o  ';
   const expectedPlan = ' o ';
 
-  const world = new World({map: [startPlan], entityProps: [props], builders, handlers});
+  const world = new World({map: [startPlan], entityProps: [props], builders});
 
   const result = world.turn();
 
@@ -105,10 +74,7 @@ it('does not need default entity handler and builder', () => {
   const props = new EntityStubProps(location, E, 40);
 
   const builders = new EntityBuilderMap();
-  builders.add('o', {build: (p) => new EntityStub(p as EntityStubProps)});
-
-  const handlers = new EntityHandlerMap();
-  handlers.add('o', new EntityStubHandler(organismBehaviour));
+  builders.add('o', {build: (p) => new EntityStub(p as EntityStubProps, graph)});
 
   const startPlan = 'o  ';
   const defaultEntity = SPACE;
@@ -117,7 +83,6 @@ it('does not need default entity handler and builder', () => {
     map: [startPlan],
     entityProps: [props],
     builders,
-    handlers,
     defaultEntity
   });
 
