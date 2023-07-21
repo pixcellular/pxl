@@ -21,7 +21,7 @@ const starting = new Behaviour<Herbivore>(
       if (spaceDir) {
         return MOVE;
       }
-      return null;
+      return;
     },
     [REPRODUCE, EAT, MOVE]
 );

@@ -3,7 +3,7 @@ import World from './World';
 
 export type BehaviourName = string;
 
-export type PerformBehaviour<T extends Entity> = (entity: T, world: World) => BehaviourName | null;
+export type PerformBehaviour<T extends Entity> = (entity: T, world: World) => BehaviourName | void;
 
 type ValidationErrorMsg = {
   walk: string[],
@@ -69,7 +69,7 @@ export default class BehaviourGraph<T extends Entity> {
       throw new GraphValidationError(this.validation);
     }
     const walk: string[] = [];
-    let nextBehaviourName: string | null = this.startBehaviourName;
+    let nextBehaviourName: BehaviourName | void = this.startBehaviourName;
     while (nextBehaviourName) {
       const behaviour: Behaviour<T> = this.behaviours[nextBehaviourName];
       if (walk.includes(behaviour.name)) {
