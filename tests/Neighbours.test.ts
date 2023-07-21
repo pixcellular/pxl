@@ -21,7 +21,7 @@ entityFactory.add('o', {
 });
 
 const entryRule = new Behaviour(START, () => STOP, [STOP]);
-const stopRule = new Behaviour(STOP, () => null, []);
+const stopRule = new Behaviour(STOP, () => {}, []);
 const behaviourGraph = new BehaviourGraph(entryRule);
 behaviourGraph.add(stopRule);
 

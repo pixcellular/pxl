@@ -35,7 +35,13 @@
     "interface-name": [
       true,
       "never-prefix"
-    ]
+    ],
+    "no-bitwise": false
   },
-  "rulesDirectory": []
+  "rulesDirectory": [],
+  "linterOptions": {
+    "exclude": [
+      "src/Perlin.ts"
+    ]
+  }
 }

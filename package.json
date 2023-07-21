@@ -29,7 +29,7 @@
     "index.d.ts"
   ],
   "scripts": {
-    "test": "jest",
+    "test": "mkdir -p dist && jest",
     "build:clean": "rimraf dist",
     "build:js": "tsc --project tsconfig.build.json",
     "build:bundle": "rollup -c",

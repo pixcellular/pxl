@@ -12,7 +12,7 @@ import {Wall} from './stub/Wall';
 const starting = new Behaviour<EntityStub>(START, () => MOVE, [MOVE]);
 const moving = new MovingBehaviour();
 const sleeping = new SleepingBehaviour();
-const stopping = new Behaviour(STOP, () => null, []);
+const stopping = new Behaviour(STOP, () => {}, []);
 
 const graph = new BehaviourGraph<EntityStub>(starting);
 graph.add(moving);

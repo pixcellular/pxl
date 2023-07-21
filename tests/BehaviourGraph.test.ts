@@ -6,7 +6,7 @@ import {EntityStubProps} from './stub/EntityStubProps';
 
 it('should create graph in mermaid format', () => {
   const start = new Behaviour(START, () => EAT, [EAT]);
-  const stop = new Behaviour(STOP, () => null, []);
+  const stop = new Behaviour(STOP, () => {}, []);
   const eating = new Behaviour(EAT, () => {
     return STOP;
   }, [STOP]);
@@ -34,7 +34,7 @@ it('should traverse graph', () => {
   ));
   graph.add(new Behaviour(
       STOP,
-      () => null,
+      () => {},
       []
   ));
 
@@ -53,7 +53,7 @@ it('should validate', () => {
   ));
   graph.add(new Behaviour(
       STOP,
-      () => null,
+      () => {},
       []
   ));
   expect(graph.validate()).toStrictEqual({valid: true, errors: []});
