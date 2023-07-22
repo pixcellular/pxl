@@ -1,6 +1,7 @@
 import {describe, expect, it} from '@jest/globals';
 import * as fs from 'fs';
-import PerlinMatrix, {flatten, mapEachCell, PerlinMatrixConfig} from '../src/PerlinMatrix';
+import {asArrays} from '../src/Matrix';
+import PerlinMatrix, {PerlinMatrixConfig} from '../src/PerlinMatrix';
 
 describe('PerlinMatrix', () => {
   const defaultMatrix = [
@@ -18,30 +19,14 @@ describe('PerlinMatrix', () => {
 
   it('creates perlin noise', () => {
     const perlinMatrix = new PerlinMatrix(3, 2);
-    expect(perlinMatrix.asArrays()).toStrictEqual(defaultMatrix);
-  });
-
-  it('seeds perlin matrix randomly', () => {
-    const perlinMatrix1 = new PerlinMatrix(3, 2, {seeder: Math.random});
-    const flatDefaultMatrix = flatten(defaultMatrix);
-    const seededMatrix = perlinMatrix1.asArrays();
-    const flatSeededMatrix = flatten(seededMatrix);
-    const allInRange = !!flatSeededMatrix.filter(n => n > PerlinMatrix.range[0] && n < PerlinMatrix.range[1]);
-    expect(seededMatrix).not.toStrictEqual(defaultMatrix);
-    expect(allInRange).toBe(true);
-    const allDiffer = !!flatSeededMatrix.filter((n, i) => n !== flatDefaultMatrix[i]);
-    expect(allDiffer).toBe(true);
-    const perlinMatrix2 = new PerlinMatrix(3, 2, {seeder: Math.random});
-    const flatSeededMatrix2 = flatten(perlinMatrix2.asArrays());
-    const diffBetween1And2 = flatSeededMatrix2.filter((n, i) => n !== flatSeededMatrix[i]);
-    expect(diffBetween1And2.length).toBe(6);
+    expect(asArrays(perlinMatrix)).toStrictEqual(defaultMatrix);
   });
 
   it('creates perlin noise between 0 and 1', () => {
     const width = 100;
     const height = 100;
     const perlinMatrix = new PerlinMatrix(width, height);
-    const allBetween0And1 = flatten(perlinMatrix.toFractions())
+    const allBetween0And1 = perlinMatrix.asFractions().getAll()
             .filter(v => v > 0 && v < 1)
             .length
         === 100 * 100;
@@ -106,27 +91,27 @@ describe('PerlinMatrix', () => {
     const smallWidth = 30;
     const smallHeight = 20;
     const smallPerlinMatrix = new PerlinMatrix(smallWidth, smallHeight, config);
-    const smallFractions = smallPerlinMatrix.toFractions();
+    const smallFractions = smallPerlinMatrix.asFractions();
     grids.push(`<div>${smallWidth}x${smallHeight}; ${JSON.stringify(config)}</div>`
-        + createBwGradientGrid(smallFractions)
+        + createBwGradientGrid(asArrays(smallFractions))
     );
 
     const bigWidth = 60;
     const bigHeight = 40;
     const bigPerlinMatrix = new PerlinMatrix(bigWidth, bigHeight, config);
-    const bigFractions = bigPerlinMatrix.toFractions();
+    const bigFractions = bigPerlinMatrix.asFractions();
     grids.push(`<div>${bigWidth}x${bigHeight}; ${JSON.stringify(config)}</div>`
-        + createBwGradientGrid(bigFractions)
+        + createBwGradientGrid(asArrays(bigFractions))
     );
 
     const path = 'dist/perlin-matrix-small-in-big.html';
     writeToHtml(grids, path);
 
-    const smallMatchesBigCell = mapEachCell<number, boolean>(
-        smallFractions, (location, value) => {
-          return bigFractions[location.y][location.x] === value;
-        });
-    const allCellsMatch = flatten(smallMatchesBigCell)
+    const smallMatchesBigCell: boolean[] = [];
+    smallFractions.forEachCell((value, location) => {
+      smallMatchesBigCell.push(bigFractions.get(location) === value);
+    });
+    const allCellsMatch = smallMatchesBigCell
             .filter(v => v)
             .length
         ===
@@ -142,7 +127,7 @@ function createFractionsBwGradientGrid(
     height: number
 ) {
   const perlinMatrix = new PerlinMatrix(width, height, config);
-  const fractions = perlinMatrix.toFractions();
+  const fractions = asArrays(perlinMatrix.asFractions());
   return createBwGradientGrid(fractions);
 }
 

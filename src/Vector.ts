@@ -1,7 +1,15 @@
 /**
+ * Vector as plain XY-coordinates
+ */
+export type V = {
+  x: number;
+  y: number;
+};
+
+/**
  * Vector in two dimensional space
  */
-export default class Vector {
+export default class Vector  implements V {
   public x: number;
   public y: number;
 

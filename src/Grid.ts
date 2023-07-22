@@ -1,12 +1,13 @@
 import Entity, {EntityWithLocation} from './Entity';
+import {EntityProps} from './EntityProps';
+import {contains, getCellIndex, Matrix} from './Matrix';
 import {SPACE} from './Space';
 import Vector from './Vector';
-import {EntityProps} from "./EntityProps";
 
 /**
  * Two-dimensional map of square cells with entities
  */
-export default class Grid {
+export default class Grid implements Matrix<Entity> {
   private readonly cells: Entity[];
   private readonly width: number;
   private readonly height: number;
@@ -29,8 +30,7 @@ export default class Grid {
    * Does grid contain location?
    */
   public contains(location: Vector): boolean {
-    return location.x >= 0 && location.x < this.width &&
-        location.y >= 0 && location.y < this.height;
+    return contains(location, this);
   }
 
   /**
@@ -53,7 +53,7 @@ export default class Grid {
     if (!location) {
       throw new Error('No location');
     }
-    const newIndex = this.getCellIndex(location);
+    const newIndex = getCellIndex(location, this);
     const entityToOverwrite = this.cells[newIndex];
     this.cells[newIndex] = entity;
 
@@ -62,7 +62,7 @@ export default class Grid {
       const oldLocation = entity.props.location;
       entity.props.location = location;
       if (oldLocation && !oldLocation.isEqual(location)) {
-        const oldIndex = this.getCellIndex(oldLocation);
+        const oldIndex = getCellIndex(oldLocation, this);
         this.cells[oldIndex] = this.defaultEntity;
       }
     }
@@ -81,7 +81,7 @@ export default class Grid {
    * - Replaces cell with default entity
    */
   public remove(location: Vector): Entity | null {
-    const index = this.getCellIndex(location);
+    const index = getCellIndex(location, this);
     const entity = this.cells[index];
     this.cells[index] = this.defaultEntity;
     if (entity.props.location) {
@@ -107,7 +107,7 @@ export default class Grid {
   /**
    * Get all entities
    */
-  public getAll() {
+  public getAll(): Entity[] {
     return this.cells;
   }
 
@@ -161,10 +161,6 @@ export default class Grid {
         handler(entity, x, y);
       }
     }
-  }
-
-  private getCellIndex(location: Vector): number {
-    return location.x + (this.width * location.y);
   }
 
   /**
