@@ -40,11 +40,9 @@
     "test-examples": "bash ./scripts/test-examples.sh",
     "set-pxl-version-in-examples": "node ./scripts/set-pxl-version-in-examples.js"
   },
-  "dependencies": {
-    "@types/node": "^12.12.21",
-    "source-map-loader": "^0.2.4"
-  },
   "devDependencies": {
+    "@types/node": "^12.12.21",
+    "source-map-loader": "^0.2.4",
     "@rollup/plugin-commonjs": "^21.0.1",
     "@types/jest": "^27.0.2",
     "jest": "^27.3.1",
