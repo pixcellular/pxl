@@ -5,24 +5,24 @@
  */
 export default class ImprovedNoise {
   public static noise(x: number, y: number, z: number): number {
-    const X = Math.floor(x) & 255;                                                        // FIND UNIT CUBE THAT
-    const Y = Math.floor(y) & 255;                                                            // CONTAINS POINT.
+    const X = Math.floor(x) & 255;                                                                // FIND UNIT CUBE THAT
+    const Y = Math.floor(y) & 255;                                                                    // CONTAINS POINT.
     const Z = Math.floor(z) & 255;
     x -= Math.floor(x);                                                                           // FIND RELATIVE X,Y,Z
     y -= Math.floor(y);                                                                             // OF POINT IN CUBE.
     z -= Math.floor(z);
     const u: number = this.fade(x);                                                               // COMPUTE FADE CURVES
-    const v = this.fade(y);                                                                // FOR EACH OF X,Y,Z.
+    const v = this.fade(y);                                                                        // FOR EACH OF X,Y,Z.
     const w = this.fade(z);
-    const A: number = this.p[X] + Y, AA = this.p[A] + Z, AB = this.p[A + 1] + Z, // HASH COORDINATES OF
-        B = this.p[X + 1] + Y, BA = this.p[B] + Z, BB = this.p[B + 1] + Z// THE 8 CUBE CORNERS,
+    const A: number = this.p[X] + Y, AA = this.p[A] + Z, AB = this.p[A + 1] + Z,                  // HASH COORDINATES OF
+        B = this.p[X + 1] + Y, BA = this.p[B] + Z, BB = this.p[B + 1] + Z                         // THE 8 CUBE CORNERS,
 
     return this.lerp(w, this.lerp(v, this.lerp(u, this.grad(this.p[AA], x, y, z),                             // AND ADD
-                this.grad(this.p[BA], x - 1, y, z)),                                                       // BLENDED
-            this.lerp(u, this.grad(this.p[AB], x, y - 1, z),                                               // RESULTS
-                this.grad(this.p[BB], x - 1, y - 1, z))),                                               // FROM  8
-        this.lerp(v, this.lerp(u, this.grad(this.p[AA + 1], x, y, z - 1),                                  // CORNERS
-                this.grad(this.p[BA + 1], x - 1, y, z - 1)),                                            // OF CUBE
+                this.grad(this.p[BA], x - 1, y, z)),                                                          // BLENDED
+            this.lerp(u, this.grad(this.p[AB], x, y - 1, z),                                                  // RESULTS
+                this.grad(this.p[BB], x - 1, y - 1, z))),                                                     // FROM  8
+        this.lerp(v, this.lerp(u, this.grad(this.p[AA + 1], x, y, z - 1),                                     // CORNERS
+                this.grad(this.p[BA + 1], x - 1, y, z - 1)),                                                  // OF CUBE
             this.lerp(u, this.grad(this.p[AB + 1], x, y - 1, z - 1),
                 this.grad(this.p[BB + 1], x - 1, y - 1, z - 1))));
   }

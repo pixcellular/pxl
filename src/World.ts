@@ -4,12 +4,13 @@ import {EntityProps} from './EntityProps';
 import Grid from './Grid';
 import {SPACE} from './Space';
 import Vector from './Vector';
+import {WorldMap} from './WorldMatrix';
 
 export type WorldConfig = {
   /**
    * Matrix with entity symbols
    */
-  map: string[],
+  map: WorldMap,
 
   /**
    * Elements as found in team.members

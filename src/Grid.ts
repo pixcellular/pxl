@@ -3,6 +3,7 @@ import {EntityProps} from './EntityProps';
 import {contains, getCellIndex, Matrix} from './Matrix';
 import {SPACE} from './Space';
 import Vector from './Vector';
+import {WorldMap} from './WorldMatrix';
 
 /**
  * Two-dimensional map of square cells with entities
@@ -123,7 +124,7 @@ export default class Grid implements Matrix<Entity> {
    * @return string[] map in which each character
    * represents the symbol of an entity on the grid
    */
-  public toMap(): string[] {
+  public toMap(): WorldMap {
     const result: string[] = [];
     this.forEach((entity, x, y) => {
       if (!result[y]) {

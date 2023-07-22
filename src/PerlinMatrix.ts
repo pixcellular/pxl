@@ -1,6 +1,6 @@
 import {contains, forEachCell, getCellIndex, Matrix} from './Matrix';
 import ImprovedNoise from './Perlin';
-import {V} from './Vector';
+import Vector, {v} from './Vector';
 
 export type PerlinMatrixConfig = {
 
@@ -9,13 +9,16 @@ export type PerlinMatrixConfig = {
   scale: number,
 
   /**
-   * Use seed to shift and create noise using floats
+   * Use floating seed to avoid integers
    * Perlin noise should be generated using floats instead of integers
    * Default seed is Math.PI
    */
   useSeed?: boolean
 };
 
+/**
+ * Build a map using [Perlin Noise]{@link https://en.wikipedia.org/wiki/Perlin_noise}
+ */
 export default class PerlinMatrix implements Matrix<number> {
   public static range = [-Math.sqrt(2) / 2, Math.sqrt(2) / 2];
 
@@ -50,7 +53,7 @@ export default class PerlinMatrix implements Matrix<number> {
   }
 
   /**
-   * From ~[-0.7, +0.7] to [0,1]
+   * Convert perlin range of ~[-0.7, +0.7] to fractions [0, 1]
    */
   public asFractions(): PerlinMatrix {
     const perlinRange = PerlinMatrix.range[1];
@@ -60,11 +63,11 @@ export default class PerlinMatrix implements Matrix<number> {
     );
   }
 
-  public forEachCell(handler: (cell: number, location: V) => void): void {
+  public forEachCell(handler: (cell: number, location: Vector) => void): void {
     forEachCell<number>(this, handler);
   }
 
-  public get(vector: V): number {
+  public get(vector: Vector): number {
     return this.cells[getCellIndex(vector, this)];
   }
 
@@ -80,17 +83,17 @@ export default class PerlinMatrix implements Matrix<number> {
     return this.width;
   }
 
-  public put(location: V, cell: number): number {
+  public put(location: Vector, cell: number): number {
     const old = this.get(location);
     this.cells[getCellIndex(location, this)] = cell;
     return old;
   }
 
-  public remove(location: V): number | null {
+  public remove(location: Vector): number | null {
     throw new Error('Not implemented');
   }
 
-  public contains(location: V): boolean {
+  public contains(location: Vector): boolean {
     return contains(location, this);
   }
 
@@ -116,12 +119,12 @@ export default class PerlinMatrix implements Matrix<number> {
 
 export function mapMatrix(
     matrix: PerlinMatrix,
-    handle: (location: V, value: number) => number
+    handle: (location: Vector, value: number) => number
 ): PerlinMatrix {
   const result = PerlinMatrix.from(matrix);
   for (let y = 0; y < matrix.getHeight(); y++) {
     for (let x = 0; x < matrix.getWidth(); x++) {
-      const location = {x, y};
+      const location = v(x, y);
       result.put(location, handle(location, matrix.get(location)));
     }
   }

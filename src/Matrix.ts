@@ -1,4 +1,4 @@
-import {V} from './Vector';
+import Vector, {v} from './Vector';
 
 export interface Matrix<T> {
 
@@ -8,23 +8,24 @@ export interface Matrix<T> {
 
   getAll(): T[];
 
-  forEachCell(handler: (cell: T, location: V) => void): void;
+  forEachCell(handler: (cell: T, location: Vector) => void): void;
 
-  remove(location: V): T | null;
+  remove(location: Vector): T | null;
 
-  put(location: V, cell: T): T | null;
+  put(location: Vector, cell: T): T | null;
 
-  get(vector: V): T;
+  get(vector: Vector): T;
 
-  contains(location: V): boolean;
+  contains(location: Vector): boolean;
+
 }
 
-export function contains<T>(location: V, matrix: Matrix<T>): boolean {
+export function contains<T>(location: Vector, matrix: Matrix<T>): boolean {
   return location.x >= 0 && location.x < matrix.getWidth() &&
       location.y >= 0 && location.y < matrix.getHeight();
 }
 
-export function getCellIndex<T>(location: V, matrix: Matrix<T>): number {
+export function getCellIndex<T>(location: Vector, matrix: Matrix<T>): number {
   return location.x + (matrix.getWidth() * location.y);
 }
 
@@ -35,16 +36,17 @@ export function asArrays<T>(matrix: Matrix<T>): T[][] {
   }
   for (let y = 0; y < matrix.getHeight(); y++) {
     for (let x = 0; x < matrix.getWidth(); x++) {
-      result[y][x] = matrix.get({x, y});
+      result[y][x] = matrix.get(v(x, y));
     }
   }
   return result;
 }
 
-export function forEachCell<T>(matrix: Matrix<T>, handle: (value: T, location: V) => void) {
+export function forEachCell<T>(matrix: Matrix<T>, handle: (value: T, location: Vector) => void) {
   for (let y = 0; y < matrix.getHeight(); y++) {
     for (let x = 0; x < matrix.getWidth(); x++) {
-      handle(matrix.get({x, y}), {x, y});
+      const location = v(x, y);
+      handle(matrix.get(location), location);
     }
   }
 }
