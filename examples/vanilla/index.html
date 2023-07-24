@@ -17,7 +17,7 @@
   </head>
   <body>
     <pre id="grid"></pre>
-    <script data-search-needle="pxl-dependency" src="https://unpkg.com/pixcellular@2.6.0/index.js"></script>
+    <script data-search-needle="pxl-dependency" src="https://unpkg.com/pixcellular@2.7.1/index.js"></script>
     <script>
 
       const map = [
@@ -44,7 +44,7 @@
         handle = (location, world) => {
 
           // Get a view of neighbouring cells:
-          const view = new pxl.Neighbours(world, location);
+          const view = new pxl.Neighbours(world.getGrid(), location);
 
           // Find random empty space:
           const spaceDirection = view.findDirRand(e => e.symbol === ' ');

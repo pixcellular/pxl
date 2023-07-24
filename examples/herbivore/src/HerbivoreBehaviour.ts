@@ -8,7 +8,7 @@ import {PLANT, SPACE} from './Symbols';
 const starting = new Behaviour<Herbivore>(
     START,
     (entity: Herbivore, world: World): BehaviourName => {
-      const view = new Neighbours(world, entity.props.location);
+      const view = new Neighbours(world.getGrid(), entity.props.location);
 
       if (canReproduce(entity)) {
         return REPRODUCE;
@@ -29,7 +29,7 @@ const starting = new Behaviour<Herbivore>(
 const reproducing = new Behaviour<Herbivore>(
     REPRODUCE,
     (entity: Herbivore, world: World): BehaviourName => {
-      const view = new Neighbours(world, entity.props.location);
+      const view = new Neighbours(world.getGrid(), entity.props.location);
       const space = view.findDirRand(e => e.symbol === SPACE);
       if (space) {
         const childProps = {energy: Math.floor(entity.props.energy / 3)};
@@ -45,7 +45,7 @@ const reproducing = new Behaviour<Herbivore>(
 const eating = new Behaviour<Herbivore>(
     EAT,
     (entity: Herbivore, world: World): BehaviourName => {
-      const view = new Neighbours(world, entity.props.location);
+      const view = new Neighbours(world.getGrid(), entity.props.location);
       const plantDir = view.findDirRand(e => e.symbol === PLANT);
       const plant = view.get(plantDir);
       if (isPlantProps(plant.props)) {
@@ -64,7 +64,7 @@ const eating = new Behaviour<Herbivore>(
 const moving = new Behaviour<Herbivore>(
     MOVE,
     (entity: Herbivore, world: World): BehaviourName => {
-      const view = new Neighbours(world, entity.props.location);
+      const view = new Neighbours(world.getGrid(), entity.props.location);
       let dir: Direction;
       if (view.get(entity.props.dir)?.symbol === SPACE) {
         // Move in props direction:
@@ -87,7 +87,7 @@ const stopping = new Behaviour<Herbivore>(
     (entity: Herbivore, world: World): BehaviourName => {
       entity.props.energy -= store.herbivoreMetabolismCosts;
       if (entity.props.energy <= 0) {
-        const view = new Neighbours(world, entity.props.location);
+        const view = new Neighbours(world.getGrid(), entity.props.location);
         view.remove(CENTRE);
       }
       return null;

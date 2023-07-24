@@ -4,28 +4,15 @@ import PerlinMatrix from './PerlinMatrix';
 import Vector from './Vector';
 import {WorldMap, WorldMatrix} from './WorldMatrix';
 
-type Appearance = {
-  /**
-   * Value between 0 and 1
-   */
-  lowerBound: number;
-
-  /**
-   * Value between 0 and 1
-   */
-  upperBound: number;
-};
-
 export type MapEntityConfig = {
   symbol: string;
 
   /**
-   * In what spectrum is the symbol found?
+   * In what range is the symbol found?
+   * Lower bound and upperbound between 0 and 1.
    * What habitat does it populate within the mountain ranges of {@link PerlinMatrix}
-   *
-   * appearance.lowerBound and appearance.upperBound should have a value between 0 and 1
    */
-  appearance: Appearance
+  range: [number, number]
 
   /**
    * Matcher determines if symbol is placed at location
@@ -82,7 +69,7 @@ export default class PerlinMapBuilder implements MapBuilder {
         if (map.get(location) !== this.config.defaultSymbol) {
           return;
         }
-        if (value < symbol.appearance.lowerBound || value > symbol.appearance.upperBound) {
+        if (value < symbol.range[0] || value > symbol.range[1]) {
           return;
         }
         if (!symbol.match(location, map)) {

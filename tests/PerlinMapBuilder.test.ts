@@ -1,27 +1,27 @@
-import PerlinMapBuilder from '../src/PerlinMapBuilder';
+import PerlinMapBuilder, {MapEntityConfig} from '../src/PerlinMapBuilder';
 import {WorldMap} from '../src/WorldMatrix';
 
 it('should build a map', () => {
   const width = 20;
   const height = 10;
-  const wall = {
+  const wall: MapEntityConfig = {
     symbol: '#',
     match: () => true,
-    appearance: {lowerBound: 0.6, upperBound: 1}
+    range: [0.6, 1]
   };
-  const plant = {
+  const plant: MapEntityConfig = {
     symbol: 'o',
     match: () => {
       toggle = !toggle;
       return toggle;
     },
-    appearance: {lowerBound: 0.3, upperBound: 1}
+    range: [0.3, 1]
   };
   let toggle = false;
-  const herbivore = {
+  const herbivore: MapEntityConfig = {
     symbol: '^',
     match: () => true,
-    appearance: {lowerBound: 0, upperBound: 0.1}
+    range: [0, 0.1]
   };
   const config = {
     defaultSymbol: ' ',

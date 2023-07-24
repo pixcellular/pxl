@@ -9,4 +9,3 @@ describe('Perlin.noise', () => {
     expect(ImprovedNoise.noise(1.1, 0.0, 0.0)).not.toBe(ImprovedNoise.noise(0.1, 0.0, 0.0));
   });
 });
-

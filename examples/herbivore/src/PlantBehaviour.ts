@@ -30,7 +30,7 @@ const growing = new Behaviour<Plant>(
 const cloning = new Behaviour<Plant>(
     CLONE,
     (entity: Plant, world: World): BehaviourName => {
-      const view = new Neighbours(world, entity.props.location);
+      const view = new Neighbours(world.getGrid(), entity.props.location);
       const space = view.findDirRand(e => e.symbol === SPACE);
       if (space) {
         const childEnergy = Math.ceil(Math.random() * entity.props.energy);

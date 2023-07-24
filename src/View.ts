@@ -1,4 +1,3 @@
-import Entity from './Entity';
 import Vector from './Vector';
 
 /**
@@ -6,56 +5,58 @@ import Vector from './Vector';
  * Directions point to locations on the grid relative to the centre of the view
  *
  * location = centre + direction
+ *
+ * @typeParam T Entity type ({@link Entity} or any other type) that populates the cells
  */
-export default interface View {
+export default interface View<T> {
 
   /**
-   * Centre of the view, location CENTRE, 0,0
+   * Get the location of CENTRE (0, 0) within the matrix
    */
   getCentre(): Vector;
 
   /**
    * Get entity
    *
-   * @return {Entity}, or null when location outside of grid
+   * @return T, or null when location outside of grid
    */
-  get(direction: Vector): Entity | null;
+  get(direction: Vector): T | null;
 
   /**
    * Put entity
    *
-   * @return {Entity} replaced, or null
+   * @return T replaced, or null
    */
-  put(direction: Vector, entity: Entity): Entity | null;
+  put(direction: Vector, entity: T): T | null;
 
   /**
    * Remove entity from the grid
    * - Deletes location from props
-   * - Replaces cell with default entity
+   * - Replace entity with default
    *
-   * @return {Entity} deleted, or null when {@link defaultEntity}
+   * @return T deleted, or null
    */
-  remove(direction: Vector): Entity | null;
+  remove(direction: Vector): T | null;
 
   /**
    * Find direction to first matching entity
    * searching in order of {@link cardinalDirections}
    *
-   * @return {Vector} direction to entity, or null when no entities found
+   * @return {Vector} direction to T, or null when none found
    */
-  findDir(predicate: (e: Entity) => boolean): Vector | null;
+  findDir(predicate: (e: T) => boolean): Vector | null;
 
   /**
-   * Find the direction to a randomly picked matching entity
+   * Find the direction to a randomly picked entity that matches the predicate
    *
-   * @return {Vector} direction to entity, or null when no entities found
+   * @return {Vector} direction to entity, or null when none found
    */
-  findDirRand(predicate: (e: Entity) => boolean): Vector | null;
+  findDirRand(predicate: (e: T) => boolean): Vector | null;
 
   /**
    * Find all matching directions
    *
    * @return {Vector[]} directions to entities
    */
-  findDirs(predicate: (e: Entity) => boolean): Vector[];
+  findDirs(predicate: (e: T) => boolean): Vector[];
 }

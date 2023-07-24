@@ -1,4 +1,4 @@
-import {Behaviour, BehaviourGraph, CENTRE, EntityProps, N} from '../src';
+import {Behaviour, BehaviourGraph, CENTRE, Entity, EntityProps, N} from '../src';
 import {EntityBuilderMap} from '../src';
 import Neighbours from '../src/Neighbours';
 import {SPACE} from '../src/Space';
@@ -35,7 +35,7 @@ it('should contain all neighbours with char', () => {
     builders: entityFactory,
   });
 
-  const view = new Neighbours(world, new Vector(1, 1));
+  const view = new Neighbours(world.getGrid(), new Vector(1, 1));
   const allWall = view.findDirs(e => e.symbol === '#');
   const expectedDirs: string[] = [
     'N',
@@ -57,7 +57,7 @@ it('should not find itself', () => {
     builders: entityFactory,
   });
 
-  const view: View = new Neighbours(world, new Vector(1, 1));
+  const view: View<Entity> = new Neighbours(world.getGrid(), new Vector(1, 1));
   const allO = view.findDirs(e => e.symbol === 'o');
   const expectedDirs: string[] = ['SE', 'NW'];
   expect(expectedDirs).toStrictEqual(allO.map(w => w.toString()));
@@ -74,7 +74,7 @@ it('should update props.location on set', () => {
     builders: entityFactory,
   });
 
-  const view = new Neighbours(world, new Vector(1, 1));
+  const view = new Neighbours(world.getGrid(), new Vector(1, 1));
   view.put(N, view.get(CENTRE)!);
   expect(props.location).toStrictEqual(new Vector(1, 0));
 });
@@ -89,7 +89,7 @@ it('should return previous entity on set', () => {
     entityProps: propsOfEntities,
     builders: entityFactory,
   });
-  const view = new Neighbours(world, new Vector(1, 1));
+  const view = new Neighbours(world.getGrid(), new Vector(1, 1));
 
   // Move 2 to 1, returning 1:
   const previous = view.put(N, view.get(CENTRE)!);

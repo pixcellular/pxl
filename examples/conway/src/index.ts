@@ -22,7 +22,7 @@ class Cell implements Entity {
     const cellProps = this.props as CellProps;
     cellProps.previousSymbol = this.symbol;
 
-    const view = new Neighbours(world, location);
+    const view = new Neighbours(world.getGrid(), location);
     const livingNeighbours = view.findDirs(e => {
       // e.handled is set and reset by world.turn:
       return e.handled
