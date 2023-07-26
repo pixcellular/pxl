@@ -6,6 +6,10 @@ export type PerlinMatrixConfig = {
 
   shift: number,
 
+  /**
+   * Zoom level
+   * See {@link PerlinMapBuilder.defaultConfig} for a sensible default
+   */
   scale: number,
 
   /**

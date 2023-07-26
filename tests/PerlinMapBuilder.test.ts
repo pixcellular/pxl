@@ -1,27 +1,34 @@
-import PerlinMapBuilder, {MapEntityConfig} from '../src/PerlinMapBuilder';
-import {WorldMap} from '../src/WorldMatrix';
+import {isInRange, MapEntityConfig} from '../src';
+import {WorldMap} from '../src';
+import PerlinMapBuilder, {PerlinMapBuilderConfig} from '../src/PerlinMapBuilder';
 
+/**
+ * Is value between range
+ * @param value
+ * @param range
+ */
 it('should build a map', () => {
   const width = 20;
   const height = 10;
-  const wall: MapEntityConfig = {
+  const wall: MapEntityConfig<number> = {
     symbol: '#',
-    match: () => true,
-    range: [0.6, 1]
+    match: (location, matrix) => isInRange(matrix.get(location), [0.6, 1]),
   };
-  const plant: MapEntityConfig = {
+  const plant: MapEntityConfig<number> = {
     symbol: 'o',
-    match: () => {
+    match: (location, matrix) => {
+      const inRange = isInRange(matrix.get(location), [0.3, 1]);
+      if (!inRange) {
+        return false;
+      }
       toggle = !toggle;
       return toggle;
     },
-    range: [0.3, 1]
   };
   let toggle = false;
-  const herbivore: MapEntityConfig = {
+  const herbivore: MapEntityConfig<number> = {
     symbol: '^',
-    match: () => true,
-    range: [0, 0.1]
+    match: (location, matrix) => isInRange(matrix.get(location), [0, 0.1]),
   };
   const config = {
     defaultSymbol: ' ',
@@ -31,7 +38,7 @@ it('should build a map', () => {
       herbivore
     ],
     scale: 0.25
-  };
+  } as PerlinMapBuilderConfig;
   const builder = new PerlinMapBuilder(
       width,
       height,

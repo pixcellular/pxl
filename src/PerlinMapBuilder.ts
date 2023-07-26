@@ -1,40 +1,23 @@
-import {MapBuilder} from './MapBuilder';
+import {MapBuilder, MapEntityConfig} from './MapBuilder';
 import {asArrays} from './Matrix';
-import PerlinMatrix from './PerlinMatrix';
-import Vector from './Vector';
+import PerlinMatrix, {PerlinMatrixConfig} from './PerlinMatrix';
 import {WorldMap, WorldMatrix} from './WorldMatrix';
 
-export type MapEntityConfig = {
-  symbol: string;
-
-  /**
-   * In what range is the symbol found?
-   * Lower bound and upperbound between 0 and 1.
-   * What habitat does it populate within the mountain ranges of {@link PerlinMatrix}
-   */
-  range: [number, number]
-
-  /**
-   * Matcher determines if symbol is placed at location
-   */
-  match: (location: Vector, matrix: WorldMatrix) => boolean;
-};
-
-export type PerlinMapBuilderConfig = {
+export type PerlinMapBuilderConfig = Omit<PerlinMatrixConfig, 'shift'> & {
   defaultSymbol: string;
 
   /**
    * List of symbols, added in the order they appear in the array
    */
-  entities: MapEntityConfig[],
+  entities: Array<MapEntityConfig<number>>,
 
   /**
-   * Zoom level of {@link PerlinMatrix}
-   * See {@link PerlinMapBuilder.defaultConfig} for a sensible default
+   * Shift on infinite Perlin noise plane to create a new map on every build
    */
-  scale: number
+  shifter: () => number;
 };
-export default class PerlinMapBuilder implements MapBuilder {
+
+export default class PerlinMapBuilder implements MapBuilder<number> {
 
   private static defaultConfig: PerlinMapBuilderConfig = {
     /**
@@ -42,9 +25,12 @@ export default class PerlinMapBuilder implements MapBuilder {
      */
     entities: [],
     scale: 0.25,
-    defaultSymbol: ' '
+    defaultSymbol: ' ',
+    shifter: () => 0,
+    useSeed: true
   };
 
+  private _symbols = new Array<MapEntityConfig<number>>();
   private width: number;
   private height: number;
   private config: PerlinMapBuilderConfig;
@@ -57,22 +43,23 @@ export default class PerlinMapBuilder implements MapBuilder {
     this.width = width;
     this.height = height;
     this.config = Object.assign({}, PerlinMapBuilder.defaultConfig, config);
+    this._symbols = this.config.entities;
   }
 
   public build(): WorldMap {
-    const matrix = new PerlinMatrix(this.width, this.height, {
-      scale: this.config.scale
-    }).asFractions();
+    const matrixConfig: PerlinMatrixConfig = {
+      scale: this.config.scale,
+      shift: this.config.shifter(),
+      useSeed: this.config.useSeed
+    };
+    const matrix = new PerlinMatrix(this.width, this.height, matrixConfig).asFractions();
     const map = new WorldMatrix(this.width, this.height, this.config.defaultSymbol);
-    this.config.entities.forEach(symbol => {
+    this._symbols.forEach(symbol => {
       matrix.forEachCell((value, location) => {
         if (map.get(location) !== this.config.defaultSymbol) {
           return;
         }
-        if (value < symbol.range[0] || value > symbol.range[1]) {
-          return;
-        }
-        if (!symbol.match(location, map)) {
+        if (!symbol.match(location, matrix)) {
           return;
         }
         map.put(location, symbol.symbol);
@@ -80,4 +67,12 @@ export default class PerlinMapBuilder implements MapBuilder {
     });
     return asArrays(map).map(row => row.map(cell => cell).join(''));
   }
+  get symbols(): Array<MapEntityConfig<number>> {
+    return this._symbols;
+  }
+
+  set symbols(value: Array<MapEntityConfig<number>>) {
+    this._symbols = value;
+  }
+
 }

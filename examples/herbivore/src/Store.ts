@@ -9,7 +9,7 @@ class Store {
 }
 
 export const store = new Store();
-store.loopDurationMs = 25;
+store.loopDurationMs = 100;
 store.herbivoreInitialEnergy = 1000;
 store.herbivoreReproductionThreshold = 3500;
 store.herbivoreMetabolismCosts = 20;

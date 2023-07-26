@@ -18,12 +18,18 @@ import Entity, {EntityHandler} from './Entity';
 import {EntityBuilder, EntityBuilderMap} from './EntityBuilder';
 import {EntityProps} from './EntityProps';
 import Grid from './Grid';
+import {MapBuilder, MapEntityConfig} from './MapBuilder';
+import { Matrix } from './Matrix';
 import Neighbours from './Neighbours';
+import PerlinMapBuilder, { PerlinMapBuilderConfig } from './PerlinMapBuilder';
+import PerlinMatrix from './PerlinMatrix';
+import { isInRange } from './util/isInRange';
 import randomDirection from './util/randomDirection';
 import randomElement from './util/randomElement';
 import Vector from './Vector';
 import View from './View';
 import World from './World';
+import {WorldMap, WorldMatrix} from './WorldMatrix';
 
 export {
 
@@ -53,6 +59,16 @@ export {
 
   Grid,
 
+  isInRange,
+
+  MapBuilder,
+  MapEntityConfig,
+
+  Matrix,
+  PerlinMatrix,
+  PerlinMapBuilder,
+  PerlinMapBuilderConfig,
+
   randomDirection,
   randomElement,
 
@@ -61,6 +77,7 @@ export {
   Vector,
 
   View,
-
-  World
+  World,
+  WorldMatrix,
+  WorldMap
 };

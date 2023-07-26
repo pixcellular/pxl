@@ -1,6 +1,7 @@
-import {EntityBuilderMap, World} from 'pixcellular';
+import {EntityBuilderMap, World, WorldMap} from 'pixcellular';
 import {herbivoreBehaviour} from './HerbivoreBehaviour';
 import {HerbivoreBuilder} from './HerbivoreBuilder';
+import {HerbivoreMapBuilder} from './HerbivoreMapBuilder';
 import {plantBehaviour} from './PlantBehaviour';
 import {PlantBuilder} from './PlantBuilder';
 import {SpaceBuilder} from './SpaceBuilder';
@@ -15,10 +16,12 @@ export default class App {
   private $grid = document.getElementById('grid');
   private $createBtn = document.getElementById(CREATE_BTN_ID);
   private currentInterval;
+  private mapBuilder = new HerbivoreMapBuilder(200, 100);
 
   public run() {
     this.displayOnCreateClick(new StoreForm());
-    this.displayWorld(createWorld());
+    const map = this.mapBuilder.build();
+    this.displayWorld(createWorld(map));
   }
 
   private displayOnCreateClick(
@@ -27,7 +30,8 @@ export default class App {
     this.$createBtn.addEventListener('click', (e) => {
       e.preventDefault();
       storeForm.updateStore();
-      this.displayWorld(createWorld());
+      const map = this.mapBuilder.build();
+      this.displayWorld(createWorld(map));
     });
   }
 
@@ -63,37 +67,7 @@ export default class App {
   }
 }
 
-function createWorld() {
-
-  const map = [
-    'O#  #    O#  #    O#  #    ',
-    '#O    #  #O    #  #O    #  ',
-    ' #  #     #  #     #  #    ',
-    '    #    ^   #        #    ',
-    '    #O       #O       #O   ',
-    '     # ##     # ##     # ##',
-    ' #  # ##O #  # ##O #  # ##O',
-    '# ##  # ## ##  # ## ##  # #',
-    '     #        #        #   ',
-    'O#  #    O#  #    O#  #    ',
-    '#O    #  #O    #  #O    #  ',
-    ' #  #     #  #     #  #    ',
-    '    #        #        #    ',
-    '    #O       #O       #O   ',
-    '  ^  # ##     # ##     # ##',
-    ' #  # ##O #  # ##O #  # ##O',
-    '# ##  # ## ##  # ## ##  # #',
-    '     #        #        #   ',
-    'O#  #    O#  #    O#  #    ',
-    '#O    #  #O    #  #O    #  ',
-    ' #  #     #  #     #  #    ',
-    '    #        #        #    ',
-    '    #O       #O       #O   ',
-    '     # ##     # ##     # ##',
-    ' #  # ##O #  # ##O #  # ##O',
-    '# ##  # ## ##  # ## ##  # #',
-    '     #        #        #   ',
-  ];
+function createWorld(map: WorldMap) {
 
   // Factory that will convert the map into entities:
   const builders = new EntityBuilderMap();
