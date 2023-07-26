@@ -1,0 +1,62 @@
+name: Pixcellular
+
+on: push
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: checkout
+        uses: actions/checkout@v3
+      -
+        name: build herbivore example
+        run: |
+          set -xe
+          cd examples/herbivore
+          npm i
+          npm run build
+      -
+        name: generated dirs
+        run: |
+          mkdir public
+          mkdir public/vanilla
+          mkdir public/herbivore
+      -
+        name: copy static files
+        run: |
+          cp examples/vanilla/index.html public/vanilla
+          cp examples/herbivore/dist/bundle.js public/herbivore
+          cp examples/herbivore/dist/index.html public/herbivore
+          cp examples/herbivore/dist/styles.css public/herbivore
+      -
+        name: generated index
+        run: |
+          cat > public/index.html <<EOL
+          <!doctype html>
+          <html>
+            <head>
+              <title>pixcellular/pxl</title>
+              <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/light.css">
+            </head>
+            <body>
+              <h1>pixcellular/pxl</h1>
+              <p>Open source grid framework to create world simulations and ecological models. See <a href="https://github.com/pixcellular/pxl">github</a> for more information.</p>
+              <p>Examples:</p>
+              <ul>
+                <li><a href="./vanilla/">Vanilla</a><br />Minimal example in plain js</li>
+                <li><a href="./herbivore/">Herbivore</a><br />Example using world builder to generate random worlds and graphs to structure the behaviour of entities</li>
+              </ul>
+              <pre style="font-size: 0.8em;">Commit <strong>${{ github.sha }}</strong> has been deployed through <a href="https://github.com/marketplace/actions/github-pages">GitHub Pages action</a> successfully.</p>
+            </body>
+          </html>
+          EOL
+      -
+        name: deploy to github pages
+        if: success()
+        uses: crazy-max/ghaction-github-pages@v3
+        with:
+          target_branch: gh-pages
+          build_dir: public
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

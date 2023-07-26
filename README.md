@@ -4,6 +4,7 @@ Pixcellular (pxl) is a small grid framework to create cellular automata and worl
 
 - The basics are explained in the [introduction](#introduction)
 - Working code can be found in the [examples](https://github.com/pixcellular/pxl/blob/main/examples/README.md)
+- Compiled examples are hosted on [pixcellular.github.io/pxl](https://pixcellular.github.io/pxl/)
 - Bugs or unsolvable questions? Please create an [issue](https://github.com/pixcellular/pxl/issues).
 - Want to contribute? :D See [development](#development)
 

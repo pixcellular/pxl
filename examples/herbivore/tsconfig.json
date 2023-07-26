@@ -4,6 +4,7 @@
     "target": "es5",
     "outDir": "dist/tmp",
     "rootDir": "src/",
-    "moduleResolution":"node"
+    "moduleResolution":"node",
+    "lib": ["ES2015", "DOM"]
   }
 }
