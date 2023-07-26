@@ -15,9 +15,11 @@ export class PlantBuilder implements EntityBuilder {
   }
 
   public build(props) {
+    let newProps: PlantProps = props;
     if (!isPlantProps(props)) {
-      props = Object.assign({}, this.defaultProps, props);
+      newProps = Object.assign({}, this.defaultProps, props);
+      newProps.energy = Math.random() * this.defaultProps.energy;
     }
-    return new Plant(props as PlantProps, this.graph, this);
+    return new Plant(newProps, this.graph, this);
   }
 }
