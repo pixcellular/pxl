@@ -1,6 +1,13 @@
-export function v(x: number, y: number) {
-  return new Vector(x, y);
-}
+import {memoize} from './util/memoize';
+
+export const v: (x: number, y: number) => Vector = memoize(
+    (x: number, y: number) => {
+      return new Vector(x, y);
+    },
+    (x, y) => {
+      return `${x},${y}`;
+    }
+);
 
 /**
  * Vector in two dimensional space
