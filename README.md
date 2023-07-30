@@ -1,17 +1,17 @@
-# Pixcellular
+# pixcellular/pxl
 
-Pixcellular (pxl) is a small grid framework to create cellular automata and world simulations in typescript and javascript. 
+Small typescript framework to create ecosystem models and simulations.
 
 - The basics are explained in the [introduction](#introduction)
-- Working code can be found in the [examples](https://github.com/pixcellular/pxl/blob/main/examples/README.md)
-- Compiled examples are hosted on [pixcellular.github.io/pxl](https://pixcellular.github.io/pxl/)
-- Bugs or unsolvable questions? Please create an [issue](https://github.com/pixcellular/pxl/issues).
+- Working code can be found in [examples](https://github.com/pixcellular/pxl/blob/main/examples/)
+- Browser examples are hosted on [pixcellular.github.io/pxl](https://pixcellular.github.io/pxl/)
+- Bug, question or suggestion? Please create an [issue](https://github.com/pixcellular/pxl/issues).
 - Want to contribute? :D See [development](#development)
 
 ## Introduction
-With Pixcellular we can model a world filled with organisms, each organism containing specific properties and a specific set of behavioural rules.
+With pxl we can model a world filled with entities, each entity containing specific properties and a specific set of behavioural rules.
 
-### Map the world
+### Mapping the world
 To create a new pxl _world_ we pass it a _map_ in which every _symbol_ marks an _entity_.
 
 ```js
@@ -31,20 +31,20 @@ const organisms = [
 ```
 
 In the map above the `o` marks two entities with two properties: a required `location` property, and the energy level of an organism.
-You can give any symbol any property you want. Also, space is an entity, albeit without any properties: all space is the same.
+You can give any symbol any property you want.
 
-Note: entity properties need a `location`. Pxl will use it to map the symbols on the map to their properties. Space does not need a location because all space properties are the same (i.e. an empty object).
+Note: entity properties need a `location`. Pxl will use it to map the symbols on the map to their properties.
 
-###  Define behaviour
+###  Defining behaviour
 
-All entities behave in a certain way. For 'space' it is simple: do nothing. But for the `o` organism we might want to define a specific set of behavioural rules. Pxl uses the `Entity.handle` function to determine the behaviour of every symbol:
+All entities behave in a certain way. For the `o` organism we can define a specific set of behavioural rules using the `Entity.handle` function:
 
 ```js
 class MyEntity {
   symbol: 'o';
   props;
 
-// Organisms behave according to specific rules:
+  // Organisms behave according to specific rules:
   handle = (location, world) => {
     // Get a view of neighbouring cells:
     const view = new pxl.Neighbours(world, location);
@@ -69,7 +69,7 @@ class MyEntity {
 }
 ```
 
-### Build entities
+### Building entities
 
 Pxl converts the map and properties into a world with acting entities. It does this using `EntityBuilder`s:
 
@@ -80,10 +80,8 @@ const builders = new EntityBuilderMap();
 builders.add('o', {build: (props) => ({symbol: 'o', props})});
 ```
 
-Note: in this example all spaces share the same `space` props, but every organism is created using its own unique properties. 
-
-### Start simulation
-Finally, we can put all these building blocks together:
+### Starting simulation
+Finally, we can put all our building blocks together:
 
 ```js
 const world = new World({
@@ -100,11 +98,17 @@ while (organisms.find(e => e.energy)) {
 }
 ```
 
-### Complex behaviour
+### More complex behaviour
 
 This is a very simple example, and you probably want to give your entities more complex behaviour. 
-To prevent outrageously unreadable handler functions, pxl offers a way to divide your behaviour into smaller parts using a `BehaviourGraph`. 
-You can find an example including documented code in the [herbivore](https://github.com/pixcellular/pxl/blob/main/examples/herbivore/README.md) example.
+To prevent outrageously unreadable `handler` functions, pxl offers a way to divide your behaviour into smaller parts using a `BehaviourGraph`. 
+You can find an example with documented code in the [herbivore](https://github.com/pixcellular/pxl/blob/main/examples/herbivore/README.md) example.
+
+## Generating maps
+
+Instead of creating maps by hand, you might want to generate them with the `PerlinMapBuilder` that uses Perlin noise to populate maps with your symbols. 
+You could also create your own implementation of the `MapBuilder` interface.
+You can find an example with documented code in the [herbivore](https://github.com/pixcellular/pxl/blob/main/examples/herbivore/README.md) example.
 
 ## Development
 
