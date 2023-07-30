@@ -10,7 +10,7 @@
   },
   "type": "module",
   "dependencies": {
-    "pixcellular": "2.8.1"
+    "pixcellular": "2.8.2"
   },
   "devDependencies": {
     "typescript": "^4.5.4",

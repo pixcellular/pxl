@@ -41,11 +41,11 @@ jobs:
             </head>
             <body>
               <h1>pixcellular/pxl</h1>
-              <p>Small grid framework to create ecosystem models and simulations. See <a href="https://github.com/pixcellular/pxl">github</a> for more information.</p>
+              <p>Small grid framework to create ecosystem models and simulations. <br />See <a href="https://github.com/pixcellular/pxl">github</a> for more information.</p>
               <p>Examples:</p>
               <ul>
-                <li><a href="./vanilla/">Vanilla</a><br />Minimal example in plain js (<a href="https://github.com/pixcellular/pxl/blob/main/examples/vanilla/">Code</a>)</li>
-                <li><a href="./herbivore/">Herbivore</a><br />Structure entity behaviour with graphs and generate maps using a world builder (<a href="https://github.com/pixcellular/pxl/blob/main/examples/herbivore/">Code</a>)</li>
+                <li><a href="./vanilla/">Vanilla</a><br />Minimal example in plain html and javascript (<a href="https://github.com/pixcellular/pxl/blob/main/examples/vanilla/">code</a>)</li>
+                <li><a href="./herbivore/">Herbivore</a><br />Example structures entity behaviour with graphs and generates random maps using Perlin noise (<a href="https://github.com/pixcellular/pxl/blob/main/examples/herbivore/">code</a>)</li>
               </ul>
               <pre style="font-size: 0.8em;">(Commit <a href="https://github.com/pixcellular/pxl/commit/${{ github.sha }}">${{ github.sha }}</a>)</p>
             </body>
