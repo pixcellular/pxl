@@ -1,5 +1,4 @@
-import {EntityProps} from '../../src';
-import Entity from '../../src/Entity';
+import {Entity, EntityProps} from '../../../src';
 
 export class Wall implements Entity {
     public symbol: string;

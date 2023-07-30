@@ -1,12 +1,12 @@
 import {Behaviour, BehaviourGraph, E, EntityBuilderMap, Vector} from '../src';
 import {SPACE} from '../src/Space';
 import World from '../src/World';
-import {MOVE, START, STOP} from './stub/Behaviours';
-import {EntityStub} from './stub/EntityStub';
-import {EntityStubProps} from './stub/EntityStubProps';
-import {MovingBehaviour} from './stub/MovingBehaviour';
-import SleepingBehaviour from './stub/SleepingBehaviour';
-import {Wall} from './stub/Wall';
+import {MOVE, START, STOP} from './test-util/stub/Behaviours';
+import {EntityStub} from './test-util/stub/EntityStub';
+import {EntityStubProps} from './test-util/stub/EntityStubProps';
+import {MovingBehaviour} from './test-util/stub/MovingBehaviour';
+import SleepingBehaviour from './test-util/stub/SleepingBehaviour';
+import {Wall} from './test-util/stub/Wall';
 
 // Create rule graph:
 const starting = new Behaviour<EntityStub>(START, () => MOVE, [MOVE]);

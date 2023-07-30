@@ -41,7 +41,7 @@
   "rulesDirectory": [],
   "linterOptions": {
     "exclude": [
-      "src/Perlin.ts"
+      "src/noise/Perlin.ts"
     ]
   }
 }

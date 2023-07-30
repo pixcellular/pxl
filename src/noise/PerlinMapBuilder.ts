@@ -1,7 +1,7 @@
-import {MapBuilder, MapEntityConfig} from './MapBuilder';
-import {asArrays} from './Matrix';
+import {MapBuilder, MapEntityConfig} from '../MapBuilder';
+import {asArrays} from '../Matrix';
+import {WorldMap, WorldMatrix} from '../WorldMatrix';
 import PerlinMatrix, {PerlinMatrixConfig} from './PerlinMatrix';
-import {WorldMap, WorldMatrix} from './WorldMatrix';
 
 export type PerlinMapBuilderConfig = Omit<PerlinMatrixConfig, 'shift'> & {
   defaultSymbol: string;

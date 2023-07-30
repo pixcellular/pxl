@@ -1,8 +1,8 @@
 import BehaviourGraph, {Behaviour} from '../src/BehaviourGraph';
 import World from '../src/World';
-import {EAT, START, STOP} from './stub/Behaviours';
-import {EntityStub} from './stub/EntityStub';
-import {EntityStubProps} from './stub/EntityStubProps';
+import {EAT, START, STOP} from './test-util/stub/Behaviours';
+import {EntityStub} from './test-util/stub/EntityStub';
+import {EntityStubProps} from './test-util/stub/EntityStubProps';
 
 it('should create graph in mermaid format', () => {
   const start = new Behaviour(START, () => EAT, [EAT]);

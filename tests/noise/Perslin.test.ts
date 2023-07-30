@@ -1,5 +1,5 @@
 import {describe, expect, it} from '@jest/globals';
-import ImprovedNoise from '../src/Perlin';
+import ImprovedNoise from '../../src/noise/Perlin';
 
 describe('Perlin.noise', () => {
   it('creates perlin noise', () => {

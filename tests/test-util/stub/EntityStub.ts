@@ -1,6 +1,4 @@
-import { BehaviourGraph } from '../../src';
-import Entity from '../../src/Entity';
-import {EntityHandler} from '../../src/Entity';
+import { BehaviourGraph, Entity, EntityHandler } from '../../../src';
 import {EntityStubProps} from './EntityStubProps';
 
 export class EntityStub implements Entity {

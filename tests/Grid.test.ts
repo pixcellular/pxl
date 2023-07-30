@@ -3,7 +3,7 @@ import Entity from '../src/Entity';
 import Grid from '../src/Grid';
 import {SPACE} from '../src/Space';
 import Vector from '../src/Vector';
-import {Wall} from './stub/Wall';
+import {Wall} from './test-util/stub/Wall';
 
 it('should return empty vector when referring to an empty cell', () => {
   const grid = new Grid(5, 5, SPACE);

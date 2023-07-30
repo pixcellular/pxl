@@ -5,10 +5,10 @@ import {SPACE} from '../src/Space';
 import Vector from '../src/Vector';
 import View from '../src/View';
 import World from '../src/World';
-import {START, STOP} from './stub/Behaviours';
-import {EntityStub} from './stub/EntityStub';
-import {EntityStubProps} from './stub/EntityStubProps';
-import {Wall} from './stub/Wall';
+import {START, STOP} from './test-util/stub/Behaviours';
+import {EntityStub} from './test-util/stub/EntityStub';
+import {EntityStubProps} from './test-util/stub/EntityStubProps';
+import {Wall} from './test-util/stub/Wall';
 
 const entityFactory = new EntityBuilderMap();
 entityFactory.add(' ', {build: () => SPACE});

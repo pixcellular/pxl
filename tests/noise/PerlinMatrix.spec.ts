@@ -1,7 +1,7 @@
 import {describe, expect, it} from '@jest/globals';
 import * as fs from 'fs';
-import {asArrays} from '../src/Matrix';
-import PerlinMatrix, {PerlinMatrixConfig} from '../src/PerlinMatrix';
+import {asArrays} from '../../src/Matrix';
+import PerlinMatrix, {PerlinMatrixConfig} from '../../src/noise/PerlinMatrix';
 
 describe('PerlinMatrix', () => {
   const defaultMatrix = [

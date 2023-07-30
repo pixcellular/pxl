@@ -1,12 +1,9 @@
-import {Behaviour, BehaviourName} from '../../src';
-import {Entity} from '../../src';
-import {SPACE} from '../../src/Space';
-import World from '../../src/World';
+import {Behaviour, BehaviourName, World} from '../../../src';
 import {SLEEP, STOP} from './Behaviours';
 import {EntityStub} from './EntityStub';
 
 export default class SleepingBehaviour extends Behaviour<EntityStub> {
-  constructor(space: Entity = SPACE) {
+  constructor() {
     super(SLEEP, (entity: EntityStub, world: World): BehaviourName => {
 
       // Are we going to die in our sleep?

@@ -1,6 +1,4 @@
-import {EntityProps} from '../../src';
-import Direction, {CENTRE} from '../../src/Direction';
-import Vector from '../../src/Vector';
+import {CENTRE, Direction, EntityProps, Vector} from '../../../src';
 
 export class EntityStubProps extends EntityProps {
 

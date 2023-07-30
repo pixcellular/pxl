@@ -1,7 +1,5 @@
-import {Behaviour} from '../../src';
-import {Entity} from '../../src/';
-import {SPACE} from '../../src/Space';
-import World from '../../src/World';
+import {Behaviour, Entity, World} from '../../../src';
+import {SPACE} from '../../../src/Space';
 import {MOVE, SLEEP} from './Behaviours';
 import {EntityStub} from './EntityStub';
 

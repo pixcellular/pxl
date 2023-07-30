@@ -1,6 +1,6 @@
-import {isInRange, MapEntityConfig} from '../src';
-import {WorldMap} from '../src';
-import PerlinMapBuilder, {PerlinMapBuilderConfig} from '../src/PerlinMapBuilder';
+import {isInRange, MapEntityConfig} from '../../src';
+import {WorldMap} from '../../src';
+import PerlinMapBuilder, {PerlinMapBuilderConfig} from '../../src/noise/PerlinMapBuilder';
 
 /**
  * Is value between range

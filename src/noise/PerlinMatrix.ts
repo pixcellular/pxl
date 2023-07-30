@@ -1,6 +1,6 @@
-import {contains, forEachCell, getCellIndex, Matrix} from './Matrix';
+import {contains, forEachCell, getCellIndex, Matrix} from '../Matrix';
 import ImprovedNoise from './Perlin';
-import Vector, {v} from './Vector';
+import Vector, {v} from '../Vector';
 
 export type PerlinMatrixConfig = {
 
