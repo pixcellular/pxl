@@ -41,7 +41,7 @@ jobs:
             </head>
             <body>
               <h1>pixcellular/pxl</h1>
-              <p>Small typescript framework to create ecosystem models and simulations. See <a href="https://github.com/pixcellular/pxl">github</a> for more information.</p>
+              <p>Small grid framework to create ecosystem models and simulations. See <a href="https://github.com/pixcellular/pxl">github</a> for more information.</p>
               <p>Examples:</p>
               <ul>
                 <li><a href="./vanilla/">Vanilla</a><br />Minimal example in plain js (<a href="https://github.com/pixcellular/pxl/blob/main/examples/vanilla/">Code</a>)</li>

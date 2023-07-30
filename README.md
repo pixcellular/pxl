@@ -1,6 +1,6 @@
 # pixcellular/pxl
 
-Small typescript framework to create ecosystem models and simulations.
+Small grid framework to create ecosystem models and simulations.
 
 - The basics are explained in the [introduction](#introduction)
 - Working code can be found in [examples](https://github.com/pixcellular/pxl/blob/main/examples/)

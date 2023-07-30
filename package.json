@@ -1,6 +1,6 @@
 {
   "name": "pixcellular",
-  "version": "2.8.0",
+  "version": "2.8.1",
   "description": "",
   "author": "pixcellular",
   "license": "ISC",
@@ -13,12 +13,13 @@
     "url": "https://github.com/pixcellular/pxl/issues"
   },
   "keywords": [
-    "cellular",
-    "automaton",
-    "automata",
-    "rule",
+    "ecosystem",
+    "simulator",
     "grid",
-    "ca"
+    "game",
+    "biology",
+    "ecology",
+    "behaviour"
   ],
   "publishConfig": {
     "access": "public"
