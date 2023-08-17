@@ -1,5 +1,7 @@
 # pixcellular/pxl
 
+[![npm version](https://badge.fury.io/js/pixcellular.svg)](https://badge.fury.io/js/pixcellular)
+
 Small grid framework to create ecosystem models and simulations.
 
 - The basics are explained in the [introduction](#introduction)
