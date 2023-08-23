@@ -8,7 +8,7 @@ Small grid framework to create ecosystem models and simulations.
 - Working code can be found in [examples](https://github.com/pixcellular/pxl/blob/main/examples/)
 - Browser examples are hosted on [pixcellular.github.io/pxl](https://pixcellular.github.io/pxl/)
 - Bug, question or suggestion? Please create an [issue](https://github.com/pixcellular/pxl/issues).
-- Want to contribute? :D See [development](#development)
+- Want to contribute? :D See [development](#development) and our [guidelines](https://github.com/pixcellular/pxl/blob/main/CONTRIBUTING.md).
 
 ## Introduction
 With pxl we can model a world filled with entities, each entity containing specific properties and a specific set of behavioural rules.
