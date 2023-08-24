@@ -1,6 +1,6 @@
 # pixcellular/pxl
 
-[![npm version](https://badge.fury.io/js/pixcellular.svg)](https://badge.fury.io/js/pixcellular)
+[![npm version](https://badge.fury.io/js/pixcellular.svg)](https://badge.fury.io/js/pixcellular) ![build](https://github.com/pixcellular/pxl/actions/workflows/build.yml/badge.svg)
 
 Small grid framework to create ecosystem models and simulations.
 
