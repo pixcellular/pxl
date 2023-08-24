@@ -1,0 +1,13 @@
+**/*.*
+
+!src/**/*.*
+!tests/**/*.*
+!.npmignore
+!README.md
+!index.js
+!index.d.ts
+!package.json
+!README.md
+!LICENSE.md
+!CONTRIBUTING.md
+!CODE_OF_CONDUCT.md

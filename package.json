@@ -1,9 +1,8 @@
 {
   "name": "pixcellular",
-  "version": "2.8.4",
+  "version": "2.8.6",
   "description": "Small grid framework to create ecosystem models and simulations",
   "author": "pixcellular",
-  "main": "src/index.ts",
   "license": "ISC",
   "homepage": "https://pixcellular.github.io/pxl/",
   "repository": {
@@ -13,6 +12,10 @@
   "bugs": {
     "url": "https://github.com/pixcellular/pxl/issues"
   },
+  "engines": {
+    "node": "^16 || ^18 || ^20"
+  },
+  "main": "index.js",
   "keywords": [
     "ecosystem",
     "simulator",
@@ -25,17 +28,12 @@
   "publishConfig": {
     "access": "public"
   },
-  "files": [
-    "README.md",
-    "index.js",
-    "index.d.ts"
-  ],
   "scripts": {
     "test": "mkdir -p dist && jest",
     "build:clean": "rimraf dist",
     "build:js": "tsc --project tsconfig.build.json",
     "build:bundle": "rollup -c",
-    "build:static": "cp package.json README.md dist",
+    "build:static": "./scripts/cp-static.sh",
     "build": "npm-run-all build:*",
     "publish:dist": "cd dist && npm publish",
     "test-build-publish": "npm run test && npm run build && npm run publish:dist",
