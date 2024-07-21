@@ -1,0 +1,86 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <title>pixcellular/pxl: vanilla javascript example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+
+      #grid {
+        display: inline-block;
+        border: 1px solid black;
+        line-height: 0.6em;
+      }
+
+    </style>
+  </head>
+  <body>
+    <pre id="grid"></pre>
+    <script data-search-needle="pxl-dependency" src="https://unpkg.com/pixcellular@2.8.6/index.js"></script>
+    <script>
+
+      const map = [
+        'o  ',
+        ' o ',
+        '   '
+      ];
+
+      // Every entity can have its own props:
+      const organisms = [
+        {location: new pxl.Vector(0, 0), energy: 10},
+        {location: new pxl.Vector(1, 1), energy: 20}
+      ];
+
+      class Organism {
+        symbol = 'o';
+        props;
+
+        constructor(props) {
+          this.props = props;
+        }
+
+        // Describe behaviour of entity:
+        handle = (location, world) => {
+
+          // Get a view of neighbouring cells:
+          const view = new pxl.Neighbours(world.getGrid(), location);
+
+          // Find random empty space:
+          const spaceDirection = view.findDirRand(e => e.symbol === ' ');
+
+          if (spaceDirection) {
+            // Move randomly:
+            view.put(spaceDirection, this);
+          }
+
+          // Living costs energy:
+          this.props.energy--;
+
+          // ... And no energy probably means death:
+          if (this.props.energy <= 0) {
+            // Remove entity from world:
+            view.remove(spaceDirection || pxl.CENTRE);
+          }
+        }
+      }
+
+      // Pxl uses builders to convert the map and properties into entity objects:
+      const builders = new pxl.EntityBuilderMap();
+      builders.add('o', {
+        build: (props) => new Organism(props)
+      });
+
+      const world = new pxl.World({map, entityProps: organisms, builders})
+
+      const interval = setInterval(() => {
+        document.getElementById('grid').innerText = world.turn().toString();
+        console.log('turn', world.age, 'organisms', JSON.stringify(organisms))
+        if (!organisms.find(o => o.energy > 0)) {
+          clearInterval(interval);
+        }
+      }, 250);
+
+    </script>
+  </body>
+</html>
